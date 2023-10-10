@@ -1,0 +1,15 @@
+{
+  "name": "cool-updown-nxt-api",
+  "displayName": "cool-updown (next) backend & API",
+  "version": "1.0.0-alpha",
+  "author": {
+    "name": "Jerome Canler",
+    "email": "djey47@github.com",
+    "url": "https://github.com/djey47"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "vite": "4.4.11",
+    "vite-plugin-node": "3.0.2"
+  }
+}
