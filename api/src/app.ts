@@ -2,20 +2,13 @@
 /** Web application back-end entry point */
 
 import fastify from 'fastify';
+import { home } from './services/home/home';
 
 const app = async () => {
   const app = fastify();
 
-  app.get('/', (req, reply) => {
-    reply.send(`Hello World, that is cool-updown-nxt API!\n${JSON.stringify(import.meta, null, 2)}`);
-  });
-
-  app.get('/ping', (req, reply) => {
-    reply.send({ msg: 'pong' });
-  });
-
-  app.get('/pong', (req, reply) => {
-    reply.send({ msg: 'ping' });
+  app.get('/', (_req, reply) => {
+    home(reply);
   });
 
   // Must match the vite config file
