@@ -30,3 +30,9 @@ To run as a service, PM2 is strongly recommended. See https://pm2.keymetrics.io 
 ### GET / (home)
 
 Returns name, version and current context of the server.
+
+## Monitoring
+
+### Logs
+
+Server logs are written to the *api/logs/cool-updown-nxt.log* file.

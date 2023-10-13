@@ -3,11 +3,16 @@
 
 import fastify from 'fastify';
 import { home } from './services/home/home';
+import { getLoggerConfig } from './common/logger';
 
 const app = async () => {
-  const app = fastify();
+  const app = fastify({
+    logger: getLoggerConfig(),
+  });
 
-  app.get('/', (_req, reply) => {
+  app.get('/', (req, reply) => {
+    // req.log.info('Some info about the current request')
+
     home(reply);
   });
 
