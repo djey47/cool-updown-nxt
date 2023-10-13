@@ -1,11 +1,11 @@
 
 /** Web application back-end entry point */
-
 import fastify from 'fastify';
 import { home } from './services/home/home';
-import { getLoggerConfig } from './common/logger';
+import { coreLogger, getLoggerConfig } from './common/logger';
 
 const app = async () => {
+  // TODO error management
   const app = fastify({
     logger: getLoggerConfig(),
   });
@@ -23,8 +23,7 @@ const app = async () => {
     const host = '0.0.0.0';
     app.listen({ port, host });
 
-    // TODO Proper logs system
-    console.log('cool-updown-nxt API running on port', port);
+    coreLogger.info('cool-updown-nxt API running on port %s', port);
   } 
  
   return app;
