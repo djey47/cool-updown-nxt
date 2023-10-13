@@ -13,9 +13,10 @@ const app = async () => {
 
   // Must match the vite config file
   if (import.meta.env.PROD) {
-    // TODO Port should be taken from config
+    // TODO Port and host should be taken from config
     const port = 3001;
-    app.listen({ port });
+    const host = '0.0.0.0';
+    app.listen({ port, host });
 
     // TODO Proper logs system
     console.log('cool-updown-nxt API running on port', port);
