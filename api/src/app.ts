@@ -3,6 +3,7 @@
 import fastify from 'fastify';
 import { home } from './services/home/home';
 import { coreLogger, getLoggerConfig } from './common/logger';
+import { logs } from './services/logs/logs';
 
 const app = async () => {
   // TODO error management
@@ -10,10 +11,14 @@ const app = async () => {
     logger: getLoggerConfig(),
   });
 
-  app.get('/', (req, reply) => {
-    // req.log.info('Some info about the current request')
-
+  app.get('/', (_req, reply) => {
     home(reply);
+  });
+
+  app.get('/logs', (_req, reply) => {
+    // req.log.trace('TRACE Some info about the current request')
+
+    logs(reply);
   });
 
   // Must match the vite config file
