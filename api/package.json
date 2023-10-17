@@ -9,6 +9,7 @@
   },
   "license": "MIT",
   "devDependencies": {
+    "@types/config": "^3.3.1",
     "@types/node": "20.8.5",
     "vite": "4.4.11",
     "vite-plugin-node": "3.0.2"
@@ -16,10 +17,11 @@
   "scripts": {
     "build": "rm -rf ./dist && vite build --mode production",
     "dev": "vite",
-    "start": "node ./dist/app.mjs"
+    "start": "NODE_ENV=production node ./dist/app.mjs"
   },
   "dependencies": {
     "app-root-dir": "1.0.2",
+    "config": "3.3.9",
     "fastify": "4.24.1"
   }
 }
