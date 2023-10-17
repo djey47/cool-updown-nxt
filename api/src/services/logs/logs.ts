@@ -21,7 +21,7 @@ export async function logs(reply: FastifyReply) {
   const logsFileStats = await stat(logFilePath);
   const logsContents = await readLogs(logFilePath);
   
-  console.log('logs::logs', { logsContents });
+  // console.log('logs::logs', { logsContents });
   
   const logs = parseLogs(logsContents);
 

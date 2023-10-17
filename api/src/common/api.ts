@@ -1,9 +1,6 @@
-import { FastifyReply } from 'fastify';
-import { ApiResponse } from '../models/api';
+import type { FastifyReply } from 'fastify/types/reply';
+import type { ApiResponse } from '../models/api';
 
-/**
- * 
- */
 export function replyWithJson(reply: FastifyReply, item?: ApiResponse) {
   if (item) {
     reply
