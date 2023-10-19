@@ -8,8 +8,14 @@ TODOs
     - [X] Config service
     - [] Logs service
       - Filters: time window (min/max date), log levels
-    - [] Diags service 
+    - [] Diags service
+      - [X] Skeleton with configured diag interval 
+    - [] Stats service 
     - [] Scheduling service
-  - Processors
-    - [] Diags processor
     - [] ON/OFF service
+  - Processors
+    - [] Diags
+    - [] Stats
+  - Transversal
+    - [] Context persistance
+    - [] Config : App => debugMode
