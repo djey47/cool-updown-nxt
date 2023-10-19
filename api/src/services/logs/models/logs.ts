@@ -20,7 +20,6 @@ export interface LogEntry {
   response?: ResponseLogEntry;
   responseTimeSeconds: BigInt;
   message: string;
-
 }
 
 export interface LogsResponse {
