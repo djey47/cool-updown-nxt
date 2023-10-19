@@ -27,7 +27,8 @@ Default configuration is given as example in `api/config/default.json` file.
 {
   "app": {
     "port": 3001,
-    "host": "127.0.0.1"
+    "host": "127.0.0.1",
+    "diagnosticsIntervalMs": "60000"
   }
 }
 ```
@@ -41,6 +42,7 @@ To override settings, create a `api/config/local.json` file and add changes to y
 | `app` | Set of application config items as described below |  |
 | `. port`| TCP port to be used by the service in production mode | 3001 |
 | `. host`| IP address to which the server will listen from requests in production mode | 127.0.0.1 |
+| `. diagnosticsIntervalMs`| Specifies time interval (in milliseconds) between a completed diagnostics processing and the next one | 60000 |
 
 ## Start production server
 

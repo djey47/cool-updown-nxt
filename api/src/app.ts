@@ -6,6 +6,7 @@ import { coreLogger, getLoggerConfig } from './common/logger';
 import { logs } from './services/logs/logs';
 import { getConfig } from './common/configuration';
 import { config } from './services/config/config';
+import { diag } from './processors/diag/diag';
 
 const app = async () => {
   // TODO error management
@@ -34,7 +35,10 @@ const app = async () => {
     app.listen({ port, host });
 
     coreLogger.info('cool-updown-nxt API running on port %s, host %s', port, host);
-  } 
+  }
+
+  // Start diagnostics processor
+  diag();
  
   return app;
 };

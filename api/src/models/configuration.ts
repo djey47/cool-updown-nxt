@@ -9,4 +9,5 @@ export interface BaseConfig {
 interface AppConfig {
   host: string;
   port: number;
+  diagnosticsIntervalMs: number;
 }
