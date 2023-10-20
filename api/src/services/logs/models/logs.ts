@@ -18,7 +18,7 @@ export interface LogEntry {
   requestId?: string;
   request?: RequestLogEntry;
   response?: ResponseLogEntry;
-  responseTimeSeconds: BigInt;
+  responseTimeSeconds: bigint;
   message: string;
 }
 

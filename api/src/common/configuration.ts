@@ -7,6 +7,6 @@ export function getConfig() {
 }
 
 export function getBaseConfig() {
-  const { get, has, util, ...baseConfig } = getConfig();
+  const { get: _get, has: _has, util: _util, ...baseConfig } = getConfig();
   return baseConfig as BaseConfig;
 }
