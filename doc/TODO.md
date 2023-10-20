@@ -2,7 +2,7 @@ TODOs
 =====
 - API/BACKEND
   - Unit tests mechanism
-  - ESLint
+  - [X] ESLint
   - Handle critical errors => 500?
   - Services  
     - [X] Config service
