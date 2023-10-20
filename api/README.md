@@ -15,9 +15,17 @@ Be sure to `cd` into this current folder, then issue `npm install`.
 
 `npm run dev`
 
+ESlint is used to lint code during dev server execution.
+
 ## Build for production
 
 `npm run build`
+
+ESlint is used to lint code during this build phase.
+
+## Manual linting
+
+To perform manual linting, issue `npm run lint` command.
 
 ## Configuration
 
@@ -33,7 +41,7 @@ Default configuration is given as example in `api/config/default.json` file.
 }
 ```
 
-To override settings, create a `api/config/local.json` file and add changes to your liking.
+To override settings, create a copy to `api/config/production.json` file and make changes to your liking.
 
 ### Available settings
 

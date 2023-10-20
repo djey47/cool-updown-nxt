@@ -9,15 +9,20 @@
   },
   "license": "MIT",
   "devDependencies": {
-    "@types/config": "^3.3.1",
+    "@types/config": "3.3.1",
     "@types/node": "20.8.5",
+    "@typescript-eslint/eslint-plugin": "6.8.0",
+    "@typescript-eslint/parser": "6.8.0",
+    "eslint": "8.51.0",
     "vite": "4.4.11",
+    "vite-plugin-eslint": "1.8.1",
     "vite-plugin-node": "3.0.2"
   },
   "scripts": {
     "build": "rm -rf ./dist && vite build --mode production",
     "dev": "vite",
-    "start": "NODE_ENV=production node ./dist/app.mjs"
+    "start": "NODE_ENV=production node ./dist/app.mjs",
+    "lint": "eslint ./src"
   },
   "dependencies": {
     "app-root-dir": "1.0.2",

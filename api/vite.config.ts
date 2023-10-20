@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite';
 import { VitePluginNode } from 'vite-plugin-node';
+import ESlintPlugin from 'vite-plugin-eslint';
 
 export default defineConfig({
   // ...vite configures
@@ -8,9 +9,21 @@ export default defineConfig({
     port: 3000
   },
   plugins: [
-    ...VitePluginNode({
+    { // default settings on build (i.e. fail on error)
+      ...ESlintPlugin({ cache: true }),
+      apply: 'build',
+    },
+    { // do not fail on serve (i.e. local development)
+      ...ESlintPlugin({
+        cache: true,
+        failOnWarning: false,
+        failOnError: false,
+      }),
+      apply: 'serve',
+      enforce: 'post'
+    },          
+    VitePluginNode({
       // Nodejs native Request adapter
-      // currently this plugin support 'express', 'nest', 'koa' and 'fastify' out of box,
       // you can also pass a function if you are using other frameworks, see Custom Adapter section
       adapter: 'fastify',
 
@@ -44,7 +57,7 @@ export default defineConfig({
       // }
       // swc configs, see [swc doc](https://swc.rs/docs/configuration/swcrc)
       swcOptions: {}
-    })
+    }),
   ],
   optimizeDeps: {
     // Vite does not work well with optionnal dependencies,
