@@ -1,13 +1,17 @@
 # cool-updown-nxt API
 
+Provides REST services and processors for the 'cool-updown' front-end applications.
+
 Here are the main components behind it:
-  - 💚node v18+
-  - ⚡[vite](https://vitejs.dev) & [vite-plugin-node](https://github.com/axe-me/vite-plugin-node)
-  - 🐆[fastify](https://fastify.dev/) as express alternative.
+  - 💚 [node](https://nodejs.org/en) v18+
+  - 🟦 [typescript](https://www.typescriptlang.org) as main language
+  - ⚡ [vite](https://vitejs.dev) & [vite-plugin-node](https://github.com/axe-me/vite-plugin-node)
+  - 🐆 [fastify](https://fastify.dev/) as express alternative
+  - 🔩 [eslint](https://eslint.org) & 🃏 [jest](https://jestjs.io) for code quality and reliability.
 
 ## Install
 
-Be sure to `cd` into this current folder, then issue `npm install`.
+Be sure to `cd` into this `api` folder, then issue `npm install`.
 
 ## Develop
 
