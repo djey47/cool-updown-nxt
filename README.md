@@ -4,7 +4,7 @@
 
 Handy client/server solution to manage start and shutdown of your home PCs.
 
-It's basically the same goal as its elder brother (https://github.com/djey47/cool-updown-legacy), but with more convenient UI and flexible architecture.
+It's basically the same goal as its elder brother [cool-updown](https://github.com/djey47/cool-updown-legacy), but with more convenient UI and flexible architecture.
 
 ## Architecture
 
