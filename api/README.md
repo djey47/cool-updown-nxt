@@ -17,6 +17,12 @@ Be sure to `cd` into this current folder, then issue `npm install`.
 
 ESlint is used to lint code during dev server execution.
 
+### Unit tests
+
+`npm test`
+
+will launch Jest.
+
 ## Build for production
 
 `npm run build`
