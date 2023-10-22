@@ -1,6 +1,6 @@
 # cool-updown-nxt
 [![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](http://choosealicense.com/licenses/mit)
-![Build status](https://github.com/djey47/cool-updown-nxt/actions/workflows/cud-nxt.yml/badge.svg?branch=master&event=push)
+![Build status](https://github.com/djey47/cool-updown-nxt/actions/workflows/cud-nxt.yml/badge.svg?branch=main&event=push)
 
 Handy client/server solution to manage start and shutdown of your home PCs.
 
