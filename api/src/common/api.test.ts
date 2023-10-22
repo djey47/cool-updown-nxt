@@ -1,45 +1,14 @@
 import { replyWithJson } from './api';
 
-import type { ServerResponse } from 'http';
-import type { FastifyReply, FastifyReplyContext, FastifyBaseLogger, FastifyRequest, FastifyInstance } from 'fastify';
+import type { FastifyReply } from 'fastify';
 import type { ApiResponse } from '../models/api';
+import { getMockedFastifyReply } from '../helpers/testing/mockObjects';
 
 describe('Common API functions', () => {
   describe('replyWithJson function', () => {
-    const sendMock = jest.fn();
     const codeMock = jest.fn();
-    const defaultReply: FastifyReply = {
-      raw: jest.fn() as unknown as ServerResponse,
-      context: jest.fn() as unknown as FastifyReplyContext,
-      getSerializationFunction: jest.fn(),
-      log: jest.fn() as unknown as FastifyBaseLogger,
-      send: sendMock,
-      code: codeMock,
-      status: jest.fn(),
-      statusCode: 0,
-      sent: false,
-      header: jest.fn(),
-      headers: jest.fn(),
-      getHeader: jest.fn(),
-      getHeaders: jest.fn(),
-      removeHeader: jest.fn(),
-      hasHeader: jest.fn(),
-      hijack: jest.fn(),
-      callNotFound: jest.fn(),
-      getResponseTime: jest.fn(),
-      type: jest.fn(),
-      serializer: jest.fn(),
-      serialize: jest.fn(),
-      compileSerializationSchema: jest.fn(),
-      then: jest.fn(),
-      trailer: jest.fn(),
-      hasTrailer: jest.fn(),
-      removeTrailer: jest.fn(),
-      request: jest.fn() as unknown as FastifyRequest,
-      server: jest.fn() as unknown as FastifyInstance,
-      redirect: jest.fn(),
-      serializeInput: jest.fn(),
-    };
+    const sendMock = jest.fn();
+    const defaultReply = getMockedFastifyReply(codeMock, sendMock); 
 
     beforeEach(() => {
       codeMock.mockReset();
