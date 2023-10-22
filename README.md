@@ -8,6 +8,8 @@ It's basically the same goal as its elder brother [cool-updown](https://github.c
 
 ## Architecture
 
+It's a WIP.
+
 ### Api
 
 NodeJS server hosting services as HTTP endpoints, as well as processors (diagnostics, stats).
