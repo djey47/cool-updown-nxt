@@ -23,9 +23,8 @@ ESlint is used to lint code during dev server execution.
 
 ### Unit tests
 
-`npm test`
-
-will launch Jest.
+- `npm test` will launch Jest
+- `npm run test:coverage` will also analyze code coverage.
 
 ## Build for production
 
