@@ -63,7 +63,7 @@ function parseLogs(contents: string[]) {
     .sort((parsed1, parsed2) => parsed2.time - parsed1.time);
 }
 
-function parsePinoLogLevel(level: number): LogLevel | undefined {
+function parsePinoLogLevel(level: number): LogLevel {
   switch (level) {
     case 10: 
       return 'trace';
@@ -78,6 +78,6 @@ function parsePinoLogLevel(level: number): LogLevel | undefined {
     case 60: 
       return 'fatal';
     default:
-      return undefined;
+      return 'silent';
   }
 }
