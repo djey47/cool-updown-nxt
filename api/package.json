@@ -26,7 +26,8 @@
     "dev": "vite",
     "start": "NODE_ENV=production node ./dist/app.mjs",
     "lint": "eslint ./src",
-    "test": "NODE_ENV=test jest"
+    "test": "NODE_ENV=test jest",
+    "test:cover": "NODE_ENV=test jest --coverage --collectCoverageFrom='src/**/*.ts'"
   },
   "dependencies": {
     "app-root-dir": "1.0.2",
