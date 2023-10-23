@@ -1,10 +1,4 @@
 import { coreLogger, getLoggerConfig } from './logger';
-import globalMocks from '../../config/jest/globalMocks';
-import resetMocks from '../../config/jest/resetMocks';
-
-afterEach(() => {
-  resetMocks();
-});
 
 describe('Common logger functions', () => {
   describe('getLoggerConfig function', () => {
