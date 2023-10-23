@@ -85,4 +85,6 @@ Returns loaded configuration.
 
 ### Logs
 
+To display logs from a terminal, issue following command: `npm run logs`.
+
 Server logs are written to the *api/logs/cool-updown-nxt.log* file and sent to the standard/error outputs as well.
