@@ -7,14 +7,17 @@ TODOs
   - Services  
     - [X] Config service
     - [] Logs service
+      - [X] Basic implementation
       - Filters: time window (min/max date), log levels
     - [] Diags service
-      - [X] Skeleton with configured diag interval 
+      - [] Ping support
     - [] Stats service 
     - [] Scheduling service
     - [] ON/OFF service
   - Processors
     - [] Diags
+      - [X] Skeleton with configured diag interval
+      - [] Ping support
     - [] Stats
   - Transversal
     - [] Context persistance
