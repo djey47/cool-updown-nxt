@@ -46,7 +46,12 @@ Default configuration is given as example in `api/config/default.json` file.
     "port": 3001,
     "host": "127.0.0.1",
     "diagnosticsIntervalMs": "60000"
-  }
+  },
+  "devices": [{
+    "network": {
+      "hostname": "my-nas",
+    }
+  }]
 }
 ```
 
@@ -60,6 +65,9 @@ To override settings, create a copy to `api/config/production.json` file and mak
 | `. port`| TCP port to be used by the service in production mode | 3001 |
 | `. host`| IP address to which the server will listen from requests in production mode | 127.0.0.1 |
 | `. diagnosticsIntervalMs`| Specifies time interval (in milliseconds) between a completed diagnostics processing and the next one | 60000 |
+| `devices` | List of monitored devices as configured below |  |
+| `. network`| Network related parameters, see below: |  |
+| `.. hostname`| Device name or IP address (mandatory) | / |
 
 ## Start production server
 
@@ -73,13 +81,64 @@ To run as a service, PM2 is strongly recommended. See https://pm2.keymetrics.io 
 
 Returns name, version and current context of the server.
 
+Sample output:
+```json
+{
+  "package": {
+    "name": "cool-updown-nxt-api",
+    "version": "1.0.0-alpha"
+  },
+  "context": {}
+}
+```
+
 ### GET /logs
 
 Returns all log entries with log file size and entry count.
 
+Sample output:
+```json
+{
+  "entryCount": 100,
+  "logs": [
+    {
+      "level": "info",
+      "message": "incoming request",
+      "time": 1698047863548,
+      "requestId": "req-3",
+      "request": {
+        "method": "GET",
+        "url": "/logs",
+        "hostname": "localhost:3000",
+        "remoteAddress": "127.0.0.1",
+        "remotePort": 56906
+      }
+    }
+  ]
+}   
+```
+
 ### GET /config
 
 Returns loaded configuration.
+
+Sample output:
+```json
+{
+  "configuration": {
+    "app": {
+      "port": 3001,
+      "host": "127.0.0.1",
+      "diagnosticsIntervalMs": 60000
+    },
+    "devices": [{
+      "network": {
+        "hostname": "my-nas"
+      }
+    }]
+  }
+}
+```
 
 ## Monitoring
 
