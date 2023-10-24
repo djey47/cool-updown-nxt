@@ -1,3 +1,5 @@
+import { FeatureStatus } from '../../../models/common';
+
 export interface DiagResults {
   deviceId: string;
   ping: FeatureDiagnostics;
@@ -12,10 +14,4 @@ export interface FeatureDiagnosticsResults {
   message?: string;
   on: Date;
   status: FeatureStatus;
-}
-
-export enum FeatureStatus {
-  OK = 'ok',
-  KO = 'ko',
-  UNAVAILABLE = 'n/a',
 }

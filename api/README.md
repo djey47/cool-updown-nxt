@@ -147,3 +147,18 @@ Sample output:
 To display logs from a terminal, issue following command: `npm run logs`.
 
 Server logs are written to the *api/logs/cool-updown-nxt.log* file and sent to the standard/error outputs as well.
+
+
+## Diagnostics
+
+Here are the diagnostics that are currently processed:
+
+### Ping
+
+A `ping` command will be issued to the configured device hostname; 2 ICMP PING packets will be sent.
+
+Diag results:
+
+- `ok` status when the command terminates with success (exit code = 0)
+- `ko` status when the command terminates with failure (exit code not 0)
+- message attribute is available with the error description caught from error output.

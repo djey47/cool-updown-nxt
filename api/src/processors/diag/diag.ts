@@ -50,6 +50,8 @@ async function diagByDevice(deviceId: string, deviceConfig: DeviceConfig): Promi
   
   return {
     deviceId,
-    ping: pingResults,
+    ping: {
+      current: pingResults,
+    },
   };
 }
