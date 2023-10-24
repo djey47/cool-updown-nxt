@@ -11,14 +11,16 @@ TODOs
       - Filters: time window (min/max date), log levels
     - [] Diags service
       - [] Ping support
+      - [] Per device (path param)
     - [] Stats service 
     - [] Scheduling service
     - [] ON/OFF service
   - Processors
     - [] Diags
       - [X] Skeleton with configured diag interval
-      - [] Ping support
+      - [X] Ping support
     - [] Stats
   - Transversal
-    - [] Context persistance
+    - [] Config: validation at startup
     - [] Config : App => debugMode
+    - [] Context persistence
