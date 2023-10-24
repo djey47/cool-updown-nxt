@@ -1,4 +1,3 @@
-import { Stats } from 'fs';
 import globalMocks from '../../../config/jest/globalMocks';
 import { replyWithJson } from '../../common/api';
 import { getFileStats, getMockedFastifyReply } from '../../helpers/testing/mockObjects';
