@@ -15,7 +15,7 @@ export class AppContext {
 
   private static createDefault(): Context {
     return {
-
+      diagnostics: {},
     };
   }
 }
