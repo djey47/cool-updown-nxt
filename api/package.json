@@ -34,6 +34,7 @@
   "dependencies": {
     "app-root-dir": "1.0.2",
     "config": "3.3.9",
+    "date-fns": "2.30.0",
     "fastify": "4.24.1"
   }
 }
