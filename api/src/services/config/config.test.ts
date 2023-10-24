@@ -25,6 +25,11 @@ describe('Configuration service', () => {
             port: 3001,
             diagnosticsIntervalMs: 0
           },
+          devices: [{
+            network: {
+              hostname: 'my-nas',
+            },
+          }],
         },
       };
       expect(replyWithJsonMock).toHaveBeenCalledWith(defaultReply, expectedOutput);

@@ -4,9 +4,5 @@
     "host": "127.0.0.1",
     "diagnosticsIntervalMs": 60000
   },
-  "devices": [{
-    "network": {
-      "hostname": "my-nas"
-    }
-  }]
+  "devices": []
 }
