@@ -13,6 +13,11 @@ export class AppContext {
     return AppContext.ctx;
   }
 
+  public static resetAll() {
+    AppContext.get();
+    AppContext.ctx = AppContext.createDefault();
+  }
+
   private static createDefault(): Context {
     return {
       diagnostics: {},
