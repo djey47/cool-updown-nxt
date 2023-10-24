@@ -1,4 +1,12 @@
+import type { ExecException } from 'child_process';
+
+
 // NODE API //
+// child_process
+const mockChildProcessExec = jest.fn();
+jest.mock('child_process', () => ({
+  exec: async (cmd: string, cb: (err: ExecException | null, stdout: string, stderr: string) => void) => mockChildProcessExec(cmd, cb),
+}));
 // fs
 const mockFSReadFile = jest.fn();
 const mockFSStat = jest.fn();
@@ -25,6 +33,9 @@ export default {
     get: mockAppRootDirGet,
   },
   node: {
+    childProcessMock: {
+      exec: mockChildProcessExec,
+    },
     fsMock: {
       readFile: mockFSReadFile,
       stat: mockFSStat,
