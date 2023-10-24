@@ -10,7 +10,7 @@ TODOs
       - [X] Basic implementation
       - Filters: time window (min/max date), log levels
     - [] Diags service
-      - [] Ping support
+      - [X] Ping support
       - [] Per device (path param)
     - [] Stats service 
     - [] Scheduling service
@@ -19,6 +19,9 @@ TODOs
     - [] Diags
       - [X] Skeleton with configured diag interval
       - [X] Ping support
+      - [] Web server (page)
+      - [] SSH connectivity
+      - [] ?
     - [] Stats
   - Transversal
     - [] Config: validation at startup
