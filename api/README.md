@@ -140,6 +140,26 @@ Sample output:
 }
 ```
 
+### GET /diags
+
+Returns some diagnostics for all configured devices (ping).
+
+Sample output:
+
+```json
+{
+  "diagnostics": {
+    "0": {
+      "on": "2023-10-24T20:30:39.119Z",
+      "ping": {
+        "on": "2023-10-24T20:30:39.119Z",
+        "status": "ko"
+      }
+    }
+  }
+}
+```
+
 ## Monitoring
 
 ### Logs
@@ -149,7 +169,7 @@ To display logs from a terminal, issue following command: `npm run logs`.
 Server logs are written to the *api/logs/cool-updown-nxt.log* file and sent to the standard/error outputs as well.
 
 
-## Diagnostics
+## Processing details: diagnostics
 
 Here are the diagnostics that are currently processed:
 

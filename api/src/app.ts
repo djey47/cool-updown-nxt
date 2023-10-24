@@ -7,6 +7,7 @@ import { logs } from './services/logs/logs';
 import { getConfig } from './common/configuration';
 import { config } from './services/config/config';
 import { diag } from './processors/diag/diag';
+import { diags } from './services/diags/diags';
 
 const app = async () => {
   // TODO error management
@@ -26,6 +27,10 @@ const app = async () => {
     // req.log.trace('TRACE Some info about the current request')
 
     config(reply);
+  });
+
+  app.get('/diags', (_req, reply) => {
+    diags(reply);
   });
 
   // Must match the vite config file
