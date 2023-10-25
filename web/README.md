@@ -1,3 +1,38 @@
+# cool-updown-nxt WEB UI
+
+Provides a web frontend using the cool-updown-nxt API.
+
+Here are the main components behind it:
+  - 💚 [node](https://nodejs.org/en) v18+
+  - [__⚛__] [react](https://react.dev) v18
+  - 🟦 [typescript](https://www.typescriptlang.org) as main language
+  - ⚡ [vite](https://vitejs.dev)
+  - 🔩 [eslint](https://eslint.org) & 🃏 [jest](https://jestjs.io) for code quality and reliability.
+
+## Install
+
+Be sure to `cd` into this `web` folder, then issue `npm install`.
+
+## Develop
+
+...with HMR:
+
+`npm run dev`
+
+ESlint is used to lint code during dev server execution.
+
+## Deploy
+
+`npm run build` will produce a release build, ready to use, under the `dist` directory.
+
+Frontend will then be served in addition to the associated API. See the `<root>/api` directory documentation for details.
+
+---
+
+*LEGACY DOCUMENTATION*
+
+---
+
 # React + TypeScript + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
