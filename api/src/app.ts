@@ -1,6 +1,9 @@
 
 /** Web application back-end entry point */
+import appRootDir from 'app-root-dir';
 import fastify from 'fastify';
+import fastifyStaticPlugin from '@fastify/static';
+import path from 'path';
 import { home } from './services/home/home';
 import { coreLogger, getLoggerConfig } from './common/logger';
 import { logs } from './services/logs/logs';
@@ -10,10 +13,16 @@ import { diag } from './processors/diag/diag';
 import { diags } from './services/diags/diags';
 
 const app = async () => {
-  // TODO error management
   const app = fastify({
     logger: getLoggerConfig(),
   });
+
+  app.register(fastifyStaticPlugin, {
+    root: path.join(appRootDir.get(), '..', 'web', 'dist'),
+    prefix: '/ui/',
+  });  
+  
+  // TODO error management
 
   app.get('/', (_req, reply) => {
     home(reply);

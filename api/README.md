@@ -75,6 +75,12 @@ To override settings, create a copy to `api/config/production.json` file and mak
 
 To run as a service, PM2 is strongly recommended. See https://pm2.keymetrics.io for details.
 
+## HOSTED WEB UI
+
+The integrated web application is available under the `/ui/` path.
+
+For more information, please refer to its own documentation, located under the `<root>/web` path.
+
 ## API usage
 
 ### GET / (home)
