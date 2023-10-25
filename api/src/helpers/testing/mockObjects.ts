@@ -38,6 +38,8 @@ export function getMockedFastifyReply(codeMock: jest.Mock, sendMock: jest.Mock):
     server: jest.fn() as unknown as FastifyInstance,
     redirect: jest.fn(),
     serializeInput: jest.fn(),
+    sendFile: jest.fn(),
+    download: jest.fn(),
   };
 }
 
