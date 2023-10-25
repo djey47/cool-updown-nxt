@@ -1,8 +1,14 @@
 TODOs
 =====
+
+- WEB/FRONTEND
+  - [X] ESLint
+  - [] Unit tests mechanism
+
 - API/BACKEND
   - [X] Unit tests mechanism
   - [X] ESLint
+  - [X] Static file server for the web-application
   - Handle critical errors => 500?
   - Services  
     - [X] Config service
