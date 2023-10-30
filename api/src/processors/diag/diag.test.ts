@@ -2,6 +2,7 @@ import { AppContext } from '../../common/context';
 import { coreLogger } from '../../common/logger';
 import { recall } from '../../helpers/recaller';
 import { FeatureStatus } from '../../models/common';
+import { stats } from '../stats/stats';
 import { diag } from './diag';
 import { pingDiag } from './items/ping';
 import { FeatureDiagnosticsResults } from './models/diag';
@@ -19,15 +20,20 @@ jest.mock('../../helpers/recaller', () => ({
 jest.mock('./items/ping', () => ({
   pingDiag: jest.fn(), 
 }));
+jest.mock('../stats/stats', () => ({
+  stats: jest.fn(), 
+}));
 
 const coreLoggerInfoMock = coreLogger.info as jest.Mock<void>;
 const recallMock = recall as jest.Mock<void>;
 const pingDiagMock = pingDiag as jest.Mock<Promise<FeatureDiagnosticsResults>>;
+const statsProcessorMock = stats as jest.Mock<Promise<void>>;
 
 beforeEach(() => {
   coreLoggerInfoMock.mockReset();
   pingDiagMock.mockReset();
   recallMock.mockReset();
+  statsProcessorMock.mockReset();
 
   AppContext.resetAll();
 })
@@ -36,7 +42,7 @@ const NOW = new Date();
 
 describe('diagnostics processor', () => {
   describe('diag function', () => {
-    it('should write logs, perform diagnostics and invoke recaller to call itself again', async () => {
+    it('should write logs, perform diagnostics, perform stats and invoke recaller to call itself again', async () => {
       // given
       const results: FeatureDiagnosticsResults = {
         on: new Date(),
@@ -60,6 +66,7 @@ describe('diagnostics processor', () => {
 
       expect(coreLoggerInfoMock).toHaveBeenCalledTimes(2);
       expect(recallMock).toHaveBeenCalledWith(diag, 0);
+      expect(statsProcessorMock).toHaveBeenCalledTimes(1);
     });
 
     it('should update diagnostics in context on a next call', async () => {

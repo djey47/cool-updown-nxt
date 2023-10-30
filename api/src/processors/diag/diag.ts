@@ -4,6 +4,7 @@ import { coreLogger } from '../../common/logger';
 import { recall } from '../../helpers/recaller';
 
 import type { DeviceConfig } from '../../models/configuration';
+import { stats } from '../stats/stats';
 import { pingDiag } from './items/ping';
 import type { DiagResults } from './models/diag';
 
@@ -18,6 +19,9 @@ export async function diag() {
   await diagForAllDevices(devicesConfig);
 
   coreLogger.info('diag::diag Done!');
+
+  // Stats are computed once diags are done
+  await stats();
 
   recall(diag, DIAGS_INTERVAL);
 }
