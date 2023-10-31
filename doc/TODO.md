@@ -18,13 +18,16 @@ TODOs
     - [] Diags service
       - [X] Ping support
       - [] Per device (path param)
-    - [] Stats service 
+    - [] Stats service
+      - [] Uptime (app and per device)
+      - [] ....?
     - [] Scheduling service
     - [] ON/OFF service
   - Processors
     - [] Diags
       - [X] Skeleton with configured diag interval
       - [X] Ping support
+        - Ping latency to be extracted from command output and available in API
       - [] Web server (page)
       - [] SSH connectivity
       - [] ?
@@ -33,3 +36,5 @@ TODOs
     - [] Config: validation at startup
     - [] Config : App => debugMode
     - [] Context persistence
+      - At exit
+      - Save overall app uptime to initialUptimeSeconds
