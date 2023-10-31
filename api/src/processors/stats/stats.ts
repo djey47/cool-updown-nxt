@@ -1,3 +1,4 @@
+import differenceInSeconds from 'date-fns/differenceInSeconds/index.js';
 import { getConfig } from '../../common/configuration';
 import { AppContext } from '../../common/context';
 import { coreLogger } from '../../common/logger';
@@ -8,12 +9,30 @@ import type { DeviceDiagnosticsContext, DeviceStatisticsContext } from '../../mo
 export async function stats() {
   coreLogger.info('stats::stats Performing...');
 
-  await statsForAllDevices();
+  statsForApplication();
+
+  statsForAllDevices();
 
   coreLogger.info('stats::stats Done!');
 }
 
-async function statsForAllDevices() {
+function statsForApplication() {
+  // Update context
+  const { appInfo: { lastStartOn, initialUptimeSeconds }, statistics } = AppContext.get();
+
+  const now = new Date();
+  const currentUptime = differenceInSeconds(now, lastStartOn || now);
+
+  statistics.global = {
+    appUptimeSeconds: {
+      current: currentUptime,
+      overall: (initialUptimeSeconds || 0) + currentUptime,
+    },
+  };
+
+}
+
+function statsForAllDevices() {
   // Update context
   const { statistics, diagnostics } = AppContext.get();
 
@@ -26,6 +45,7 @@ async function statsForAllDevices() {
 }
 
 function statsByDevice(deviceId: string, deviceConfig: DeviceConfig, deviceDiagnostics: DeviceDiagnosticsContext): DeviceStatisticsContext {
+  // TODO Implement
   return {
     uptimeSeconds: {
       current: 0,

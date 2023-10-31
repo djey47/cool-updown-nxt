@@ -1,9 +1,8 @@
-import differenceInSeconds from 'date-fns/differenceInSeconds/index.js';
 import { replyWithJson } from '../../common/api';
 import { AppContext } from '../../common/context';
 
 import type { FastifyReply } from 'fastify';
-import type { AppInfoContext, StatisticsContext } from '../../models/context';
+import type { GlobalStatisticsContext, StatisticsContext } from '../../models/context';
 import type { StatsResponse, StatsResponseForAllDevices, StatsResponseForApp, StatsResponseForDevice } from './models/stats';
 
 /** 
@@ -12,11 +11,11 @@ import type { StatsResponse, StatsResponseForAllDevices, StatsResponseForApp, St
 export async function stats(reply: FastifyReply) {
   const appContext = AppContext.get();
 
-  const { statistics, appInfo } = appContext;
+  const { statistics } = appContext;
 
   const output: StatsResponse = {
     statistics: {
-      app: globalStatsContextToResponse(appInfo),
+      app: globalStatsContextToResponse(statistics.global),
       perDevice: statsContextToResponse(statistics),
     },
   };
@@ -24,14 +23,13 @@ export async function stats(reply: FastifyReply) {
   replyWithJson(reply, output);
 }
 
-function globalStatsContextToResponse(appInfo: AppInfoContext): StatsResponseForApp {
-  const now = new Date();
-  const currentUptime = differenceInSeconds(now, appInfo.lastStartOn || now);
+function globalStatsContextToResponse(statsContext: GlobalStatisticsContext): StatsResponseForApp {
+  const { appUptimeSeconds } = statsContext;
   return {
     uptimeSeconds: {
-      current: currentUptime,
-      overall: (appInfo.initialUptimeSeconds || 0) + currentUptime,
-    }
+      current: appUptimeSeconds?.current || 0,
+      overall: appUptimeSeconds?.overall || 0,
+    },
   };
 }
 
@@ -39,7 +37,7 @@ function statsContextToResponse(statsContext: StatisticsContext): StatsResponseF
   return Object.entries(statsContext.perDevice)
     .sort(([deviceId1], [deviceId2]) => deviceId1.localeCompare(deviceId2))
     .reduce((acc: StatsResponseForAllDevices, [deviceId, deviceStats]) => {
-      const { uptime: { current: currentUptime, overall: overallUptime } } = deviceStats;
+      const { uptimeSeconds: { current: currentUptime, overall: overallUptime } } = deviceStats;
       const resultEntry: StatsResponseForDevice = {
         uptimeSeconds: {
           current: currentUptime,
