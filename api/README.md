@@ -170,7 +170,6 @@ Returns some diagnostics for all configured devices (ping, power state).
 ```
 
 **Notes**
-
 - The key used for each diagnostics entry is the device identifier
 - `on` fields allow to track the moment where diagnostics have been processed
 - Ping `status`: available values are either `ok`, `ko` or `n/a`
@@ -184,11 +183,30 @@ Returns some statistics for all configured devices.
 **Sample output**
 ```json
 {
-  "statistics": {}
+  "statistics": {
+    "app": {
+      "uptimeSeconds": {
+        "current": 27,
+        "overall": 27
+      }
+    },
+    "perDevice": {
+      "0": {
+        "uptimeSeconds": {
+          "current": 0,
+          "overall": 0
+        }
+      }
+    }
+  }
 }
 ```
 
 **Notes**
+- `app` section is related to cool-updown-nxt API server itself
+- `current` uptime is computed from the last start of app/device
+- `overall` uptime is the total amount for app/device
+- The key used for each `perDevice` sub-entry is the device identifier.
 
 ## Monitoring
 
