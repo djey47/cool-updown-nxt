@@ -85,16 +85,16 @@ For more information, please refer to its own documentation, located under the `
 
 ### GET / (home)
 
-Returns name, version and current context of the server.
+Returns name, version and current context of the server; it is not advised to use context directly to get stats/diags etc. as dedicated services are made for this.
 
-Sample output:
+**Sample output**
 ```json
 {
   "package": {
     "name": "cool-updown-nxt-api",
     "version": "1.0.0-alpha"
   },
-  "context": {}
+  "context": {...}
 }
 ```
 
@@ -102,7 +102,7 @@ Sample output:
 
 Returns all log entries with log file size and entry count.
 
-Sample output:
+**Sample output**
 ```json
 {
   "entryCount": 100,
@@ -128,7 +128,7 @@ Sample output:
 
 Returns loaded configuration.
 
-Sample output:
+**Sample output**
 ```json
 {
   "configuration": {
@@ -148,9 +148,9 @@ Sample output:
 
 ### GET /diags
 
-Returns some diagnostics for all configured devices (ping).
+Returns some diagnostics for all configured devices (ping, power state).
 
-Sample output:
+**Sample output**
 
 ```json
 {
@@ -160,11 +160,35 @@ Sample output:
       "ping": {
         "on": "2023-10-24T20:30:39.119Z",
         "status": "ko"
+      },
+      "power": {
+        "state": "off" 
       }
     }
   }
 }
 ```
+
+**Notes**
+
+- The key used for each diagnostics entry is the device identifier
+- `on` fields allow to track the moment where diagnostics have been processed
+- Ping `status`: available values are either `ok`, `ko` or `n/a`
+- Power `state`: available values are either `on`, `off` or `n/a`.
+
+
+### GET /stats
+
+Returns some statistics for all configured devices.
+
+**Sample output**
+```json
+{
+  "statistics": {}
+}
+```
+
+**Notes**
 
 ## Monitoring
 
