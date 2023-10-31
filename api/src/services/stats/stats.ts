@@ -1,4 +1,4 @@
-import differenceInSeconds from 'date-fns/differenceInSeconds';
+import differenceInSeconds from 'date-fns/differenceInSeconds/index.js';
 import { replyWithJson } from '../../common/api';
 import { AppContext } from '../../common/context';
 
