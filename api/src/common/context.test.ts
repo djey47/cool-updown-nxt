@@ -1,4 +1,4 @@
-import { FeatureStatus } from '../models/common';
+import { FeatureStatus, PowerStatus } from '../models/common';
 import { AppContext } from './context';
 
 describe('AppContext singleton class', () => {
@@ -25,6 +25,9 @@ describe('AppContext singleton class', () => {
               status: FeatureStatus.OK,
             },
           },
+          power: {
+            state: PowerStatus.ON,
+          },
         },
       };
 
@@ -33,7 +36,12 @@ describe('AppContext singleton class', () => {
 
       // then
       expect(AppContext.get()).toEqual({
-        diagnostics: {}
+        appInfo: {},
+        diagnostics: {},
+        statistics: {
+          global: {},
+          perDevice: {},
+        },
       });
     });
   })

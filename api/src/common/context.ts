@@ -20,7 +20,12 @@ export class AppContext {
 
   private static createDefault(): Context {
     return {
+      appInfo: {},
       diagnostics: {},
+      statistics: {
+        global: {},
+        perDevice: {},
+      },
     };
   }
 }

@@ -2,9 +2,9 @@ import { replyWithJson } from '../../common/api';
 import { AppContext } from '../../common/context';
 
 import type { FastifyReply } from 'fastify';
-import type { DiagsResponse, DiagsResponseForAllDevices, DiagsResponseForDevice, DiagsResponseForFeature } from './models/diags';
+import type { DiagsResponse, DiagsResponseForAllDevices, DiagsResponseForDevice, DiagsResponseForFeature, PowerDiagsResponse as DiagsResponseForPower } from './models/diags';
 import type { DiagnosticsContext } from '../../models/context';
-import type { FeatureDiagnostics } from '../../processors/diag/models/diag';
+import type { FeatureDiagnostics, PowerDiagnostics } from '../../processors/diag/models/diag';
 
 /** 
  * Diagnostics service implementation
@@ -25,10 +25,11 @@ function diagsContextToResponse(diagsContext: DiagnosticsContext): DiagsResponse
   return Object.entries(diagsContext)
     .sort(([deviceId1], [deviceId2]) => deviceId1.localeCompare(deviceId2))
     .reduce((acc: DiagsResponseForAllDevices, [ deviceId, deviceDiags]) => {
-      const { on, ping } = deviceDiags;
+      const { on, ping, power } = deviceDiags;
       const resultEntry: DiagsResponseForDevice = {
         on,
         ping: diagsFeatureToResponse(ping),
+        power: diagsPowerToResponse(power),
       };
       acc[deviceId] = resultEntry;
       return acc;
@@ -40,6 +41,14 @@ function diagsFeatureToResponse(featureDiags: FeatureDiagnostics): DiagsResponse
   return {
     on, 
     status,
+  };
+}
+
+function diagsPowerToResponse(powerDiagnostics: PowerDiagnostics): DiagsResponseForPower {
+  return {
+    lastStartAttemptOn: powerDiagnostics.lastStartAttemptOn,
+    lastStopAttemptOn: powerDiagnostics.lastStopAttemptOn,
+    state: powerDiagnostics.state,
   };
 }
 

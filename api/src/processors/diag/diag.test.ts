@@ -1,11 +1,12 @@
 import { AppContext } from '../../common/context';
 import { coreLogger } from '../../common/logger';
 import { recall } from '../../helpers/recaller';
-import { FeatureStatus } from '../../models/common';
+import { FeatureStatus, PowerStatus } from '../../models/common';
 import { stats } from '../stats/stats';
 import { diag } from './diag';
 import { pingDiag } from './items/ping';
-import { FeatureDiagnosticsResults } from './models/diag';
+
+import type { FeatureDiagnosticsResults } from './models/diag';
 
 jest.useFakeTimers();
 
@@ -61,6 +62,9 @@ describe('diagnostics processor', () => {
             on: NOW,
             status: 'ok',
           },
+        },
+        power: {
+          state: 'on',
         }
       });
 
@@ -75,6 +79,9 @@ describe('diagnostics processor', () => {
       const appContext = AppContext.get();
       appContext.diagnostics[0] = {        
         on: previousDate,
+        power: {
+          state: PowerStatus.ON, 
+        },
         ping: {
           current: {
             on: previousDate,
@@ -103,6 +110,9 @@ describe('diagnostics processor', () => {
             on: previousDate,
             status: 'ok',
           },
+        },
+        power: {
+          state: 'off',
         }
       });
 

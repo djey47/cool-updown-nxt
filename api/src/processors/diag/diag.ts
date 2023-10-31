@@ -2,11 +2,13 @@ import { getConfig } from '../../common/configuration';
 import { AppContext } from '../../common/context';
 import { coreLogger } from '../../common/logger';
 import { recall } from '../../helpers/recaller';
-
-import type { DeviceConfig } from '../../models/configuration';
+import { FeatureStatus, PowerStatus } from '../../models/common';
 import { stats } from '../stats/stats';
 import { pingDiag } from './items/ping';
-import type { DiagResults } from './models/diag';
+import type { DiagResults, PowerDiagnostics } from './models/diag';
+
+import type { DeviceConfig } from '../../models/configuration';
+import type { DeviceDiagnosticsContext } from '../../models/context';
 
 const DIAGS_INTERVAL = getConfig().app.diagnosticsIntervalMs;
 
@@ -41,11 +43,15 @@ async function diagForAllDevices(devicesConfigs: DeviceConfig[]) {
     const currentDate = new Date();
     deviceDiags.on = currentDate;
 
+
     // Ping
     deviceDiags.ping = {
       current: pingResult.current,
       previous: deviceDiags.ping.current,
     };
+
+    // Power state
+    deviceDiags.power = computePowerDiags(deviceDiags);
   });
 }
 
@@ -59,3 +65,27 @@ async function diagByDevice(deviceId: string, deviceConfig: DeviceConfig): Promi
     },
   };
 }
+
+function computePowerDiags(diags: DeviceDiagnosticsContext): PowerDiagnostics {
+  const { power: powerDiags, ping: { current: { status: currentStatus }}} = diags;
+
+  if (!powerDiags) {
+    diags.power = {
+      state: PowerStatus.UNAVAILABLE,
+    };
+  }
+
+  let newPowerState: PowerStatus = PowerStatus.UNAVAILABLE;
+  if (currentStatus === FeatureStatus.OK) {
+    newPowerState =  PowerStatus.ON;
+  }
+  if (currentStatus === FeatureStatus.KO) {
+    newPowerState = PowerStatus.OFF;
+  }
+
+  return {
+    ...powerDiags,
+    state: newPowerState,
+  };
+}
+

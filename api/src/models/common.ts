@@ -3,3 +3,9 @@ export enum FeatureStatus {
   KO = 'ko',
   UNAVAILABLE = 'n/a',
 }
+
+export enum PowerStatus {
+  ON = 'on',
+  OFF = 'off',
+  UNAVAILABLE = 'n/a',
+}

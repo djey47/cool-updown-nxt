@@ -2,7 +2,7 @@ import subSeconds from 'date-fns/subSeconds';
 import { replyWithJson } from '../../common/api';
 import { AppContext } from '../../common/context';
 import { getMockedFastifyReply } from '../../helpers/testing/mockObjects';
-import { FeatureStatus } from '../../models/common';
+import { FeatureStatus, PowerStatus } from '../../models/common';
 import { diags } from './diags';
 
 import type { DiagsResponse } from './models/diags';
@@ -39,7 +39,10 @@ describe('diags service', () => {
               on: NOW_MINUS_1MIN,
               status: FeatureStatus.KO,
             }
-          }
+          },
+          power: {
+            state: PowerStatus.ON,
+          },
         },
         '1': {
           on: NOW,
@@ -52,7 +55,10 @@ describe('diags service', () => {
               on: NOW_MINUS_1MIN,
               status: FeatureStatus.OK,
             }
-          }
+          },
+          power: {
+            state: PowerStatus.OFF,
+          },
         },
       };
 
@@ -68,12 +74,18 @@ describe('diags service', () => {
               on: NOW,
               status: FeatureStatus.OK,
             },
+            power: {
+              state: PowerStatus.ON,
+            },
           },
           '1': {
             on: NOW,
             ping: {
               on: NOW,
               status: FeatureStatus.KO,
+            },
+            power: {
+              state: PowerStatus.OFF,
             },
           },
         },

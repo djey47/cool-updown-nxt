@@ -1,4 +1,4 @@
-import { FeatureStatus } from '../../../models/common';
+import { FeatureStatus, PowerStatus } from '../../../models/common';
 
 export interface DiagsResponse {
   diagnostics: DiagsResponseForAllDevices;
@@ -11,9 +11,16 @@ export interface DiagsResponseForAllDevices {
 export interface DiagsResponseForDevice {
   on: Date;
   ping: DiagsResponseForFeature;
+  power: PowerDiagsResponse;
 }
 
 export interface DiagsResponseForFeature {
   on: Date;
   status: FeatureStatus;
+}
+
+export interface PowerDiagsResponse {
+  state: PowerStatus;
+  lastStartAttemptOn?: Date;
+  lastStopAttemptOn?: Date;
 }
