@@ -17,13 +17,15 @@ export interface DiagnosticsContext {
 
 export interface StatisticsContext {
   global: GlobalStatisticsContext;
-  perDevice: {
-    [deviceId: string]: DeviceStatisticsContext;
-  };
+  perDevice: PerDeviceStatisticsContext;
+}
+
+export interface PerDeviceStatisticsContext {
+  [deviceId: string]: DeviceStatisticsContext;
 }
 
 export interface DeviceDiagnosticsContext {
-  on: Date;
+  on?: Date;
   ping: FeatureDiagnostics;
   power: PowerDiagnostics;
 }

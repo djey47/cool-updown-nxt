@@ -18,6 +18,6 @@ export interface PowerDiagnostics {
 
 export interface FeatureDiagnosticsResults {
   message?: string;
-  on: Date;
+  on?: Date;
   status: FeatureStatus;
 }

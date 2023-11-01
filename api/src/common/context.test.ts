@@ -37,10 +37,28 @@ describe('AppContext singleton class', () => {
       // then
       expect(AppContext.get()).toEqual({
         appInfo: {},
-        diagnostics: {},
+        diagnostics: {
+          '0': {
+            ping: {
+              current: {
+                status: 'n/a',
+              },
+            },
+            power: {
+              state: 'n/a',
+            },
+          },
+        },
         statistics: {
           global: {},
-          perDevice: {},
+          perDevice: {
+            '0': {
+              uptimeSeconds: {
+                current: 0,
+                overall: 0,
+              },
+            },
+          },
         },
       });
     });
