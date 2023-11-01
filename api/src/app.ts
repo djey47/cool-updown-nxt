@@ -13,6 +13,7 @@ import { diag } from './processors/diag/diag';
 import { diags, diagsForDevice } from './services/diags/diags';
 import { AppContext } from './common/context';
 import { stats, statsForDevice } from './services/stats/stats';
+import { powerOnForDevice } from './services/power/powerOn';
 
 import type { ApiWithDeviceIdParameterRequest } from './models/api';
 import type { FastifyReply } from 'fastify/types/reply';
@@ -68,7 +69,12 @@ const app = async () => {
   app.get('/stats/:deviceId', (req: ApiWithDeviceIdParameterRequest, reply: FastifyReply) => {
     const { params: { deviceId } } = req;
     statsForDevice(deviceId, reply);
-  })
+  });
+
+  app.post('/power-on/:deviceId',(req: ApiWithDeviceIdParameterRequest, reply: FastifyReply) => {
+    const { params: { deviceId } } = req;
+    powerOnForDevice(deviceId, reply);
+  });
 
   // Must match the vite config file
   if (import.meta.env.PROD) {

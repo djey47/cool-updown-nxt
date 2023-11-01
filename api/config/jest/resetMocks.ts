@@ -1,7 +1,7 @@
 import globalMocks from './globalMocks';
 
 const {
-    appRootDirMock, pinoMock, node: { childProcessMock, fsMock }
+    appRootDirMock, pinoMock, node: { childProcessMock, fsMock }, wakeonlanMock
 } = globalMocks;
   
 export default function() {
@@ -10,4 +10,5 @@ export default function() {
     childProcessMock.exec.mockReset();
     fsMock.readFile.mockReset();
     fsMock.stat.mockReset();
+    wakeonlanMock.wake.mockReset();
 }

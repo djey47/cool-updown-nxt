@@ -38,7 +38,7 @@ To perform manual linting, issue `npm run lint` command.
 
 ## Configuration
 
-Default configuration is given as example in `api/config/default.json` file.
+Default configuration is defined in `api/config/default.json` file.
 
 ```json
 {
@@ -50,6 +50,8 @@ Default configuration is given as example in `api/config/default.json` file.
   "devices": [{
     "network": {
       "hostname": "my-nas",
+      "macAddress": "aa:bb:cc:dd:ee:ff",
+      "broadcastIpAddress": "255.255.255.255"
     }
   }]
 }
@@ -67,7 +69,9 @@ To override settings, create a copy to `api/config/production.json` file and mak
 | `. diagnosticsIntervalMs`| Specifies time interval (in milliseconds) between a completed diagnostics processing and the next one | 60000 |
 | `devices` | List of monitored devices as configured below |  |
 | `. network`| Network related parameters, see below: |  |
+| `.. broadcastIpAddress`| Broadcast IP address (mandatory for WOL) | / |
 | `.. hostname`| Device name or IP address (mandatory) | / |
+| `.. macAddress`| MAC address for this device (mandatory for WOL) | / |
 
 ## Start production server
 
@@ -271,6 +275,34 @@ Returns some statistics for a configured device.
 }
 ```
 
+### POST /power-on/[deviceId]
+
+Attempts to wake specified device up through Wake On Lan.
+
+**Sample output**
+
+This service does not provide any output in nominal case (HTTP code being 204).
+
+**Notes**
+- `deviceId` acts as unique identifier for a configured device; it matches the 0-based rank of the device in the configuration array
+- If no device exists with this identifier, a 404 is replied with following output:
+
+```json
+{
+  "errorMessage": "Specified item was not found",
+  "itemType": "deviceId",
+  "itemValue": "foo"
+}
+```
+
+- If for some reason the WOL fails, a 500 is replied with following output: 
+
+```json
+{
+  "errorMessage": "Unable to perform wake on LAN: <...>",
+}
+```
+
 ## Monitoring
 
 ### Logs
@@ -278,7 +310,6 @@ Returns some statistics for a configured device.
 To display logs from a terminal, issue following command: `npm run logs`.
 
 Server logs are written to the *api/logs/cool-updown-nxt.log* file and sent to the standard/error outputs as well.
-
 
 ## Processing details: diagnostics
 
@@ -293,3 +324,7 @@ Diag results:
 - `ok` status when the command terminates with success (exit code = 0)
 - `ko` status when the command terminates with failure (exit code not 0)
 - message attribute is available with the error description caught from error output.
+
+## Processing details: statistics
+
+Stats are computed everytime diagbostics processing get achieved.

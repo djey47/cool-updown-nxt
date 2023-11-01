@@ -27,7 +27,9 @@ describe('Configuration service', () => {
           },
           devices: [{
             network: {
+              broadcastIpAddress: '255.255.255.255',
               hostname: 'my-nas',
+              macAddress: 'aa:bb:cc:dd:ee:ff',
             },
           }],
         },

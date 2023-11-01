@@ -9,13 +9,13 @@ export interface DiagsResponseForAllDevices {
 }
 
 export interface DiagsResponseForDevice {
-  on: Date;
+  on?: Date;
   ping: DiagsResponseForFeature;
   power: PowerDiagsResponse;
 }
 
 export interface DiagsResponseForFeature {
-  on: Date;
+  on?: Date;
   status: FeatureStatus;
 }
 

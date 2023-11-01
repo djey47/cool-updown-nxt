@@ -1,0 +1,14 @@
+{
+  "app": {
+    "diagnosticsIntervalMs": 0
+  },
+  "devices": [
+    {
+      "network": {
+        "hostname": "my-nas",
+        "macAddress": "aa:bb:cc:dd:ee:ff",
+        "broadcastIpAddress": "255.255.255.255"
+      }
+    }
+  ]
+}

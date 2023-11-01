@@ -16,7 +16,9 @@ describe('ping diag item', () => {
   describe('pingDiag function', () => {
     const deviceConfig: DeviceConfig = {
       network: {
+        broadcastIpAddress: '255.255.255.255',
         hostname: 'host-name',
+        macAddress: 'aa:bb:cc:dd:ee:ff',
       },
     };
 

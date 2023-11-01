@@ -1,5 +1,5 @@
 import type { ExecException } from 'child_process';
-
+import type { WakeOptions } from 'wake_on_lan';
 
 // NODE API //
 // child_process
@@ -27,6 +27,12 @@ jest.mock('app-root-dir', () => ({
 const mockPino = jest.fn(() => ({ pino: 'foo' }));
 jest.mock('pino', () => mockPino); 
 
+// wake_on_lan
+const mockWOLWake = jest.fn();
+jest.mock('wake_on_lan', () => ({
+  wake: (a: string, o: WakeOptions, f: () => void) => mockWOLWake(a, o, f),
+}));
+
 
 export default {
   appRootDirMock: {
@@ -42,4 +48,7 @@ export default {
     }
   },
   pinoMock: mockPino,
+  wakeonlanMock: {
+    wake: mockWOLWake,
+  },
 };

@@ -62,6 +62,9 @@ describe('diagnostics processor', () => {
             on: NOW,
             status: 'ok',
           },
+          previous: {
+            status: 'n/a',
+          },
         },
         power: {
           state: 'on',

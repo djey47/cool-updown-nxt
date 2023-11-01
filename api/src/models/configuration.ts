@@ -18,5 +18,7 @@ export interface DeviceConfig {
 }
 
 interface DeviceNetworkConfig {
-  hostname: string;  
+  broadcastIpAddress: string;
+  hostname: string;
+  macAddress: string;
 }
