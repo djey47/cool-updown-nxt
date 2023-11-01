@@ -1,4 +1,4 @@
-import { replyWithJson, replyWithItemNotFound } from './api';
+import { replyWithJson, replyWithItemNotFound, replyWithInternalError } from './api';
 import { getMockedFastifyReply } from '../helpers/testing/mockObjects';
 
 import type { FastifyReply } from 'fastify';
@@ -15,7 +15,7 @@ describe('Common API functions', () => {
       sendMock.mockReset();
     })
 
-    it('should reply provided object', () => {
+    it('should reply a 200 with provided object', () => {
       // given
       const reply: FastifyReply = defaultReply;
       const item: ApiResponse = {};
@@ -55,7 +55,7 @@ describe('Common API functions', () => {
       sendMock.mockReset();
     })
 
-    it('should reply with correct error', () => {
+    it('should reply a 404 with correct error', () => {
       // given
       codeMock.mockReturnValue(defaultReply);
       const reply: FastifyReply = defaultReply;
@@ -70,6 +70,33 @@ describe('Common API functions', () => {
         errorMessage: 'Specified item was not found',
         itemType: 'deviceId',
         itemValue: 'value',
+      });
+    });    
+  });
+
+  describe('replyWithInternalError function', () => {
+    const codeMock = jest.fn();
+    const sendMock = jest.fn();
+    const defaultReply = getMockedFastifyReply(codeMock, sendMock); 
+
+    beforeEach(() => {
+      codeMock.mockReset();
+      sendMock.mockReset();
+    })
+
+    it('should reply a 500 with correct error', () => {
+      // given
+      codeMock.mockReturnValue(defaultReply);
+      const reply: FastifyReply = defaultReply;
+
+      // when
+      replyWithInternalError(reply, 'error');
+
+      // then
+      expect(codeMock).toHaveBeenCalledWith(500);
+      expect(sendMock).toHaveBeenCalledTimes(1);
+      expect(sendMock).toHaveBeenCalledWith({
+        errorMessage: 'error',
       });
     });    
   });

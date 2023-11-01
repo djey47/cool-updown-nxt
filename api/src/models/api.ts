@@ -13,6 +13,10 @@ export type ApiItemNotFoundResponse = {
   itemValue: string;
 };
 
+export type ApiInternalErrorResponse = {
+  errorMessage: string;
+};
+
 export enum ApiItem {
   DEVICE_ID = 'deviceId',
 }

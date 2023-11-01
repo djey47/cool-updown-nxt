@@ -1,5 +1,5 @@
 import type { FastifyReply } from 'fastify/types/reply';
-import type { ApiItem, ApiItemNotFoundResponse, ApiResponse } from '../models/api';
+import type { ApiInternalErrorResponse, ApiItem, ApiItemNotFoundResponse, ApiResponse } from '../models/api';
 
 export function replyWithJson(reply: FastifyReply, item?: ApiResponse) {
   if (item) {
@@ -20,5 +20,14 @@ export function replyWithItemNotFound(reply: FastifyReply, itemType: ApiItem, it
   };
   reply
     .code(404)
+    .send(responseItem);
+}
+
+export function replyWithInternalError(reply: FastifyReply, errorMessage: string) {
+  const responseItem: ApiInternalErrorResponse = {
+    errorMessage,
+  };
+  reply
+    .code(500)
     .send(responseItem);
 }
