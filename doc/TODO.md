@@ -10,19 +10,32 @@ TODOs
   - [X] ESLint
   - [X] Static file server for the web-application
   - Handle critical errors => 500?
-  - Services  
-    - [X] Config service
+  - Services
+    - [] Websocket support for diags/stats
+    - Config service
+      - [X] Basic implementation
+      - [] Sensitive info obfuscation
     - [] Logs service
       - [X] Basic implementation
-      - Filters: time window (min/max date), log levels
+      - [] Filters: time window (min/max date), log levels
     - [] Diags service
       - [X] Ping support
-      - [] Per device (path param)
+      - [X] Per device (path param)
+      - [] Per tags (query string)
+      - 
     - [] Stats service
+      - [X] Per device (path param)
+      - [] Per tags (query string)
       - [] Uptime (app and per device)
       - [] ....?
     - [] Scheduling service
     - [] ON/OFF service
+      - [] Unitary (path param)
+        - [X] ON
+        - [] OFF
+      - [] From tag
+      - [] ID list (query param)
+      - [] All
   - Processors
     - [] Diags
       - [X] Skeleton with configured diag interval
