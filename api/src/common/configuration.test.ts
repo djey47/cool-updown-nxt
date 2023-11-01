@@ -1,4 +1,4 @@
-import { getBaseConfig, getConfig } from './configuration';
+import { getBaseConfig, getConfig, getDeviceConfig } from './configuration';
 
 describe('Common Configuration functions', () => {
   describe('getConfig function', () => {
@@ -24,6 +24,18 @@ describe('Common Configuration functions', () => {
       expect(actual).not.toHaveProperty('get');
       expect(actual).not.toHaveProperty('has');
       expect(actual).not.toHaveProperty('util');
+    });
+  });
+
+  describe('getDeviceConfig function', () => {
+    it('should return existing configuration', () => {
+      // given-when-then
+      expect(getDeviceConfig('0')).not.toBeUndefined();
+    });
+
+    it('should return undefined when non-existing configuration', () => {
+      // given-when-then
+      expect(getDeviceConfig('foo')).toBeUndefined();
     });
   });
 });
