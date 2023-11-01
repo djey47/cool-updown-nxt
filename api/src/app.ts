@@ -10,9 +10,12 @@ import { logs } from './services/logs/logs';
 import { getConfig } from './common/configuration';
 import { config } from './services/config/config';
 import { diag } from './processors/diag/diag';
-import { diags } from './services/diags/diags';
+import { diags, diagsForDevice } from './services/diags/diags';
 import { AppContext } from './common/context';
 import { stats } from './services/stats/stats';
+
+import type { ApiWithDeviceIdParameterRequest } from './models/api';
+import type { FastifyReply } from 'fastify/types/reply';
 
 function initAppInfo() {
   // Update app start date
@@ -52,6 +55,11 @@ const app = async () => {
   app.get('/diags', (_req, reply) => {
     diags(reply);
   });
+
+  app.get('/diags/:deviceId', (req: ApiWithDeviceIdParameterRequest, reply: FastifyReply) => {
+    const { params: { deviceId } } = req;
+    diagsForDevice(deviceId, reply);
+  })
 
   app.get('/stats', (_req, reply) => {
     stats(reply);

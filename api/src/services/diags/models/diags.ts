@@ -1,7 +1,7 @@
 import { FeatureStatus, PowerStatus } from '../../../models/common';
 
 export interface DiagsResponse {
-  diagnostics: DiagsResponseForAllDevices;
+  diagnostics: DiagsResponseForAllDevices | DiagsResponseForDevice;
 }
 
 export interface DiagsResponseForAllDevices {

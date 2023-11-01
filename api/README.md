@@ -175,6 +175,39 @@ Returns some diagnostics for all configured devices (ping, power state).
 - Ping `status`: available values are either `ok`, `ko` or `n/a`
 - Power `state`: available values are either `on`, `off` or `n/a`.
 
+### GET /diags/[deviceId]
+
+Returns some diagnostics for a configured device.
+
+**Sample output**
+
+```json
+{
+  "diagnostics": {
+    "on": "2023-10-24T20:30:39.119Z",
+    "ping": {
+      "on": "2023-10-24T20:30:39.119Z",
+      "status": "ko"
+    },
+    "power": {
+      "state": "off" 
+    }
+  }
+}
+```
+
+**Notes**
+- Please refer to `/diags` documentation above for details
+- `deviceId` acts as unique identifier for a configured device; it matches the 0-based rank of the device in the configuration array
+- If no diagnostics are available for specified device (or no device exists with this identifier), a 404 is replied with following output:
+
+```json
+{
+  "errorMessage": "Specified item was not found",
+  "itemType": "deviceId",
+  "itemValue": "foo"
+}
+```
 
 ### GET /stats
 
