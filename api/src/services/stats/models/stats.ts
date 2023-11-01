@@ -1,8 +1,10 @@
 export interface StatsResponse {
-  statistics: {
-    app: StatsResponseForApp;
-    perDevice: StatsResponseForAllDevices;
-  };
+  statistics: StatsResponseUnified | StatsResponseForDevice;
+}
+
+export interface StatsResponseUnified {
+  app: StatsResponseForApp;
+  perDevice: StatsResponseForAllDevices;
 }
 
 export interface StatsResponseForApp {

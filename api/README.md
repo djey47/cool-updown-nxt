@@ -241,6 +241,36 @@ Returns some statistics for all configured devices.
 - `overall` uptime is the total amount for app/device
 - The key used for each `perDevice` sub-entry is the device identifier.
 
+### GET /stats/[deviceId]
+
+Returns some statistics for a configured device.
+
+**Sample output**
+
+```json
+{
+  "statistics": {
+    "uptimeSeconds": {
+      "current": 0,
+      "overall": 0
+    }
+  }
+}
+```
+
+**Notes**
+- Please refer to `/stats` documentation above for details
+- `deviceId` acts as unique identifier for a configured device; it matches the 0-based rank of the device in the configuration array
+- If no statistics are available for specified device (or no device exists with this identifier), a 404 is replied with following output:
+
+```json
+{
+  "errorMessage": "Specified item was not found",
+  "itemType": "deviceId",
+  "itemValue": "foo"
+}
+```
+
 ## Monitoring
 
 ### Logs
