@@ -1,8 +1,8 @@
-import { replyWithJson } from './api';
+import { replyWithJson, replyWithItemNotFound } from './api';
+import { getMockedFastifyReply } from '../helpers/testing/mockObjects';
 
 import type { FastifyReply } from 'fastify';
-import type { ApiResponse } from '../models/api';
-import { getMockedFastifyReply } from '../helpers/testing/mockObjects';
+import { ApiItem, type ApiResponse } from '../models/api';
 
 describe('Common API functions', () => {
   describe('replyWithJson function', () => {
@@ -43,5 +43,34 @@ describe('Common API functions', () => {
       expect(sendMock).toHaveBeenCalledTimes(1);
       expect(sendMock).toHaveBeenCalledWith();
     });
+  });  
+  
+  describe('replyWithItemNotFound function', () => {
+    const codeMock = jest.fn();
+    const sendMock = jest.fn();
+    const defaultReply = getMockedFastifyReply(codeMock, sendMock); 
+
+    beforeEach(() => {
+      codeMock.mockReset();
+      sendMock.mockReset();
+    })
+
+    it('should reply with correct error', () => {
+      // given
+      codeMock.mockReturnValue(defaultReply);
+      const reply: FastifyReply = defaultReply;
+
+      // when
+      replyWithItemNotFound(reply, ApiItem.DEVICE_ID, 'value');
+
+      // then
+      expect(codeMock).toHaveBeenCalledWith(404);
+      expect(sendMock).toHaveBeenCalledTimes(1);
+      expect(sendMock).toHaveBeenCalledWith({
+        errorMessage: 'Specified item was not found',
+        itemType: 'deviceId',
+        itemValue: 'value',
+      });
+    });    
   });
 });
