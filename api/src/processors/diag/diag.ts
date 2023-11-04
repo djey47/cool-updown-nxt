@@ -5,10 +5,11 @@ import { recall } from '../../helpers/recaller';
 import { FeatureStatus, PowerStatus } from '../../models/common';
 import { stats } from '../stats/stats';
 import { pingDiag } from './items/ping';
-import { DiagResults, LastPowerAttemptReason, PowerDiagnostics } from './models/diag';
+import { DiagResults, LastPowerAttemptDiagnostics, LastPowerAttemptReason, PowerDiagnostics } from './models/diag';
 
 import type { DeviceConfig } from '../../models/configuration';
 import type { DeviceDiagnosticsContext } from '../../models/context';
+import { differenceInMinutes } from 'date-fns';
 
 const DIAGS_INTERVAL = getConfig().app.diagnosticsIntervalMs;
 
@@ -69,6 +70,7 @@ async function diagByDevice(deviceId: string, deviceConfig: DeviceConfig): Promi
 function computePowerDiags(diags: DeviceDiagnosticsContext): PowerDiagnostics {
   const { power: powerDiags, ping: { current: { status: currentStatus }}} = diags;
 
+  // TODO See if still necessary
   if (!powerDiags) {
     diags.power = {
       state: PowerStatus.UNAVAILABLE,
@@ -91,7 +93,40 @@ function computePowerDiags(diags: DeviceDiagnosticsContext): PowerDiagnostics {
 
   return {
     ...powerDiags,
+    lastStartAttempt: registerAttempt('lastStartAttempt', newPowerState, powerDiags),
+    lastStopAttempt: registerAttempt('lastStopAttempt', newPowerState, powerDiags),
     state: newPowerState,
   };
 }
 
+function registerAttempt(lastAttemptType: 'lastStartAttempt' | 'lastStopAttempt', newPowerState: PowerStatus, powerDiags: PowerDiagnostics): LastPowerAttemptDiagnostics {
+  const { state: lastPowerState} = powerDiags;
+  const {on: lastAttemptOn, reason: lastReason } = powerDiags[lastAttemptType];
+
+  const now = new Date();
+  const isPowerChangeValid = !lastAttemptOn || differenceInMinutes(lastAttemptOn, now) > 10; // TODO see to tweak this value
+
+  let newReason = lastReason;
+  let shouldReasonChange = false;
+  if (isPowerChangeValid
+      && (
+        lastAttemptType === 'lastStartAttempt'
+          && newPowerState === PowerStatus.ON
+          && lastPowerState === PowerStatus.OFF
+        || lastAttemptType === 'lastStopAttempt'
+          && newPowerState === PowerStatus.OFF
+          && lastPowerState === PowerStatus.ON
+      )) {
+    newReason = LastPowerAttemptReason.EXTERNAL;
+    shouldReasonChange = true;
+  }
+
+  // console.log('processors::diag::registerAttempt', { shouldReasonChange, lastAttemptType, isPowerChangeValid, newReason, newPowerState, oldPowerState: lastPowerState });
+
+  const newOn = shouldReasonChange && newReason === LastPowerAttemptReason.EXTERNAL ? now : lastAttemptOn;
+
+  return {
+    on: newOn,
+    reason: newReason,
+  };
+}

@@ -8,8 +8,6 @@ import { pingDiag } from './items/ping';
 
 import { LastPowerAttemptReason, type FeatureDiagnosticsResults } from './models/diag';
 
-jest.useFakeTimers();
-
 jest.mock('../../common/logger', () => ({
   coreLogger: {
     info: jest.fn(),
@@ -30,6 +28,14 @@ const recallMock = recall as jest.Mock<void>;
 const pingDiagMock = pingDiag as jest.Mock<Promise<FeatureDiagnosticsResults>>;
 const statsProcessorMock = stats as jest.Mock<Promise<void>>;
 
+const NOW = new Date();
+
+jest.useFakeTimers({ now: NOW });
+
+afterAll(() => {
+  jest.useRealTimers();
+});
+
 beforeEach(() => {
   coreLoggerInfoMock.mockReset();
   pingDiagMock.mockReset();
@@ -39,9 +45,8 @@ beforeEach(() => {
   AppContext.resetAll();
 })
 
-const NOW = new Date();
-
 describe('diagnostics processor', () => {
+
   describe('diag function', () => {
     it('should write logs, perform diagnostics, perform stats and invoke recaller to call itself again', async () => {
       // given
@@ -82,7 +87,7 @@ describe('diagnostics processor', () => {
       expect(statsProcessorMock).toHaveBeenCalledTimes(1);
     });
 
-    it('should update diagnostics in context on a next call', async () => {
+    it('should update diagnostics in context on a next call, registering an external stop attempt', async () => {
       // given
       const previousDate = new Date(2023, 0, 1);
       const appContext = AppContext.get();
@@ -130,6 +135,67 @@ describe('diagnostics processor', () => {
           state: 'off',
           lastStartAttempt: {
             reason: 'none',
+          },
+          lastStopAttempt: {
+            on: NOW,
+            reason: 'external',
+          },
+        }
+      });
+
+      expect(coreLoggerInfoMock).toHaveBeenCalledTimes(2);
+      expect(recallMock).toHaveBeenCalledWith(diag, 0);
+    });    
+    
+    it('should update diagnostics in context on a next call, registering an external start attempt', async () => {
+      // given
+      const previousDate = new Date(2023, 0, 1);
+      const appContext = AppContext.get();
+      appContext.diagnostics[0] = {        
+        on: previousDate,
+        power: {
+          state: PowerStatus.OFF,
+          lastStartAttempt: {
+            reason: LastPowerAttemptReason.NONE,
+          },
+          lastStopAttempt: {
+            reason: LastPowerAttemptReason.NONE,
+          },
+        },
+        ping: {
+          current: {
+            on: previousDate,
+            status: FeatureStatus.OK,
+          },
+        }
+      };
+      const results: FeatureDiagnosticsResults = {
+        on: NOW,
+        status: FeatureStatus.OK,
+      };
+      pingDiagMock.mockResolvedValue(results);
+
+      // when
+      await diag();
+
+      // then
+      expect(appContext.diagnostics['0']).toEqual({
+        on: NOW,
+        ping: {
+          current: {
+            on: NOW,
+            status: 'ok',
+          },
+          previous: {
+            on: previousDate,
+            status: 'ok',
+          },
+        },
+        power: {
+          state: 'on',
+          lastStartAttempt: {
+            on: NOW,
+            reason: 'external',
           },
           lastStopAttempt: {
             reason: 'none',

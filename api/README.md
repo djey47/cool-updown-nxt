@@ -166,7 +166,10 @@ Returns some diagnostics for all configured devices (ping, power state).
         "status": "ko"
       },
       "power": {
-        "state": "off" 
+        "lastStartAttemptOn": "2023-11-04T14:05:33.967Z",
+        "lastStartAttemptReason": "api",
+        "lastStopAttemptReason": "none",
+        "state": "off"
       }
     }
   }
@@ -178,6 +181,7 @@ Returns some diagnostics for all configured devices (ping, power state).
 - `on` fields allow to track the moment where diagnostics have been processed
 - Ping `status`: available values are either `ok`, `ko` or `n/a`
 - Power `state`: available values are either `on`, `off` or `n/a`.
+- Power `lastStartAttemptReason` or `lastStartAttemptReason`: available values are one of the following: `none`, `api`, `scheduled` or `external`.
 
 ### GET /diags/[deviceId]
 
@@ -324,6 +328,18 @@ Diag results:
 - `ok` status when the command terminates with success (exit code = 0)
 - `ko` status when the command terminates with failure (exit code not 0)
 - message attribute is available with the error description caught from error output.
+
+### Power
+
+The application actually records the power ON/OFF attempts and thus is able to store:
+
+- date on which the attempt has been made
+- reason (source) of this attempt; it can be via api, scheduling, external (e.g power button, supply lost), or none if no power state change has been detected at all.
+
+At time of every diagnostics processing, it can track the power state change and register external attempts:
+
+- if power state switched from `off` to `on` and last start attempt date is older than 10 minutes (should it be tweakable?), an external start attempt is registered and attempt date is updated to current moment
+- if power state switched from `on` to `off` and last stop attempt date is older than 10 minutes (should it be tweakable?), an external stop attempt is registered and attempt date is updated to current moment.
 
 ## Processing details: statistics
 
