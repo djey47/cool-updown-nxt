@@ -8,6 +8,7 @@ import { ApiItem } from '../../models/api';
 
 import type { DiagsResponse } from './models/diags';
 import type { DiagnosticsContext } from '../../models/context';
+import { LastPowerAttemptReason } from '../../processors/diag/models/diag';
 
 jest.useFakeTimers();
 const NOW = new Date();
@@ -43,6 +44,12 @@ describe('diags service', () => {
       },
       power: {
         state: PowerStatus.ON,
+        lastStartAttempt: {
+          reason: LastPowerAttemptReason.NONE,
+        },
+        lastStopAttempt: {
+          reason: LastPowerAttemptReason.NONE,
+        },        
       },
     },
     '1': {
@@ -59,6 +66,12 @@ describe('diags service', () => {
       },
       power: {
         state: PowerStatus.OFF,
+        lastStartAttempt: {
+          reason: LastPowerAttemptReason.NONE,
+        }, 
+        lastStopAttempt: {
+          reason: LastPowerAttemptReason.NONE,
+        },
       },
     },
   };
@@ -83,6 +96,8 @@ describe('diags service', () => {
             },
             power: {
               state: PowerStatus.ON,
+              lastStartAttemptReason: LastPowerAttemptReason.NONE,
+              lastStopAttemptReason: LastPowerAttemptReason.NONE,
             },
           },
           '1': {
@@ -93,6 +108,8 @@ describe('diags service', () => {
             },
             power: {
               state: PowerStatus.OFF,
+              lastStartAttemptReason: LastPowerAttemptReason.NONE,
+              lastStopAttemptReason: LastPowerAttemptReason.NONE,
             },
           },
         },
@@ -121,6 +138,8 @@ describe('diags service', () => {
           },
           power: {
             state: PowerStatus.ON,
+            lastStartAttemptReason: LastPowerAttemptReason.NONE,
+            lastStopAttemptReason: LastPowerAttemptReason.NONE,
           },
         },
       };

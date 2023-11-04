@@ -8,6 +8,7 @@ import { PowerStatus } from '../../models/common';
 import type { FastifyReply } from 'fastify/types/reply';
 import type { WakeOptions } from 'wake_on_lan';
 import type { DeviceConfig } from '../../models/configuration';
+import { LastPowerAttemptReason } from '../../processors/diag/models/diag';
 
 /** 
  * Power->ON service implementation: for a specified device
@@ -30,7 +31,10 @@ export async function powerOnForDevice(deviceId: string, reply: FastifyReply) {
   }
 
   // Update context for last start attempt (don't care if it is successful or not)
-  deviceDiagContext.power.lastStartAttemptOn = new Date();
+  deviceDiagContext.power.lastStartAttempt = {
+    on: new Date(),
+    reason: LastPowerAttemptReason.API,
+  };
 
   try {
     await awakeDevice(deviceConfig);

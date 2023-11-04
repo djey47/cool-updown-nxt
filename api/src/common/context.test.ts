@@ -1,4 +1,5 @@
 import { FeatureStatus, PowerStatus } from '../models/common';
+import { LastPowerAttemptReason } from '../processors/diag/models/diag';
 import { AppContext } from './context';
 
 describe('AppContext singleton class', () => {
@@ -27,6 +28,12 @@ describe('AppContext singleton class', () => {
           },
           power: {
             state: PowerStatus.ON,
+            lastStartAttempt: {
+              reason: LastPowerAttemptReason.NONE,
+            },
+            lastStopAttempt: {
+              reason: LastPowerAttemptReason.NONE,
+            },
           },
         },
       };
@@ -46,6 +53,12 @@ describe('AppContext singleton class', () => {
             },
             power: {
               state: 'n/a',
+              lastStartAttempt: {
+                reason: 'none',
+              },
+              lastStopAttempt: {
+                reason: 'none',
+              },
             },
           },
         },

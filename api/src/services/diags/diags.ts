@@ -68,9 +68,12 @@ function diagsFeatureToResponse(featureDiags: FeatureDiagnostics): DiagsResponse
 }
 
 function diagsPowerToResponse(powerDiagnostics: PowerDiagnostics): DiagsResponseForPower {
+  const { lastStartAttempt, lastStopAttempt } = powerDiagnostics; 
   return {
-    lastStartAttemptOn: powerDiagnostics.lastStartAttemptOn,
-    lastStopAttemptOn: powerDiagnostics.lastStopAttemptOn,
+    lastStartAttemptOn: lastStartAttempt?.on,
+    lastStartAttemptReason: lastStartAttempt?.reason,
+    lastStopAttemptOn: lastStopAttempt?.on,
+    lastStopAttemptReason: lastStopAttempt?.reason,
     state: powerDiagnostics.state,
   };
 }

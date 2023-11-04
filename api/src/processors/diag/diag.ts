@@ -5,7 +5,7 @@ import { recall } from '../../helpers/recaller';
 import { FeatureStatus, PowerStatus } from '../../models/common';
 import { stats } from '../stats/stats';
 import { pingDiag } from './items/ping';
-import type { DiagResults, PowerDiagnostics } from './models/diag';
+import { DiagResults, LastPowerAttemptReason, PowerDiagnostics } from './models/diag';
 
 import type { DeviceConfig } from '../../models/configuration';
 import type { DeviceDiagnosticsContext } from '../../models/context';
@@ -72,6 +72,12 @@ function computePowerDiags(diags: DeviceDiagnosticsContext): PowerDiagnostics {
   if (!powerDiags) {
     diags.power = {
       state: PowerStatus.UNAVAILABLE,
+      lastStartAttempt: {
+        reason: LastPowerAttemptReason.NONE,
+      },
+      lastStopAttempt: {
+        reason: LastPowerAttemptReason.NONE,
+      },
     };
   }
 

@@ -6,7 +6,7 @@ import { stats } from '../stats/stats';
 import { diag } from './diag';
 import { pingDiag } from './items/ping';
 
-import type { FeatureDiagnosticsResults } from './models/diag';
+import { LastPowerAttemptReason, type FeatureDiagnosticsResults } from './models/diag';
 
 jest.useFakeTimers();
 
@@ -68,6 +68,12 @@ describe('diagnostics processor', () => {
         },
         power: {
           state: 'on',
+          lastStartAttempt: {
+            reason: 'none',
+          },
+          lastStopAttempt: {
+            reason: 'none',
+          },
         }
       });
 
@@ -83,7 +89,13 @@ describe('diagnostics processor', () => {
       appContext.diagnostics[0] = {        
         on: previousDate,
         power: {
-          state: PowerStatus.ON, 
+          state: PowerStatus.ON,
+          lastStartAttempt: {
+            reason: LastPowerAttemptReason.NONE,
+          },
+          lastStopAttempt: {
+            reason: LastPowerAttemptReason.NONE,
+          },
         },
         ping: {
           current: {
@@ -116,6 +128,12 @@ describe('diagnostics processor', () => {
         },
         power: {
           state: 'off',
+          lastStartAttempt: {
+            reason: 'none',
+          },
+          lastStopAttempt: {
+            reason: 'none',
+          },
         }
       });
 

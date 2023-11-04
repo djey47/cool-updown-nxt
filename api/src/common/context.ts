@@ -3,6 +3,7 @@ import { getConfig } from './configuration';
 
 import type { DeviceConfig } from '../models/configuration';
 import type { Context, DiagnosticsContext, PerDeviceStatisticsContext, StatisticsContext } from '../models/context';
+import { LastPowerAttemptReason } from '../processors/diag/models/diag';
 
 /**
  * Singleton for application context
@@ -42,6 +43,12 @@ export class AppContext {
         },
         power: {
           state: PowerStatus.UNAVAILABLE,
+          lastStartAttempt: {
+            reason: LastPowerAttemptReason.NONE,
+          },
+          lastStopAttempt: {
+            reason: LastPowerAttemptReason.NONE,
+          },
         },
       };
       return acc;

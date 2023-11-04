@@ -35,7 +35,7 @@ describe('powerOn service', () => {
       sendMock.mockReset();
     });
 
-    it('should awake specified device and return 204 with empty contents', async () => {
+    it('should awake specified device, update diags context and return 204 with empty contents', async () => {
       // given
       codeMock.mockReturnValue(defaultReply);
       wakeonlanMock.wake.mockImplementation((_a: string, _o: WakeOptions, cb: () => void) => {
@@ -46,6 +46,9 @@ describe('powerOn service', () => {
       await powerOnForDevice('0', defaultReply);
 
       // then
+      const { power: { lastStartAttempt }} = AppContext.get().diagnostics['0'];
+      expect(lastStartAttempt.reason).toBe('api');
+      expect(lastStartAttempt.on).not.toBeUndefined();
       expect(wakeonlanMock.wake).toHaveBeenCalledTimes(1);
       const [[address, options]] = wakeonlanMock.wake.mock.calls;
       expect(address).toBe('aa:bb:cc:dd:ee:ff');
@@ -53,7 +56,7 @@ describe('powerOn service', () => {
       expect(replyWithJsonMock).toHaveBeenCalledWith(defaultReply);
     });    
     
-    it('should handle wol error and return 500 with message', async () => {
+    it('should handle wol error, update diags context and return 500 with message', async () => {
       // given
       codeMock.mockReturnValue(defaultReply);
       wakeonlanMock.wake.mockImplementation((_a: string, _o: WakeOptions, cb: (error: string) => void) => {
@@ -64,6 +67,9 @@ describe('powerOn service', () => {
       await powerOnForDevice('0', defaultReply);
 
       // then
+      const { power: { lastStartAttempt }} = AppContext.get().diagnostics['0'];
+      expect(lastStartAttempt.reason).toBe('api');
+      expect(lastStartAttempt.on).not.toBeUndefined();
       expect(wakeonlanMock.wake).toHaveBeenCalledTimes(1);
       expect(replyWithInternalErrorMock).toHaveBeenCalledWith(defaultReply, 'Unable to perform wake on LAN: WOL error');
     });    
@@ -80,7 +86,7 @@ describe('powerOn service', () => {
       expect(replyWithItemNotFoundMock).toHaveBeenCalledWith(defaultReply, 'deviceId', 'foo');
     });    
     
-    it('should not attempt to wake device return 204 when already powered ON', async () => {
+    it('should not attempt to wake device nor update diags context and return 204 when already powered ON', async () => {
       // given
       codeMock.mockReturnValue(defaultReply);
       AppContext.get().diagnostics['0'].power.state = PowerStatus.ON;
@@ -89,6 +95,9 @@ describe('powerOn service', () => {
       await powerOnForDevice('0', defaultReply);
 
       // then
+      const { power: { lastStartAttempt }} = AppContext.get().diagnostics['0'];
+      expect(lastStartAttempt.reason).toBe('none');
+      expect(lastStartAttempt.on).toBeUndefined();
       expect(wakeonlanMock.wake).not.toHaveBeenCalled();
       expect(replyWithJsonMock).toHaveBeenCalledWith(defaultReply);
     });

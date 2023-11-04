@@ -1,4 +1,5 @@
 import { FeatureStatus, PowerStatus } from '../../../models/common';
+import { LastPowerAttemptReason } from '../../../processors/diag/models/diag';
 
 export interface DiagsResponse {
   diagnostics: DiagsResponseForAllDevices | DiagsResponseForDevice;
@@ -22,5 +23,7 @@ export interface DiagsResponseForFeature {
 export interface PowerDiagsResponse {
   state: PowerStatus;
   lastStartAttemptOn?: Date;
+  lastStartAttemptReason: LastPowerAttemptReason;
   lastStopAttemptOn?: Date;
+  lastStopAttemptReason: LastPowerAttemptReason;
 }
