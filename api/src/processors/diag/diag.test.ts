@@ -45,6 +45,9 @@ beforeEach(() => {
   AppContext.resetAll();
 })
 
+
+// FIXME Move power diag tests to specific file
+
 describe('diagnostics processor', () => {
 
   describe('diag function', () => {
