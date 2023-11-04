@@ -43,8 +43,12 @@ unTODOs
         - [X] base implem
         - [] Ping latency to be extracted from command output and available in API
       - [] power state
-        - [X] last on attempt date
-        - [] last off attempt date
+        - [X] last on attempt date (API)
+        - [X] last on attempt date (external)
+        - [] last on attempt date (scheduled)
+        - [] last off attempt date (API)
+        - [X] last off attempt date (external)
+        - [] last off attempt date (scheduled)
         - [] cause of last on and off attempt(api, scheduled, external...)
       - [] Web server (page)
       - [] SSH connectivity
