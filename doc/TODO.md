@@ -1,4 +1,4 @@
-TODOs
+unTODOs
 =====
 
 - WEB/FRONTEND
@@ -39,8 +39,13 @@ TODOs
   - Processors
     - [] Diags
       - [X] Skeleton with configured diag interval
-      - [X] Ping support
-        - Ping latency to be extracted from command output and available in API
+      - [] Ping support
+        - [X] base implem
+        - [] Ping latency to be extracted from command output and available in API
+      - [] power state
+        - [X] last on attempt date
+        - [] last off attempt date
+        - [] cause of last on and off attempt(api, scheduled, external...)
       - [] Web server (page)
       - [] SSH connectivity
       - [] ?
