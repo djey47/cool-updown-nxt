@@ -4,7 +4,7 @@ import { coreLogger } from '../../common/logger';
 import { recall } from '../../helpers/recaller';
 import { stats } from '../stats/stats';
 import { pingDiag } from './items/ping';
-import { computePowerDiags } from './items/power';
+import { powerDiag } from './items/power';
 
 import type { DiagResults } from './models/diag';
 import type { DeviceConfig } from '../../models/configuration';
@@ -42,7 +42,6 @@ async function diagForAllDevices(devicesConfigs: DeviceConfig[]) {
     const currentDate = new Date();
     deviceDiags.on = currentDate;
 
-
     // Ping
     deviceDiags.ping = {
       current: pingResult.current,
@@ -50,7 +49,7 @@ async function diagForAllDevices(devicesConfigs: DeviceConfig[]) {
     };
 
     // Power state
-    deviceDiags.power = computePowerDiags(deviceDiags);
+    deviceDiags.power = powerDiag(deviceDiags);
   });
 }
 

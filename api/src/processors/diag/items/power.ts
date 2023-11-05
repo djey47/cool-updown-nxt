@@ -3,8 +3,8 @@ import { FeatureStatus, PowerStatus } from '../../../models/common';
 import type { DeviceDiagnosticsContext } from '../../../models/context';
 import { LastPowerAttemptDiagnostics, LastPowerAttemptReason, type PowerDiagnostics } from '../models/diag';
 
-export function computePowerDiags(diags: DeviceDiagnosticsContext): PowerDiagnostics {
-    const { power: powerDiags, ping: { current: { status: currentStatus }}} = diags;
+export function powerDiag(diags: DeviceDiagnosticsContext): PowerDiagnostics {
+    const { power: powerDiags, ping: { current: { status: currentPingStatus }}} = diags;
   
     // TODO See if still necessary
     if (!powerDiags) {
@@ -20,10 +20,10 @@ export function computePowerDiags(diags: DeviceDiagnosticsContext): PowerDiagnos
     }
   
     let newPowerState: PowerStatus = PowerStatus.UNAVAILABLE;
-    if (currentStatus === FeatureStatus.OK) {
+    if (currentPingStatus === FeatureStatus.OK) {
       newPowerState =  PowerStatus.ON;
     }
-    if (currentStatus === FeatureStatus.KO) {
+    if (currentPingStatus === FeatureStatus.KO) {
       newPowerState = PowerStatus.OFF;
     }
   
