@@ -40,8 +40,10 @@ export function powerDiag(diags: DeviceDiagnosticsContext): PowerDiagnostics {
     const {on: lastAttemptOn, reason: lastReason } = powerDiags[lastAttemptType];
   
     const now = new Date();
-    const isPowerChangeValid = !lastAttemptOn || differenceInMinutes(lastAttemptOn, now) > 10; // TODO see to tweak this value
-  
+    const isPowerChangeValid = !lastAttemptOn || differenceInMinutes(now, lastAttemptOn) > 10; // TODO see to tweak this value
+
+    // console.log('processors::diag::registerAttempt', lastAttemptOn && differenceInMinutes(now, lastAttemptOn));
+
     let newReason = lastReason;
     let shouldReasonChange = false;
     if (isPowerChangeValid
@@ -57,7 +59,7 @@ export function powerDiag(diags: DeviceDiagnosticsContext): PowerDiagnostics {
       shouldReasonChange = true;
     }
   
-    // console.log('processors::diag::registerAttempt', { shouldReasonChange, lastAttemptType, isPowerChangeValid, newReason, newPowerState, oldPowerState: lastPowerState });
+    // console.log('processors::diag::registerAttempt', { shouldReasonChange, lastAttemptType, isPowerChangeValid, newReason, newPowerState, oldPowerState: lastPowerState, lastAttemptOn, now });
   
     const newOn = shouldReasonChange && newReason === LastPowerAttemptReason.EXTERNAL ? now : lastAttemptOn;
   

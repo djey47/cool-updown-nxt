@@ -1,3 +1,4 @@
+import subMinutes from 'date-fns/subMinutes/index.js';
 import { powerDiag } from './power';
 import { LastPowerAttemptReason } from '../models/diag';
 import { FeatureStatus, PowerStatus } from '../../../models/common';
@@ -6,6 +7,8 @@ import type { DeviceDiagnosticsContext } from '../../../models/context';
 
 const NOW = new Date();
 const PREVIOUS_MOMENT = new Date(2023, 0, 1);
+const EVEN_MORE_PREVIOUS_MOMENT = new Date(2022, 11, 31);
+const EVEN_MORE_PREVIOUS_MOMENT_MINUS_10MIN = subMinutes(EVEN_MORE_PREVIOUS_MOMENT, 10);
 
 beforeAll(() => {
   jest.useFakeTimers({ now: NOW });
@@ -85,6 +88,84 @@ describe('power diag item', () => {
         },
         lastStopAttempt: {
           reason: 'none',
+        },
+      });
+    });
+
+    it('should update an external start attempt even when previously turned ON and OFF from external attempts', async () => {
+      // given
+      const deviceDiags: DeviceDiagnosticsContext = {
+        ping: {
+          current: {
+            on: PREVIOUS_MOMENT,
+            status: FeatureStatus.OK,
+          },
+        },
+        power: {
+          state: PowerStatus.OFF,
+          lastStartAttempt: {
+            on: EVEN_MORE_PREVIOUS_MOMENT_MINUS_10MIN,
+            reason: LastPowerAttemptReason.EXTERNAL,
+          },
+          lastStopAttempt: {
+            on: EVEN_MORE_PREVIOUS_MOMENT,
+            reason: LastPowerAttemptReason.EXTERNAL,
+          },
+        },
+      };
+
+      // when
+      const actualDiags = powerDiag(deviceDiags);
+
+      // then
+      expect(actualDiags).toEqual({
+        state: 'on',
+        lastStartAttempt: {
+          on: NOW,
+          reason: 'external',
+        },
+        lastStopAttempt: {
+          on: EVEN_MORE_PREVIOUS_MOMENT,
+          reason: 'external',
+        },
+      });
+    });
+
+    it('should update an external stop attempt even when previously turned OFF and ON from external attempts', async () => {
+      // given
+      const deviceDiags: DeviceDiagnosticsContext = {
+        ping: {
+          current: {
+            on: PREVIOUS_MOMENT,
+            status: FeatureStatus.KO,
+          },
+        },
+        power: {
+          state: PowerStatus.ON,
+          lastStartAttempt: {
+            on: EVEN_MORE_PREVIOUS_MOMENT,
+            reason: LastPowerAttemptReason.EXTERNAL,
+          },
+          lastStopAttempt: {
+            on: EVEN_MORE_PREVIOUS_MOMENT_MINUS_10MIN,
+            reason: LastPowerAttemptReason.EXTERNAL,
+          },
+        },
+      };
+
+      // when
+      const actualDiags = powerDiag(deviceDiags);
+
+      // then
+      expect(actualDiags).toEqual({
+        state: 'off',
+        lastStartAttempt: {
+          on: EVEN_MORE_PREVIOUS_MOMENT,
+          reason: 'external',
+        },
+        lastStopAttempt: {
+          on: NOW,
+          reason: 'external',
         },
       });
     });
