@@ -1,8 +1,12 @@
+import appRootDir from 'app-root-dir';
+import path from 'path';
+import { writeFile } from 'fs/promises';
 import { FeatureStatus, PowerStatus } from '../models/common';
 import { getConfig } from './configuration';
+import { coreLogger } from './logger';
 
 import type { DeviceConfig } from '../models/configuration';
-import type { Context, DiagnosticsContext, PerDeviceStatisticsContext, StatisticsContext } from '../models/context';
+import type { Context, DiagnosticsContext, PerDeviceStatisticsContext, PersistedContext, StatisticsContext } from '../models/context';
 import { LastPowerAttemptReason } from '../processors/diag/models/diag';
 
 /**
@@ -13,6 +17,9 @@ export class AppContext {
 
   private static deviceConfigurations: DeviceConfig[] = getConfig().devices;
 
+  /**
+   * @returns single context instance shared by the whole app
+   */
   public static get() {
     if (!AppContext.ctx) {
       AppContext.ctx = AppContext.createDefault();
@@ -20,9 +27,33 @@ export class AppContext {
     return AppContext.ctx;
   }
 
+  /**
+   * Restore context to default values
+   */
   public static resetAll() {
     AppContext.get();
     AppContext.ctx = AppContext.createDefault();
+  }
+
+  /**
+   * Write context to a file
+   */
+  public static async persist() {
+    const contextInstance = AppContext.get();
+    const contextFilePath = path.join(appRootDir.get(), 'config', 'cud-nxt-context.json');
+
+    const persisted: PersistedContext = {
+      meta: {
+        persistedOn: new Date(),
+      },
+      contents: contextInstance,
+    };
+
+    await writeFile(contextFilePath, JSON.stringify(persisted, null, 2), {
+      encoding: 'utf-8',
+    });
+
+    coreLogger.info('AppContext::persist saved context to {}', contextFilePath);
   }
 
   private static createDefault(): Context {

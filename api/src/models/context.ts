@@ -1,3 +1,4 @@
+import { AppContext } from '../common/context';
 import { FeatureDiagnostics, PowerDiagnostics } from '../processors/diag/models/diag';
 
 export interface Context {
@@ -32,6 +33,13 @@ export interface DeviceDiagnosticsContext {
 
 export interface DeviceStatisticsContext {
   uptimeSeconds: UptimeStatisticsContext;
+}
+
+export interface PersistedContext {
+  contents: AppContext;
+  meta: {
+    persistedOn: Date;
+  };
 }
 
 export interface GlobalStatisticsContext {

@@ -10,5 +10,6 @@ export default function() {
     childProcessMock.exec.mockReset();
     fsMock.readFile.mockReset();
     fsMock.stat.mockReset();
+    fsMock.writeFile.mockReset();
     wakeonlanMock.wake.mockReset();
 }
