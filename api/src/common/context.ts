@@ -70,7 +70,6 @@ export class AppContext {
         const persistedContents = JSON.parse(fileContents) as PersistedContext;
         const { contents } = persistedContents;
         
-        contextInstance.isContextPersisted = true;
         contextInstance.appInfo = contents.appInfo;
         contextInstance.diagnostics = contents.diagnostics;
         contextInstance.statistics = contents.statistics;

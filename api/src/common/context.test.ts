@@ -154,11 +154,7 @@ describe('AppContext singleton class', () => {
 
       // then
       const actualContext = AppContext.get();
-      const expectedContext: AppContext = {
-        ...persistedContext.contents,
-        isContextPersisted: true,
-      };
-      expect(actualContext).toEqual(expectedContext);
+      expect(actualContext).toEqual(persistedContext.contents);
     });
     
     it('should handle missing file correctly', async () => {

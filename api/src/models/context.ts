@@ -4,7 +4,6 @@ export interface Context {
   appInfo: AppInfoContext;
   diagnostics: DiagnosticsContext;
   statistics: StatisticsContext;
-  isContextPersisted?: boolean;
 }
 
 export interface AppInfoContext {

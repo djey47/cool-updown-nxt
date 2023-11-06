@@ -22,21 +22,18 @@ beforeEach(() => {
 
 describe('context processor', () => {
   describe('contextProcessor function', () => {
-    it('should read context from file initially then recall itself in 1h', async () => {
+    it('should restore then persist context to file then recall itself in 1h when initializing', async () => {
       // given-when
-      await contextProcessor();
+      await contextProcessor(true);
 
       // then
-      expect(persistMock).toHaveBeenCalledTimes(0);
       expect(restoreMock).toHaveBeenCalledTimes(1);
+      expect(persistMock).toHaveBeenCalledTimes(1);
       expect(recallMock).toHaveBeenCalledWith(contextProcessor, 3600000);
     });
 
-    it('should persist context to file then recall itself in 1h when context has is already persisted', async () => {
-      // given
-      AppContext.get().isContextPersisted = true;
-
-      // when
+    it('should persist context to file initially then recall itself in 1h', async () => {
+      // given-when
       await contextProcessor();
 
       // then
@@ -44,5 +41,6 @@ describe('context processor', () => {
       expect(restoreMock).toHaveBeenCalledTimes(0);
       expect(recallMock).toHaveBeenCalledWith(contextProcessor, 3600000);
     });
+
   });
 });
