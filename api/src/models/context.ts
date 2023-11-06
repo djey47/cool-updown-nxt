@@ -1,10 +1,10 @@
-import { AppContext } from '../common/context';
 import { FeatureDiagnostics, PowerDiagnostics } from '../processors/diag/models/diag';
 
 export interface Context {
   appInfo: AppInfoContext;
   diagnostics: DiagnosticsContext;
   statistics: StatisticsContext;
+  isContextPersisted?: boolean;
 }
 
 export interface AppInfoContext {
@@ -36,7 +36,7 @@ export interface DeviceStatisticsContext {
 }
 
 export interface PersistedContext {
-  contents: AppContext;
+  contents: Context;
   meta: {
     persistedOn: Date;
   };

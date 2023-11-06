@@ -5,7 +5,9 @@ import { LastPowerAttemptReason } from '../processors/diag/models/diag';
 import { AppContext } from './context';
 import { coreLogger } from './logger';
 
-const { appRootDirMock, node: { fsMock }} = globalMocks;
+import type { PersistedContext } from '../models/context';
+
+const { appRootDirMock, node: { fsMock } } = globalMocks;
 
 jest.mock('./logger', () => ({
   coreLogger: {
@@ -106,58 +108,72 @@ describe('AppContext singleton class', () => {
   });
 
   describe('persist static method', () => {
-    it('should write context to file asynchronously', () => {
+    it('should write context to file asynchronously', async () => {
       // given
       AppContext.get().appInfo.initialUptimeSeconds = 55;
 
       // when
-      AppContext.persist();
+      await AppContext.persist();
 
       // then
       const expectedContents = JSON.stringify({
         meta: {
           persistedOn: NOW,
         },
-        contents: {
-          appInfo: {
-            initialUptimeSeconds: 55,
-          },
-          diagnostics: {
-            '0': {
-              ping: {
-                current: {
-                  status: 'n/a',
-                },
-              },
-              power: {
-                state: 'n/a',
-                lastStartAttempt: {
-                  reason: 'none'
-                },
-                lastStopAttempt: {
-                  reason: 'none'
-                }
-              }
-            },
-          },
-          statistics: {
-            global: {},
-            perDevice: {
-              '0': {
-                uptimeSeconds: {
-                  current: 0,
-                  overall: 0,
-                },
-
-              },
-            },
-          },
-        },
+        contents: AppContext.get(),
       }, null, 2);
       expect(fsMock.writeFile).toHaveBeenCalledWith(
         '/config/cud-nxt-context.json',
         expectedContents,
-        { encoding: 'utf-8'});
+        { encoding: 'utf-8' });
+    });
+  });
+
+  describe('restore static method', () => {
+    it('should read context from existing file', async () => {
+      // given
+      const persistedContext: PersistedContext = {
+        meta: {
+          persistedOn: NOW,
+        },
+        contents: {
+          ...AppContext.get(),
+          appInfo: {
+            initialUptimeSeconds: 55,
+          },
+        },
+      };
+      const persistedContextAsString = JSON.stringify(persistedContext);
+      fsMock.stat.mockResolvedValue({
+        isFile: () => true,
+      });
+      fsMock.readFile.mockResolvedValue(persistedContextAsString);
+
+      // when
+      await AppContext.restore();
+
+      // then
+      const actualContext = AppContext.get();
+      const expectedContext: AppContext = {
+        ...persistedContext.contents,
+        isContextPersisted: true,
+      };
+      expect(actualContext).toEqual(expectedContext);
+    });
+    
+    it('should handle missing file correctly', async () => {
+      // given
+      fsMock.stat.mockRejectedValue('file not found');
+      const initialContext: AppContext = {
+        ...AppContext.get(),
+      };
+
+      // when
+      await AppContext.restore();
+
+      // then
+      const actualContext = AppContext.get();
+      expect(actualContext).toEqual(initialContext);
     });
   });
 });

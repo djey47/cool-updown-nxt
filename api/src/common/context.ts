@@ -1,6 +1,6 @@
 import appRootDir from 'app-root-dir';
 import path from 'path';
-import { writeFile } from 'fs/promises';
+import { readFile, stat, writeFile } from 'fs/promises';
 import { FeatureStatus, PowerStatus } from '../models/common';
 import { getConfig } from './configuration';
 import { coreLogger } from './logger';
@@ -40,7 +40,7 @@ export class AppContext {
    */
   public static async persist() {
     const contextInstance = AppContext.get();
-    const contextFilePath = path.join(appRootDir.get(), 'config', 'cud-nxt-context.json');
+    const contextFilePath = AppContext.resolveContextFilePath();
 
     const persisted: PersistedContext = {
       meta: {
@@ -53,7 +53,38 @@ export class AppContext {
       encoding: 'utf-8',
     });
 
-    coreLogger.info('AppContext::persist saved context to {}', contextFilePath);
+    coreLogger.info('AppContext::persist saved context to %s', contextFilePath);
+  }
+
+  /**
+   * Reads context from a file
+   */
+  public static async restore() {
+    const contextInstance = AppContext.get();
+    const contextFilePath = AppContext.resolveContextFilePath();
+
+    try {
+      const fileStat = await stat(contextFilePath);
+      if (fileStat.isFile()) {
+        const fileContents = await readFile(contextFilePath, { encoding: 'utf-8'});
+        const persistedContents = JSON.parse(fileContents) as PersistedContext;
+        const { contents } = persistedContents;
+        
+        contextInstance.isContextPersisted = true;
+        contextInstance.appInfo = contents.appInfo;
+        contextInstance.diagnostics = contents.diagnostics;
+        contextInstance.statistics = contents.statistics;
+      }
+    } catch (err) {
+      coreLogger.info('AppContext::restore could not find persisted context in %s', contextFilePath);
+    } 
+  }
+
+  private static resolveContextFilePath() {
+    return path.join(
+      appRootDir.get(),
+      'config',
+      'cud-nxt-context.json');  
   }
 
   private static createDefault(): Context {
