@@ -39,10 +39,19 @@ async function diagForAllDevices(devicesConfigs: DeviceConfig[]) {
     const deviceDiags = appContext.diagnostics[deviceId] || { ping: {} };
     appContext.diagnostics[deviceId] = deviceDiags;
 
+    // Previous diagnostics
+    deviceDiags.previous = {
+      on: deviceDiags.on,
+      ping: { ...deviceDiags.ping },
+      power: { ...deviceDiags.power },
+    };
+
+    // Current diagnostics
     const currentDate = new Date();
     deviceDiags.on = currentDate;
 
     // Ping
+    // FIXME Use previous diags instead, assume current by default (simplify model)
     deviceDiags.ping = {
       current: pingResult.current,
       previous: deviceDiags.ping.current,

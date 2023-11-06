@@ -28,6 +28,7 @@ export interface DeviceDiagnosticsContext {
   on?: Date;
   ping: FeatureDiagnostics;
   power: PowerDiagnostics;
+  previous?: DeviceDiagnosticsContext;
 }
 
 export interface DeviceStatisticsContext {

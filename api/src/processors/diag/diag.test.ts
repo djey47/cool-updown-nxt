@@ -83,11 +83,15 @@ describe('diagnostics processor', () => {
             on: NOW,
             status: 'ok',
           },
-        }
+        },
+        previous: {
+          ping: {},
+          power: {},
+        },
       });
     });
 
-    it('should write logs, perform diagnostic, stats and invoke recaller to call itself again', async () => {
+    it('should write logs, perform diagnostics, stats and invoke recaller to call itself again', async () => {
       // given
       pingDiagMock.mockResolvedValue(defaultPingResultsOK);
       powerDiagMock.mockReturnValue(defaultPowerResults);
@@ -115,7 +119,23 @@ describe('diagnostics processor', () => {
           lastStopAttempt: {
             reason: 'external',
           },
-        }
+        },
+        previous: {
+          ping: {
+            current: {
+              status: 'n/a',
+            },
+          },
+          power: {
+            lastStartAttempt: {
+              reason: 'none',
+            },
+            lastStopAttempt: {
+              reason: 'none',
+            },
+            state: 'n/a',
+          },
+        },
       });
 
       expect(coreLoggerInfoMock).toHaveBeenCalledTimes(2);
@@ -184,7 +204,26 @@ describe('diagnostics processor', () => {
           lastStopAttempt: {
             reason: 'external',
           },
-        }
+        },
+        previous: {
+          on: previousDate,
+          ping: {
+            current: {
+              on: previousDate,
+              status: 'ok',
+            },
+          },
+          power: {
+            lastStartAttempt: {
+              reason: 'none',
+            },
+            lastStopAttempt: {
+              reason: 'none',
+            },
+            state: 'off',
+          },
+        },
+
       });
 
       expect(coreLoggerInfoMock).toHaveBeenCalledTimes(2);

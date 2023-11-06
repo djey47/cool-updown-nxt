@@ -325,7 +325,9 @@ Application context, being the whole data required by the application at run-tim
 
 ## Processing details: diagnostics
 
-Here are the diagnostics that are currently processed:
+Diagnostics processor stores the N-1 results in a `previous` field for the devo=ice specific context, and updates current results.
+
+Here are the diagnostics that are actually processed:
 
 ### Ping
 
@@ -339,12 +341,12 @@ Diag results:
 
 ### Power
 
-Note: By design, the power state of a device is determined by the results of the ping diagnostic above; while working on most cases, that approach might not be 100% reliable, especially when device encounters network issues; besides, there's latency between the real status change and the moment when it comes detected by the diagnostics.
+Note: By design, the power state of a device is determined by the results of the ping diagnostic above; while working on most cases, that approach might not be 100% reliable, especially when device encounters network issues; besides, there's latency between the real status change and the moment when it comes detected by the diagnostics. So... be aware of the limitations!
 
 The application actually records the power ON/OFF attempts and thus is able to store:
 
 - date on which the attempt has been made
-- reason (source) of this attempt; it can be via api, scheduling, external (e.g power button, supply lost), or none if no power state change has been detected at all.
+- reason (source) of this attempt; it can be via api, scheduling, external (e.g power button, supply lost, etc.), or none if no power state change has been detected at all.
 
 At time of every diagnostics processing, it can track the power state change and register external attempts:
 
