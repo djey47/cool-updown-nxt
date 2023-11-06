@@ -322,6 +322,7 @@ Application context, being the whole data required by the application at run-tim
 - reload persisted context (written to disk) at application start
 - regularly update persisted context with the current data, every 1 hour by design.
 
+
 ## Processing details: diagnostics
 
 Here are the diagnostics that are currently processed:
@@ -349,6 +350,7 @@ At time of every diagnostics processing, it can track the power state change and
 
 - if power state switched from `off` to `on` and last start attempt date is older than 10 minutes (should it be tweakable?), an external start attempt is registered and attempt date is updated to current moment
 - if power state switched from `on` to `off` and last stop attempt date is older than 10 minutes (should it be tweakable?), an external stop attempt is registered and attempt date is updated to current moment.
+
 
 ## Processing details: statistics
 

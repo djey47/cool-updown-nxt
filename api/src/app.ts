@@ -3,6 +3,7 @@
 import appRootDir from 'app-root-dir';
 import fastify from 'fastify';
 import fastifyStaticPlugin from '@fastify/static';
+import fastifyGracefulShutdownPlugin from 'fastify-graceful-shutdown';
 import path from 'path';
 import { home } from './services/home/home';
 import { coreLogger, getLoggerConfig } from './common/logger';
@@ -31,15 +32,16 @@ const app = async () => {
     logger: getLoggerConfig(),
   });
 
+  // Plugins
   app.register(fastifyStaticPlugin, {
     root: path.join(appRootDir.get(), '..', 'web', 'dist'),
     prefix: '/ui/',
   });
+  app.register(fastifyGracefulShutdownPlugin);
 
-  // TODO error management
+  // TODO critical error management
 
-  // TODO exit management
-
+  // Routes
   app.get('/', (_req, reply) => {
     home(reply);
   });
@@ -72,10 +74,22 @@ const app = async () => {
     statsForDevice(deviceId, reply);
   });
 
-  app.post('/power-on/:deviceId',(req: ApiWithDeviceIdParameterRequest, reply: FastifyReply) => {
+  app.post('/power-on/:deviceId', (req: ApiWithDeviceIdParameterRequest, reply: FastifyReply) => {
     const { params: { deviceId } } = req;
     powerOnForDevice(deviceId, reply);
   });
+
+  // Shutdown management
+  app.after(() => {
+    app.gracefulShutdown(async (signal, next) => {
+      app.log.info('cool-updown-nxt received signal %s, server will terminate', signal);
+
+      // Should persist context
+      await contextProcessor()
+
+      next();
+    });
+  })
 
   // Must match the vite config file
   if (import.meta.env.PROD) {

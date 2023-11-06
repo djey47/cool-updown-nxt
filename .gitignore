@@ -5,3 +5,4 @@ node_modules/
 *.log
 api/config/local.json
 api/config/production.json
+api/config/cud-nxt-context.json
