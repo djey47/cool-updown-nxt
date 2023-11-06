@@ -54,10 +54,11 @@ unTODOs
       - [] SSH connectivity
       - [] ?
     - [] Stats
+      - [] Uptimes: app, per device (current and overall)
+      - [] ?
   - Transversal
     - [] Config: validation at startup
     - [] Config : App => debugMode
     - [] Context persistence
       - [X] At start: restore context from file
       - [X] At exit: save to file
-      - [] Save overall app uptime to initialUptimeSeconds
