@@ -24,7 +24,6 @@ function initAppInfo() {
   // Update app start date
   const { appInfo } = AppContext.get();
   appInfo.lastStartOn = new Date();
-  appInfo.initialUptimeSeconds = 0; // TODO get persisted value on last exit
 }
 
 const app = async () => {
@@ -101,7 +100,7 @@ const app = async () => {
   }
 
   // Start context processor - should always be the 1st thing to do
-  await contextProcessor();
+  await contextProcessor(true);
 
   initAppInfo();
 
