@@ -8,7 +8,6 @@ export interface Context {
 
 export interface AppInfoContext {
   lastStartOn?: Date;
-  initialUptimeSeconds?: number;
 }
 
 export interface DiagnosticsContext {

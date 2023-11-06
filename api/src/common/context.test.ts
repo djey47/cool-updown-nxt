@@ -110,7 +110,7 @@ describe('AppContext singleton class', () => {
   describe('persist static method', () => {
     it('should write context to file asynchronously', async () => {
       // given
-      AppContext.get().appInfo.initialUptimeSeconds = 55;
+      AppContext.get().appInfo.lastStartOn = NOW;
 
       // when
       await AppContext.persist();
@@ -138,9 +138,7 @@ describe('AppContext singleton class', () => {
         },
         contents: {
           ...AppContext.get(),
-          appInfo: {
-            initialUptimeSeconds: 55,
-          },
+          appInfo: {},
         },
       };
       const persistedContextAsString = JSON.stringify(persistedContext);

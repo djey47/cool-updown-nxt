@@ -1,4 +1,5 @@
 import appRootDir from 'app-root-dir';
+import parseISO from 'date-fns/parseISO/index.js';
 import path from 'path';
 import { readFile, stat, writeFile } from 'fs/promises';
 import { FeatureStatus, PowerStatus } from '../models/common';
@@ -67,7 +68,7 @@ export class AppContext {
       const fileStat = await stat(contextFilePath);
       if (fileStat.isFile()) {
         const fileContents = await readFile(contextFilePath, { encoding: 'utf-8'});
-        const persistedContents = JSON.parse(fileContents) as PersistedContext;
+        const persistedContents = JSON.parse(fileContents, AppContext.contextReviver) as PersistedContext;
         const { contents } = persistedContents;
         
         contextInstance.appInfo = contents.appInfo;
@@ -133,5 +134,13 @@ export class AppContext {
       };
       return acc;
     }, {});
+  }
+
+  private static contextReviver(key: string, value: unknown) {
+    if ((key === 'on' || key.endsWith('On')) && typeof(value) === 'string') {
+      return parseISO(value);
+    }
+
+    return value;
   }
 }

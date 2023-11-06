@@ -358,4 +358,7 @@ At time of every diagnostics processing, it can track the power state change and
 
 Stats are computed everytime diagnostics processing gets achieved.
 
-For now, uptime has a WIP computation.
+For now, uptime has a WIP computation and is in beta state:
+
+- Global: concerning application itself (`current` = from last start, or `overall`  = since the beginning)
+- Per configured device (also supporting `current` and `overall` information).
