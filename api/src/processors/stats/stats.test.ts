@@ -1,6 +1,6 @@
 import subSeconds from 'date-fns/subSeconds';
 import { AppContext } from '../../common/context';
-import { stats } from './stats';
+import { statsProcessor } from './stats';
 
 jest.useFakeTimers();
 
@@ -26,7 +26,7 @@ describe('statistics processor', () => {
       appInfo.initialUptimeSeconds = 60;
 
       // when
-      await stats();
+      await statsProcessor();
 
       // then
       const { statistics } = AppContext.get();
@@ -50,7 +50,7 @@ describe('statistics processor', () => {
 
     it('should compute stats into context when last start on and initial uptime not available', async () => {
       // given-when
-      await stats();
+      await statsProcessor();
 
       // then
       const { statistics } = AppContext.get();

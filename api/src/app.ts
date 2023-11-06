@@ -10,7 +10,7 @@ import { coreLogger, getLoggerConfig } from './common/logger';
 import { logs } from './services/logs/logs';
 import { getConfig } from './common/configuration';
 import { config } from './services/config/config';
-import { diag } from './processors/diag/diag';
+import { diagProcessor } from './processors/diag/diag';
 import { diags, diagsForDevice } from './services/diags/diags';
 import { AppContext } from './common/context';
 import { stats, statsForDevice } from './services/stats/stats';
@@ -106,7 +106,7 @@ const app = async () => {
   initAppInfo();
 
   // Start diagnostics processor
-  await diag();
+  await diagProcessor();
   return app;
 };
 

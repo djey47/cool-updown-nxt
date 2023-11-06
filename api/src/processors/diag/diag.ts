@@ -2,7 +2,7 @@ import { getConfig } from '../../common/configuration';
 import { AppContext } from '../../common/context';
 import { coreLogger } from '../../common/logger';
 import { recall } from '../../helpers/recaller';
-import { stats } from '../stats/stats';
+import { statsProcessor } from '../stats/stats';
 import { pingDiag } from './items/ping';
 import { powerDiag } from './items/power';
 
@@ -11,7 +11,7 @@ import type { DeviceConfig } from '../../models/configuration';
 
 const DIAGS_INTERVAL = getConfig().app.diagnosticsIntervalMs;
 
-export async function diag() {
+export async function diagProcessor() {
   // Will log to console only as using core logger (pino)
   coreLogger.info('diag::diag Performing...');
 
@@ -22,9 +22,9 @@ export async function diag() {
   coreLogger.info('diag::diag Done!');
 
   // Stats are computed once diags are done
-  await stats();
+  await statsProcessor();
 
-  recall(diag, DIAGS_INTERVAL);
+  recall(diagProcessor, DIAGS_INTERVAL);
 }
 
 async function diagForAllDevices(devicesConfigs: DeviceConfig[]) {

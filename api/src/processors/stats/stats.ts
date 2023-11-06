@@ -6,7 +6,7 @@ import { coreLogger } from '../../common/logger';
 import type { DeviceConfig } from '../../models/configuration';
 import type { DeviceDiagnosticsContext, DeviceStatisticsContext } from '../../models/context';
 
-export async function stats() {
+export async function statsProcessor() {
   coreLogger.info('stats::stats Performing...');
 
   statsForApplication();

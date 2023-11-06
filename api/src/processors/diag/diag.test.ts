@@ -2,8 +2,8 @@ import { AppContext } from '../../common/context';
 import { coreLogger } from '../../common/logger';
 import { recall } from '../../helpers/recaller';
 import { FeatureStatus, PowerStatus } from '../../models/common';
-import { stats } from '../stats/stats';
-import { diag } from './diag';
+import { statsProcessor } from '../stats/stats';
+import { diagProcessor } from './diag';
 import { pingDiag } from './items/ping';
 import { powerDiag } from './items/power';
 
@@ -24,14 +24,14 @@ jest.mock('./items/power', () => ({
   powerDiag: jest.fn(),
 }));
 jest.mock('../stats/stats', () => ({
-  stats: jest.fn(),
+  statsProcessor: jest.fn(),
 }));
 
 const coreLoggerInfoMock = coreLogger.info as jest.Mock<void>;
 const recallMock = recall as jest.Mock<void>;
 const pingDiagMock = pingDiag as jest.Mock<Promise<FeatureDiagnosticsResults>>;
 const powerDiagMock = powerDiag as jest.Mock<PowerDiagnostics>;
-const statsProcessorMock = stats as jest.Mock<Promise<void>>;
+const statsProcessorMock = statsProcessor as jest.Mock<Promise<void>>;
 
 const NOW = new Date();
 
@@ -73,7 +73,7 @@ describe('diagnostics processor', () => {
       pingDiagMock.mockResolvedValue(defaultPingResultsOK);
 
       // when
-      await diag();
+      await diagProcessor();
 
       // then
       expect(AppContext.get().diagnostics['0']).toEqual({
@@ -93,7 +93,7 @@ describe('diagnostics processor', () => {
       powerDiagMock.mockReturnValue(defaultPowerResults);
 
       // when
-      await diag();
+      await diagProcessor();
 
       // then
       expect(AppContext.get().diagnostics['0']).toEqual({
@@ -119,7 +119,7 @@ describe('diagnostics processor', () => {
       });
 
       expect(coreLoggerInfoMock).toHaveBeenCalledTimes(2);
-      expect(recallMock).toHaveBeenCalledWith(diag, 0);
+      expect(recallMock).toHaveBeenCalledWith(diagProcessor, 0);
       expect(statsProcessorMock).toHaveBeenCalledTimes(1);
     });
 
@@ -160,7 +160,7 @@ describe('diagnostics processor', () => {
       powerDiagMock.mockReturnValue(powerResults);
 
       // when
-      await diag();
+      await diagProcessor();
 
       // then
       expect(appContext.diagnostics['0']).toEqual({
@@ -188,7 +188,7 @@ describe('diagnostics processor', () => {
       });
 
       expect(coreLoggerInfoMock).toHaveBeenCalledTimes(2);
-      expect(recallMock).toHaveBeenCalledWith(diag, 0);
+      expect(recallMock).toHaveBeenCalledWith(diagProcessor, 0);
     });
   });
 });
