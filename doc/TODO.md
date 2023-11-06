@@ -11,7 +11,7 @@ unTODOs
   - [X] Static file server for the web-application
   - Handle critical errors => 500?
   - Services
-    - [] Websocket support for diags/stats
+    - [] enhancement: Websocket support for diags/stats refresh
     - Config service
       - [X] Basic implementation
       - [] Sensitive info obfuscation
@@ -58,5 +58,6 @@ unTODOs
     - [] Config: validation at startup
     - [] Config : App => debugMode
     - [] Context persistence
-      - At exit
-      - Save overall app uptime to initialUptimeSeconds
+      - [X] At start: restore context from file
+      - [X] At exit: save to file
+      - [] Save overall app uptime to initialUptimeSeconds
