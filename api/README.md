@@ -315,6 +315,13 @@ To display logs from a terminal, issue following command: `npm run logs`.
 
 Server logs are written to the *api/logs/cool-updown-nxt.log* file and sent to the standard/error outputs as well.
 
+
+## Processing details: context
+
+Application context, being the whole data required by the application at run-time, has its own processor, to:
+- reload persisted context (written to disk) at application start
+- regularly update persisted context with the current data, every 1 hour by design.
+
 ## Processing details: diagnostics
 
 Here are the diagnostics that are currently processed:
@@ -331,6 +338,8 @@ Diag results:
 
 ### Power
 
+Note: By design, the power state of a device is determined by the results of the ping diagnostic above; while working on most cases, that approach might not be 100% reliable, especially when device encounters network issues; besides, there's latency between the real status change and the moment when it comes detected by the diagnostics.
+
 The application actually records the power ON/OFF attempts and thus is able to store:
 
 - date on which the attempt has been made
@@ -343,4 +352,6 @@ At time of every diagnostics processing, it can track the power state change and
 
 ## Processing details: statistics
 
-Stats are computed everytime diagbostics processing get achieved.
+Stats are computed everytime diagnostics processing gets achieved.
+
+For now, uptime has a WIP computation.

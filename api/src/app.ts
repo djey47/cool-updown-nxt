@@ -14,6 +14,7 @@ import { diags, diagsForDevice } from './services/diags/diags';
 import { AppContext } from './common/context';
 import { stats, statsForDevice } from './services/stats/stats';
 import { powerOnForDevice } from './services/power/powerOn';
+import { contextProcessor } from './processors/context/context';
 
 import type { ApiWithDeviceIdParameterRequest } from './models/api';
 import type { FastifyReply } from 'fastify/types/reply';
@@ -85,11 +86,13 @@ const app = async () => {
     coreLogger.info('cool-updown-nxt API running on port %s, host %s', port, host);
   }
 
+  // Start context processor - should always be the 1st thing to do
+  await contextProcessor();
+
   initAppInfo();
 
   // Start diagnostics processor
-  diag();
-
+  await diag();
   return app;
 };
 
