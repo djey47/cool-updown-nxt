@@ -150,6 +150,35 @@ Returns loaded configuration.
 }
 ```
 
+### GET /config/[deviceId]
+
+Returns registered configuration for a configured device.
+
+**Sample output**
+
+```json
+{
+  "configuration": {
+    "network": {
+      "hostname": "my-nas"
+    }
+  }
+}
+```
+
+**Notes**
+- Please refer to `/config` documentation above for details
+- `deviceId` acts as unique identifier for a configured device; it matches the 0-based rank of the device in the configuration array
+- If no configuration is available for specified device, a 404 is replied with following output:
+
+```json
+{
+  "errorMessage": "Specified item was not found",
+  "itemType": "deviceId",
+  "itemValue": "foo"
+}
+```
+
 ### GET /diags
 
 Returns some diagnostics for all configured devices (ping, power state).

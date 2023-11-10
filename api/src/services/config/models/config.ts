@@ -1,5 +1,5 @@
-import type { BaseConfig } from '../../../models/configuration';
+import type { BaseConfig, DeviceConfig } from '../../../models/configuration';
 
 export interface ConfigResponse {
-  configuration: BaseConfig;
+  configuration: BaseConfig | DeviceConfig;
 }

@@ -139,7 +139,7 @@ describe('diags service', () => {
 
       // then
       expect(replyWithJsonMock).not.toHaveBeenCalled();
-      expect(replyWithItemNotFound).toHaveBeenCalledWith(defaultReply, ApiItem.DEVICE_ID, 'foo');
+      expect(replyWithItemNotFoundMock).toHaveBeenCalledWith(defaultReply, ApiItem.DEVICE_ID, 'foo');
     });
   });
 });
