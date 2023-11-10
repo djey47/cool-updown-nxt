@@ -60,7 +60,7 @@ function diagsContextForDeviceToResponse(deviceDiags: DeviceDiagnosticsContext):
 }
 
 function diagsFeatureToResponse(featureDiags: FeatureDiagnostics): DiagsResponseForFeature {
-  const { current: { on, status} } = featureDiags;
+  const { on, status } = featureDiags;
   return {
     on, 
     status,

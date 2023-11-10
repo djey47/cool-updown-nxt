@@ -33,14 +33,8 @@ describe('diags service', () => {
     '0': {
       on: NOW,
       ping: {
-        current: {
-          on: NOW,
-          status: FeatureStatus.OK
-        },
-        previous: {
-          on: NOW_MINUS_1MIN,
-          status: FeatureStatus.KO,
-        }
+        on: NOW,
+        status: FeatureStatus.OK
       },
       power: {
         state: PowerStatus.ON,
@@ -49,26 +43,20 @@ describe('diags service', () => {
         },
         lastStopAttempt: {
           reason: LastPowerAttemptReason.NONE,
-        },        
+        },
       },
     },
     '1': {
       on: NOW,
       ping: {
-        current: {
-          on: NOW,
-          status: FeatureStatus.KO
-        },
-        previous: {
-          on: NOW_MINUS_1MIN,
-          status: FeatureStatus.OK,
-        }
+        on: NOW,
+        status: FeatureStatus.KO
       },
       power: {
         state: PowerStatus.OFF,
         lastStartAttempt: {
           reason: LastPowerAttemptReason.NONE,
-        }, 
+        },
         lastStopAttempt: {
           reason: LastPowerAttemptReason.NONE,
         },
@@ -144,8 +132,8 @@ describe('diags service', () => {
         },
       };
       expect(replyWithJsonMock).toHaveBeenCalledWith(defaultReply, expectedOutput);
-    });    
-    
+    });
+
     it('should reply with 404 when no diags for specified device', async () => {
       // given
       const appContext = AppContext.get();

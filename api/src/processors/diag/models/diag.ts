@@ -6,20 +6,15 @@ export interface DiagResults {
 }
 
 export interface FeatureDiagnostics {
-  current: FeatureDiagnosticsResults;
-  previous?: FeatureDiagnosticsResults;
+  message?: string;
+  on?: Date;
+  status: FeatureStatus;
 }
 
 export interface PowerDiagnostics {
   lastStartAttempt: LastPowerAttemptDiagnostics;
   lastStopAttempt: LastPowerAttemptDiagnostics;
   state: PowerStatus;
-}
-
-export interface FeatureDiagnosticsResults {
-  message?: string;
-  on?: Date;
-  status: FeatureStatus;
 }
 
 export interface LastPowerAttemptDiagnostics {

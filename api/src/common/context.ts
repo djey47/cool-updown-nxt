@@ -67,24 +67,24 @@ export class AppContext {
     try {
       const fileStat = await stat(contextFilePath);
       if (fileStat.isFile()) {
-        const fileContents = await readFile(contextFilePath, { encoding: 'utf-8'});
+        const fileContents = await readFile(contextFilePath, { encoding: 'utf-8' });
         const persistedContents = JSON.parse(fileContents, AppContext.contextReviver) as PersistedContext;
         const { contents } = persistedContents;
-        
+
         contextInstance.appInfo = contents.appInfo;
         contextInstance.diagnostics = contents.diagnostics;
         contextInstance.statistics = contents.statistics;
       }
     } catch (err) {
       coreLogger.info('AppContext::restore could not find persisted context in %s', contextFilePath);
-    } 
+    }
   }
 
   private static resolveContextFilePath() {
     return path.join(
       appRootDir.get(),
       'config',
-      'cud-nxt-context.json');  
+      'cud-nxt-context.json');
   }
 
   private static createDefault(): Context {
@@ -99,9 +99,7 @@ export class AppContext {
     return AppContext.deviceConfigurations.reduce((acc: DiagnosticsContext, _dc, index) => {
       acc[String(index)] = {
         ping: {
-          current: {
-            status: FeatureStatus.UNAVAILABLE,            
-          }
+          status: FeatureStatus.UNAVAILABLE,
         },
         power: {
           state: PowerStatus.UNAVAILABLE,
@@ -118,15 +116,15 @@ export class AppContext {
   }
 
   private static createDefaultStats(): StatisticsContext {
-    return {      
+    return {
       global: {},
       perDevice: AppContext.createDefaultStatsPerDevice(),
-    };    
+    };
   }
 
   private static createDefaultStatsPerDevice() {
     return AppContext.deviceConfigurations.reduce((acc: PerDeviceStatisticsContext, _dc, index) => {
-      acc[String(index)] = {  
+      acc[String(index)] = {
         uptimeSeconds: {
           current: 0,
           overall: 0,
@@ -137,7 +135,7 @@ export class AppContext {
   }
 
   private static contextReviver(key: string, value: unknown) {
-    if ((key === 'on' || key.endsWith('On')) && typeof(value) === 'string') {
+    if ((key === 'on' || key.endsWith('On')) && typeof (value) === 'string') {
       return parseISO(value);
     }
 

@@ -7,7 +7,7 @@ import { diagProcessor } from './diag';
 import { pingDiag } from './items/ping';
 import { powerDiag } from './items/power';
 
-import { LastPowerAttemptReason, type FeatureDiagnosticsResults, PowerDiagnostics } from './models/diag';
+import { type FeatureDiagnostics, LastPowerAttemptReason, type PowerDiagnostics } from './models/diag';
 
 jest.mock('../../common/logger', () => ({
   coreLogger: {
@@ -29,7 +29,7 @@ jest.mock('../stats/stats', () => ({
 
 const coreLoggerInfoMock = coreLogger.info as jest.Mock<void>;
 const recallMock = recall as jest.Mock<void>;
-const pingDiagMock = pingDiag as jest.Mock<Promise<FeatureDiagnosticsResults>>;
+const pingDiagMock = pingDiag as jest.Mock<Promise<FeatureDiagnostics>>;
 const powerDiagMock = powerDiag as jest.Mock<PowerDiagnostics>;
 const statsProcessorMock = statsProcessor as jest.Mock<Promise<void>>;
 
@@ -53,7 +53,7 @@ beforeEach(() => {
 
 describe('diagnostics processor', () => {
   describe('diag function', () => {
-    const defaultPingResultsOK: FeatureDiagnosticsResults = {
+    const defaultPingResultsOK: FeatureDiagnostics = {
       on: new Date(),
       status: FeatureStatus.OK,
     };
@@ -79,10 +79,8 @@ describe('diagnostics processor', () => {
       expect(AppContext.get().diagnostics['0']).toEqual({
         on: NOW,
         ping: {
-          current: {
-            on: NOW,
-            status: 'ok',
-          },
+          on: NOW,
+          status: 'ok',
         },
         previous: {
           ping: {},
@@ -103,13 +101,8 @@ describe('diagnostics processor', () => {
       expect(AppContext.get().diagnostics['0']).toEqual({
         on: NOW,
         ping: {
-          current: {
-            on: NOW,
-            status: 'ok',
-          },
-          previous: {
-            status: 'n/a',
-          },
+          on: NOW,
+          status: 'ok',
         },
         power: {
           state: 'on',
@@ -122,9 +115,7 @@ describe('diagnostics processor', () => {
         },
         previous: {
           ping: {
-            current: {
-              status: 'n/a',
-            },
+            status: 'n/a',
           },
           power: {
             lastStartAttempt: {
@@ -159,13 +150,11 @@ describe('diagnostics processor', () => {
           },
         },
         ping: {
-          current: {
-            on: previousDate,
-            status: FeatureStatus.OK,
-          },
-        }
+          on: previousDate,
+          status: FeatureStatus.OK,
+        },
       };
-      const pingResultsKO: FeatureDiagnosticsResults = {
+      const pingResultsKO: FeatureDiagnostics = {
         ...defaultPingResultsOK,
         status: FeatureStatus.KO,
       };
@@ -186,14 +175,8 @@ describe('diagnostics processor', () => {
       expect(appContext.diagnostics['0']).toEqual({
         on: NOW,
         ping: {
-          current: {
-            on: NOW,
-            status: 'ko',
-          },
-          previous: {
-            on: previousDate,
-            status: 'ok',
-          },
+          on: NOW,
+          status: 'ko',
         },
         power: {
           state: 'on',
@@ -208,10 +191,8 @@ describe('diagnostics processor', () => {
         previous: {
           on: previousDate,
           ping: {
-            current: {
-              on: previousDate,
-              status: 'ok',
-            },
+            on: previousDate,
+            status: 'ok',
           },
           power: {
             lastStartAttempt: {

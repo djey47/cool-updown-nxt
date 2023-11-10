@@ -51,11 +51,7 @@ async function diagForAllDevices(devicesConfigs: DeviceConfig[]) {
     deviceDiags.on = currentDate;
 
     // Ping
-    // FIXME Use previous diags instead, assume current by default (simplify model)
-    deviceDiags.ping = {
-      current: pingResult.current,
-      previous: deviceDiags.ping.current,
-    };
+    deviceDiags.ping = pingResult;
 
     // Power state
     deviceDiags.power = powerDiag(deviceDiags);
@@ -67,8 +63,6 @@ async function diagByDevice(deviceId: string, deviceConfig: DeviceConfig): Promi
   
   return {
     deviceId,
-    ping: {
-      current: pingResults,
-    },
+    ping: pingResults,
   };
 }

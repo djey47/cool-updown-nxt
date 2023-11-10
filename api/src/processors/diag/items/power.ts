@@ -4,7 +4,7 @@ import type { DeviceDiagnosticsContext } from '../../../models/context';
 import { LastPowerAttemptDiagnostics, LastPowerAttemptReason, type PowerDiagnostics } from '../models/diag';
 
 export function powerDiag(diags: DeviceDiagnosticsContext): PowerDiagnostics {
-    const { power: powerDiags, ping: { current: { status: currentPingStatus }}} = diags;
+    const { power: powerDiags, ping: { status: currentPingStatus }} = diags;
   
     // TODO See if still necessary
     if (!powerDiags) {

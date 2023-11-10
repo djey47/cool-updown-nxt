@@ -3,12 +3,12 @@
 import { ping } from '../../../helpers/systemGateway';
 
 import type{ DeviceConfig } from '../../../models/configuration';
-import type { FeatureDiagnosticsResults } from '../models/diag';
+import type { FeatureDiagnostics } from '../models/diag';
 
 /**
  * @returns Promise with all ping diagnostics
  */
-export async function pingDiag(_deviceId: string, deviceConfig: DeviceConfig): Promise<FeatureDiagnosticsResults> {
+export async function pingDiag(_deviceId: string, deviceConfig: DeviceConfig): Promise<FeatureDiagnostics> {
   const result = await ping(deviceConfig.network.hostname);
 
   const currentDate = new Date();

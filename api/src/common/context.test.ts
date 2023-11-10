@@ -51,10 +51,8 @@ describe('AppContext singleton class', () => {
         '0': {
           on: new Date(),
           ping: {
-            current: {
-              on: new Date(),
-              status: FeatureStatus.OK,
-            },
+            on: new Date(),
+            status: FeatureStatus.OK,
           },
           power: {
             state: PowerStatus.ON,
@@ -77,9 +75,7 @@ describe('AppContext singleton class', () => {
         diagnostics: {
           '0': {
             ping: {
-              current: {
-                status: 'n/a',
-              },
+              status: 'n/a',
             },
             power: {
               state: 'n/a',
@@ -154,7 +150,7 @@ describe('AppContext singleton class', () => {
       const actualContext = AppContext.get();
       expect(actualContext).toEqual(persistedContext.contents);
     });
-    
+
     it('should handle missing file correctly', async () => {
       // given
       fsMock.stat.mockRejectedValue('file not found');

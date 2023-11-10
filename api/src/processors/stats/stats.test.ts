@@ -36,9 +36,7 @@ describe('statistics processor', () => {
       diagnostics['0'] = {
         on: NOW,
         ping: {
-          current: {
-            status: FeatureStatus.OK,
-          },
+          status: FeatureStatus.OK,
         },
         power: {
           state: PowerStatus.ON,
@@ -48,9 +46,7 @@ describe('statistics processor', () => {
         previous: {
           on: NOW_MINUS_1MIN,
           ping: {
-            current: {
-              status: FeatureStatus.OK,
-            },
+            status: FeatureStatus.OK,
           },
           power: {
             state: PowerStatus.ON,
@@ -96,9 +92,7 @@ describe('statistics processor', () => {
       }
       diagnostics['0'] = {
         ping: {
-          current: {
-            status: FeatureStatus.OK,
-          },
+          status: FeatureStatus.OK,
         },
         power: {
           state: PowerStatus.ON,
