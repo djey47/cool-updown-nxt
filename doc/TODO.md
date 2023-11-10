@@ -5,7 +5,11 @@ unTODOs
   - [X] ESLint
   - [] Unit tests mechanism
   - [] Dashboard
-    - device tiles (status, uptime...)
+    - [] device tiles
+      - power status,
+      - uptime
+      - diags results
+      - rdp via URI scheme (https://learn.microsoft.com/en-us/windows-server/remote/remote-desktop-services/clients/remote-desktop-uri#ms-rd-uri-scheme)
     - 
   - [] Logs
   - [] Config (per device, app server)
