@@ -1,5 +1,8 @@
-unTODOs
+TODOs
 =====
+
+- COMMON
+  - [] Add package scripts at root to easily install and run the app in prod mode
 
 - WEB/FRONTEND
   - [X] ESLint
@@ -19,6 +22,7 @@ unTODOs
   - [X] Unit tests mechanism
   - [X] ESLint
   - [X] Static file server for the web-application
+  - [] unit tests for routes
   - Handle critical errors => 500?
   - Services
     - [] enhancement: Websocket support for diags/stats refresh
