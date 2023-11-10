@@ -54,7 +54,6 @@ beforeEach(() => {
 describe('diagnostics processor', () => {
   describe('diag function', () => {
     const defaultPingResultsOK: FeatureDiagnostics = {
-      on: new Date(),
       status: FeatureStatus.OK,
     };
     const defaultPowerResults: PowerDiagnostics = {
@@ -79,7 +78,6 @@ describe('diagnostics processor', () => {
       expect(AppContext.get().diagnostics['0']).toEqual({
         on: NOW,
         ping: {
-          on: NOW,
           status: 'ok',
         },
         previous: {
@@ -101,7 +99,6 @@ describe('diagnostics processor', () => {
       expect(AppContext.get().diagnostics['0']).toEqual({
         on: NOW,
         ping: {
-          on: NOW,
           status: 'ok',
         },
         power: {
@@ -150,7 +147,6 @@ describe('diagnostics processor', () => {
           },
         },
         ping: {
-          on: previousDate,
           status: FeatureStatus.OK,
         },
       };
@@ -175,7 +171,6 @@ describe('diagnostics processor', () => {
       expect(appContext.diagnostics['0']).toEqual({
         on: NOW,
         ping: {
-          on: NOW,
           status: 'ko',
         },
         power: {
@@ -191,7 +186,6 @@ describe('diagnostics processor', () => {
         previous: {
           on: previousDate,
           ping: {
-            on: previousDate,
             status: 'ok',
           },
           power: {

@@ -7,7 +7,6 @@ export interface DiagResults {
 
 export interface FeatureDiagnostics {
   message?: string;
-  on?: Date;
   status: FeatureStatus;
 }
 

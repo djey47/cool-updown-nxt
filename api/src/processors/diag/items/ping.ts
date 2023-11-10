@@ -11,9 +11,7 @@ import type { FeatureDiagnostics } from '../models/diag';
 export async function pingDiag(_deviceId: string, deviceConfig: DeviceConfig): Promise<FeatureDiagnostics> {
   const result = await ping(deviceConfig.network.hostname);
 
-  const currentDate = new Date();
   return {
-    on: currentDate,
     status: result.status,
     message: result.errorOutput,
   };

@@ -37,7 +37,7 @@ export function powerDiag(diags: DeviceDiagnosticsContext): PowerDiagnostics {
   
   function registerAttempt(lastAttemptType: 'lastStartAttempt' | 'lastStopAttempt', newPowerState: PowerStatus, powerDiags: PowerDiagnostics): LastPowerAttemptDiagnostics {
     const { state: lastPowerState} = powerDiags;
-    const {on: lastAttemptOn, reason: lastReason } = powerDiags[lastAttemptType];
+    const { on: lastAttemptOn, reason: lastReason } = powerDiags[lastAttemptType];
   
     const now = new Date();
     const isPowerChangeValid = !lastAttemptOn || differenceInMinutes(now, lastAttemptOn) > 10; // TODO see to tweak this value

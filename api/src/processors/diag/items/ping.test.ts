@@ -35,7 +35,6 @@ describe('ping diag item', () => {
 
       // then
       expect(actual).toEqual({
-        on: NOW,
         status: 'ok',
       });
     });
@@ -55,7 +54,6 @@ describe('ping diag item', () => {
 
       // then
       expect(actual).toEqual({
-        on: NOW,
         message: 'an error occurred',
         status: 'ko',
       });

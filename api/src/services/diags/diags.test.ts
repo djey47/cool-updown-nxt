@@ -33,7 +33,6 @@ describe('diags service', () => {
     '0': {
       on: NOW,
       ping: {
-        on: NOW,
         status: FeatureStatus.OK
       },
       power: {
@@ -49,7 +48,6 @@ describe('diags service', () => {
     '1': {
       on: NOW,
       ping: {
-        on: NOW,
         status: FeatureStatus.KO
       },
       power: {
@@ -79,7 +77,6 @@ describe('diags service', () => {
           '0': {
             on: NOW,
             ping: {
-              on: NOW,
               status: FeatureStatus.OK,
             },
             power: {
@@ -91,7 +88,6 @@ describe('diags service', () => {
           '1': {
             on: NOW,
             ping: {
-              on: NOW,
               status: FeatureStatus.KO,
             },
             power: {
@@ -121,7 +117,6 @@ describe('diags service', () => {
         diagnostics: {
           on: NOW,
           ping: {
-            on: NOW,
             status: FeatureStatus.OK,
           },
           power: {

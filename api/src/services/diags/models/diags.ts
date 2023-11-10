@@ -16,7 +16,6 @@ export interface DiagsResponseForDevice {
 }
 
 export interface DiagsResponseForFeature {
-  on?: Date;
   status: FeatureStatus;
 }
 

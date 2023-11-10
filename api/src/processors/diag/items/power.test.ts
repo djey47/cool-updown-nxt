@@ -24,7 +24,6 @@ describe('power diag item', () => {
       // given
       const deviceDiags: DeviceDiagnosticsContext = {
         ping: {
-          on: PREVIOUS_MOMENT,
           status: FeatureStatus.KO,
         },
         power: {
@@ -58,7 +57,6 @@ describe('power diag item', () => {
       // given
       const deviceDiags: DeviceDiagnosticsContext = {
         ping: {
-          on: PREVIOUS_MOMENT,
           status: FeatureStatus.OK,
         },
         power: {
@@ -92,7 +90,6 @@ describe('power diag item', () => {
       // given
       const deviceDiags: DeviceDiagnosticsContext = {
         ping: {
-          on: PREVIOUS_MOMENT,
           status: FeatureStatus.OK,
         },
         power: {
@@ -129,7 +126,6 @@ describe('power diag item', () => {
       // given
       const deviceDiags: DeviceDiagnosticsContext = {
         ping: {
-          on: PREVIOUS_MOMENT,
           status: FeatureStatus.KO,
         },
         power: {

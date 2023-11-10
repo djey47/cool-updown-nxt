@@ -51,7 +51,6 @@ describe('AppContext singleton class', () => {
         '0': {
           on: new Date(),
           ping: {
-            on: new Date(),
             status: FeatureStatus.OK,
           },
           power: {
