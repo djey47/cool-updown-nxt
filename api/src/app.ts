@@ -5,20 +5,17 @@ import fastify from 'fastify';
 import fastifyStaticPlugin from '@fastify/static';
 import fastifyGracefulShutdownPlugin from 'fastify-graceful-shutdown';
 import path from 'path';
-import { home } from './services/home/home';
 import { coreLogger, getLoggerConfig } from './common/logger';
-import { logs } from './services/logs/logs';
 import { getConfig } from './common/configuration';
-import { config } from './services/config/config';
 import { diagProcessor } from './processors/diag/diag';
-import { diags, diagsForDevice } from './services/diags/diags';
 import { AppContext } from './common/context';
-import { stats, statsForDevice } from './services/stats/stats';
-import { powerOnForDevice } from './services/power/powerOn';
 import { contextProcessor } from './processors/context/context';
-
-import type { ApiWithDeviceIdParameterRequest } from './models/api';
-import type { FastifyReply } from 'fastify/types/reply';
+import { rootRoutes } from './routes/root';
+import { logsRoutes } from './routes/logs';
+import { configRoutes } from './routes/config';
+import { diagsRoutes } from './routes/diags';
+import { statsRoutes } from './routes/stats';
+import { powerRoutes } from './routes/power';
 
 const IS_PRODUCTION = !!import.meta.env.PROD;
 
@@ -46,42 +43,17 @@ const app = async () => {
   // TODO critical error management
 
   // Routes
-  app.get('/', (_req, reply) => {
-    home(reply);
-  });
+  rootRoutes(app);
 
-  app.get('/logs', (_req, reply) => {
-    logs(reply);
-  });
+  logsRoutes(app);
 
-  app.get('/config', (_req, reply) => {
-    // req.log.trace('TRACE Some info about the current request')
+  configRoutes(app);
 
-    config(reply);
-  });
+  diagsRoutes(app);
 
-  app.get('/diags', (_req, reply) => {
-    diags(reply);
-  });
+  statsRoutes(app);
 
-  app.get('/diags/:deviceId', (req: ApiWithDeviceIdParameterRequest, reply: FastifyReply) => {
-    const { params: { deviceId } } = req;
-    diagsForDevice(deviceId, reply);
-  })
-
-  app.get('/stats', (_req, reply) => {
-    stats(reply);
-  });
-
-  app.get('/stats/:deviceId', (req: ApiWithDeviceIdParameterRequest, reply: FastifyReply) => {
-    const { params: { deviceId } } = req;
-    statsForDevice(deviceId, reply);
-  });
-
-  app.post('/power-on/:deviceId', (req: ApiWithDeviceIdParameterRequest, reply: FastifyReply) => {
-    const { params: { deviceId } } = req;
-    powerOnForDevice(deviceId, reply);
-  });
+  powerRoutes(app);
 
   // Shutdown management
   app.after(() => {

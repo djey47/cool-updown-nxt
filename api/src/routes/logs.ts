@@ -1,0 +1,9 @@
+import { logs } from '../services/logs/logs';
+
+import type { FastifyInstance } from 'fastify/types/instance';
+
+export function logsRoutes(app: FastifyInstance) {
+  app.get('/logs', (_req, reply) => {
+    logs(reply);
+  });
+}
