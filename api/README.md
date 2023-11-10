@@ -162,7 +162,6 @@ Returns some diagnostics for all configured devices (ping, power state).
     "0": {
       "on": "2023-10-24T20:30:39.119Z",
       "ping": {
-        "on": "2023-10-24T20:30:39.119Z",
         "status": "ko"
       },
       "power": {
@@ -178,7 +177,7 @@ Returns some diagnostics for all configured devices (ping, power state).
 
 **Notes**
 - The key used for each diagnostics entry is the device identifier
-- `on` fields allow to track the moment where diagnostics have been processed
+- `on` field allow to track the moment where diagnostics have been processed
 - Ping `status`: available values are either `ok`, `ko` or `n/a`
 - Power `state`: available values are either `on`, `off` or `n/a`.
 - Power `lastStartAttemptReason` or `lastStartAttemptReason`: available values are one of the following: `none`, `api`, `scheduled` or `external`.
@@ -194,7 +193,6 @@ Returns some diagnostics for a configured device.
   "diagnostics": {
     "on": "2023-10-24T20:30:39.119Z",
     "ping": {
-      "on": "2023-10-24T20:30:39.119Z",
       "status": "ko"
     },
     "power": {
@@ -325,7 +323,7 @@ Application context, being the whole data required by the application at run-tim
 
 ## Processing details: diagnostics
 
-Diagnostics processor stores the N-1 results in a `previous` field for the devo=ice specific context, and updates current results.
+Diagnostics processor stores the N-1 results in a `previous` field for the device-specific context, and updates current results.
 
 Here are the diagnostics that are actually processed:
 
@@ -341,7 +339,7 @@ Diag results:
 
 ### Power
 
-Note: By design, the power state of a device is determined by the results of the ping diagnostic above; while working on most cases, that approach might not be 100% reliable, especially when device encounters network issues; besides, there's latency between the real status change and the moment when it comes detected by the diagnostics. So... be aware of the limitations!
+*Note: By design, the power state of a device is determined by the results of the ping diagnostic above; while working on most cases, that approach might not be 100% reliable, especially when device encounters network issues; besides, there's latency between the real status change and the moment when it comes detected by the diagnostics. So... be aware of the limitations!*
 
 The application actually records the power ON/OFF attempts and thus is able to store:
 
