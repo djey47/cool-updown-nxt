@@ -20,6 +20,8 @@ import { contextProcessor } from './processors/context/context';
 import type { ApiWithDeviceIdParameterRequest } from './models/api';
 import type { FastifyReply } from 'fastify/types/reply';
 
+const IS_PRODUCTION = !!import.meta.env.PROD;
+
 function initAppInfo() {
   // Update app start date
   const { appInfo } = AppContext.get();
@@ -36,7 +38,10 @@ const app = async () => {
     root: path.join(appRootDir.get(), '..', 'web', 'dist'),
     prefix: '/ui/',
   });
-  app.register(fastifyGracefulShutdownPlugin);
+  if (IS_PRODUCTION) {
+    // As this plugin is incompatible with vite in development
+    app.register(fastifyGracefulShutdownPlugin);
+  }
 
   // TODO critical error management
 
@@ -80,18 +85,21 @@ const app = async () => {
 
   // Shutdown management
   app.after(() => {
-    app.gracefulShutdown(async (signal, next) => {
-      app.log.info('cool-updown-nxt received signal %s, server will terminate', signal);
-
-      // Should persist context
-      await contextProcessor()
-
-      next();
-    });
+    if (IS_PRODUCTION) {
+      // As this plugin is incompatible with vite during development
+      app.gracefulShutdown(async (signal, next) => {
+        app.log.info('cool-updown-nxt received signal %s, server will terminate', signal);
+  
+        // Should persist context
+        await contextProcessor()
+  
+        next();
+      });  
+    }
   })
 
   // Must match the vite config file
-  if (import.meta.env.PROD) {
+  if (IS_PRODUCTION) {
     const config = getConfig();
     const { host, port } = config.app;
     app.listen({ port, host });
