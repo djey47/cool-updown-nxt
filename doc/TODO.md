@@ -4,6 +4,12 @@ unTODOs
 - WEB/FRONTEND
   - [X] ESLint
   - [] Unit tests mechanism
+  - [] Dashboard
+    - device tiles (status, uptime...)
+    - 
+  - [] Logs
+  - [] Config (per device, app server)
+  - [] About (web UI méta, server config)
 
 - API/BACKEND
   - [X] Unit tests mechanism
@@ -15,6 +21,7 @@ unTODOs
     - Config service
       - [X] Basic implementation
       - [] Sensitive info obfuscation
+      - [] Per device (path param)
     - [] Logs service
       - [X] Basic implementation
       - [] Filters: time window (min/max date), log levels
@@ -36,6 +43,8 @@ unTODOs
       - [] From tag
       - [] ID list (query param)
       - [] All
+    - [] Devices service
+      - [] lists all devices with Id and basic info
   - Processors
     - [] Diags
       - [X] Skeleton with configured diag interval
