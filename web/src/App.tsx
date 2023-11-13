@@ -1,13 +1,14 @@
-import PageContainer from './components/page/PageContainer'
-
-import './App.css'
+import PageContainer from './components/page/PageContainer';
+import Dashboard from './components/page/Dashboard';
+import Banner from './components/molecules/banner/Banner';
 
 const App = () => {
   return (
     <PageContainer>
-      <div>toto</div>
+      <Banner />
+      <Dashboard />
     </PageContainer>
   )
-}
+};
 
-export default App
+export default App;
