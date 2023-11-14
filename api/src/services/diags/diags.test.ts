@@ -1,4 +1,3 @@
-import subSeconds from 'date-fns/subSeconds';
 import { replyWithJson, replyWithItemNotFound } from '../../common/api';
 import { AppContext } from '../../common/context';
 import { getMockedFastifyReply } from '../../helpers/testing/mockObjects';
@@ -12,7 +11,6 @@ import { LastPowerAttemptReason } from '../../processors/diag/models/diag';
 
 jest.useFakeTimers();
 const NOW = new Date();
-const NOW_MINUS_1MIN = subSeconds(NOW, 60);
 
 jest.mock('../../common/api');
 const replyWithJsonMock = replyWithJson as jest.Mock;
@@ -33,7 +31,16 @@ describe('diags service', () => {
     '0': {
       on: NOW,
       ping: {
-        status: FeatureStatus.OK
+        status: FeatureStatus.OK,
+        data: {
+          packetLossRate: 0.5,
+          roundTripTimeMs: {
+            average: 2,
+            max: 3,
+            min: 1,
+            standardDeviation: 1,  
+          },
+        },
       },
       power: {
         state: PowerStatus.ON,
@@ -78,6 +85,15 @@ describe('diags service', () => {
             on: NOW,
             ping: {
               status: FeatureStatus.OK,
+              data: {
+                packetLossRate: 0.5,
+                roundTripTimeMs: {
+                  average: 2,
+                  max: 3,
+                  min: 1,
+                  standardDeviation: 1,  
+                },      
+              },
             },
             power: {
               state: PowerStatus.ON,
@@ -118,6 +134,15 @@ describe('diags service', () => {
           on: NOW,
           ping: {
             status: FeatureStatus.OK,
+            data: {
+              packetLossRate: 0.5,
+              roundTripTimeMs: {
+                average: 2,
+                max: 3,
+                min: 1,
+                standardDeviation: 1,  
+              },      
+            },
           },
           power: {
             state: PowerStatus.ON,

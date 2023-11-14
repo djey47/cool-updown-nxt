@@ -1,13 +1,26 @@
 import { FeatureStatus, PowerStatus } from '../../../models/common';
 
+export type FeatureData = PingFeatureData;
+
 export interface DiagResults {
   deviceId: string;
   ping: FeatureDiagnostics;
 }
 
 export interface FeatureDiagnostics {
+  data?: FeatureData;
   message?: string;
   status: FeatureStatus;
+}
+
+export interface PingFeatureData {
+  packetLossRate: number;
+  roundTripTimeMs: {
+    min: number;
+    max: number;
+    average: number;
+    standardDeviation: number;
+  };
 }
 
 export interface PowerDiagnostics {

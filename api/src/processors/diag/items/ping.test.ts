@@ -1,14 +1,12 @@
 import { pingDiag } from './ping';
 import { ping as sgPing } from '../../../helpers/systemGateway';
 import { FeatureStatus } from '../../../models/common';
+import { PING_OK_SAMPLE_50_LOSS, PING_OK_SAMPLE_0_LOSS, PING_OK_SAMPLE_100_LOSS } from './test-resources/pingOutputSamples';
 
 import type { DeviceConfig } from '../../../models/configuration';
 import type { SysCommandOutput } from '../../../helpers/systemGateway';
 
 jest.mock('../../../helpers/systemGateway');
-
-jest.useFakeTimers();
-const NOW = new Date();
 
 const sgPingMock = sgPing as jest.Mock<Promise<SysCommandOutput>>;
 
@@ -22,10 +20,10 @@ describe('ping diag item', () => {
       },
     };
 
-    it('should invoke systemGateway to call ping command when success', async () => {
+    it('should invoke systemGateway to call ping command when success (0% packet loss)', async () => {
       // given
       const gatewayResponse: SysCommandOutput = {
-        standardOutput: '',
+        standardOutput: PING_OK_SAMPLE_0_LOSS,
         status: FeatureStatus.OK,
       };
       sgPingMock.mockResolvedValue(gatewayResponse);
@@ -35,6 +33,67 @@ describe('ping diag item', () => {
 
       // then
       expect(actual).toEqual({
+        data: {
+          packetLossRate: 0,
+          roundTripTimeMs: {
+            average: 0.154,
+            max: 0.184,
+            min: 0.125,
+            standardDeviation: 0.029,
+          },
+        },
+        status: 'ok',
+      });
+    });
+
+    it('should invoke systemGateway to call ping command when success (50% packet loss)', async () => {
+      // given
+      const gatewayResponse: SysCommandOutput = {
+        standardOutput: PING_OK_SAMPLE_50_LOSS,
+        status: FeatureStatus.OK,
+      };
+      sgPingMock.mockResolvedValue(gatewayResponse);
+      
+      // when
+      const actual = await pingDiag('0', deviceConfig);
+
+      // then
+      expect(actual).toEqual({
+        data: {
+          packetLossRate: 0.5,
+          roundTripTimeMs: {
+            average: 0.154,
+            max: 0.184,
+            min: 0.125,
+            standardDeviation: 0.029,
+          },
+        },
+        status: 'ok',
+      });
+    });
+
+    it('should invoke systemGateway to call ping command when success (100% packet loss)', async () => {
+      // given
+      const gatewayResponse: SysCommandOutput = {
+        standardOutput: PING_OK_SAMPLE_100_LOSS,
+        status: FeatureStatus.OK,
+      };
+      sgPingMock.mockResolvedValue(gatewayResponse);
+      
+      // when
+      const actual = await pingDiag('0', deviceConfig);
+
+      // then
+      expect(actual).toEqual({
+        data: {
+          packetLossRate: 1,
+          roundTripTimeMs: {
+            average: 0.154,
+            max: 0.184,
+            min: 0.125,
+            standardDeviation: 0.029,
+          },
+        },
         status: 'ok',
       });
     });

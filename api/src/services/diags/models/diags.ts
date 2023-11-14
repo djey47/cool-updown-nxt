@@ -1,5 +1,5 @@
 import { FeatureStatus, PowerStatus } from '../../../models/common';
-import { LastPowerAttemptReason } from '../../../processors/diag/models/diag';
+import { type FeatureData, LastPowerAttemptReason } from '../../../processors/diag/models/diag';
 
 export interface DiagsResponse {
   diagnostics: DiagsResponseForAllDevices | DiagsResponseForDevice;
@@ -17,6 +17,7 @@ export interface DiagsResponseForDevice {
 
 export interface DiagsResponseForFeature {
   status: FeatureStatus;
+  data?: FeatureData;
 }
 
 export interface PowerDiagsResponse {

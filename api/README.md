@@ -191,7 +191,16 @@ Returns some diagnostics for all configured devices (ping, power state).
     "0": {
       "on": "2023-10-24T20:30:39.119Z",
       "ping": {
-        "status": "ko"
+        "status": "ok",
+        "data": {
+          "packetLossRate": 0,
+          "roundTripTimeMs": {
+            "average": 0.012,
+            "max": 0.017,
+            "min": 0.008,
+            "standardDeviation": 0.004            
+          } 
+        },
       },
       "power": {
         "lastStartAttemptOn": "2023-11-04T14:05:33.967Z",
@@ -208,6 +217,9 @@ Returns some diagnostics for all configured devices (ping, power state).
 - The key used for each diagnostics entry is the device identifier
 - `on` field allow to track the moment where diagnostics have been processed
 - Ping `status`: available values are either `ok`, `ko` or `n/a`
+- Ping `data`: are collected values from the ICMP command results (only Linux with english messages are supported for now):
+  - `packetLossRate` (decimal between 0 and 1) is the count of lost packets / total amount sent
+  - `roundTripTimeMs` (in milliseconds) are average, maximum, minimum, standard deviation times on sent packets 
 - Power `state`: available values are either `on`, `off` or `n/a`.
 - Power `lastStartAttemptReason` or `lastStartAttemptReason`: available values are one of the following: `none`, `api`, `scheduled` or `external`.
 
