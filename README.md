@@ -17,3 +17,19 @@ NodeJS server hosting services as HTTP endpoints, as well as processors (diagnos
 ### Web
 
 React front-end application relying upon the above API.
+
+## Using solution
+
+Following scripts have been set-up to make it a bit easier:
+
+### Installing
+
+`npm install` will run both api and web install tasks as well as build related artifacts.
+
+### Configuring
+
+`npm run configure` will (re)initialize backend configuration and allow you to edit it using vi.
+
+### Running
+
+`npm start` will run the api server.

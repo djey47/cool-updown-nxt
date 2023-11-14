@@ -1,0 +1,33 @@
+{
+  "name": "cool-updown-nxt",
+  "version": "1.0.0-alpha",
+  "description": "Tiny device monitoring solution",
+  "directories": {
+    "doc": "doc"
+  },
+  "scripts": {
+    "install": "npm run install-api;npm run install-web",
+    "install-api": "cd ./api && npm install && npm run build",
+    "install-web": "cd ./web && npm install && npm run build",
+    "configure": "npm run configure-api",
+    "configure-api": "cd ./api/config && cp default.json local.json && vi local.json",
+    "start": "cd ./api && npm start"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/djey47/cool-updown-nxt.git"
+  },
+  "keywords": [
+    "nodejs",
+    "typescript",
+    "react",
+    "wol",
+    "ssh"
+  ],
+  "author": "djey47@github.com",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/djey47/cool-updown-nxt/issues"
+  },
+  "homepage": "https://github.com/djey47/cool-updown-nxt#readme"
+}
