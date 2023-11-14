@@ -13,3 +13,10 @@ export interface DeviceDiagnostics {
     state: 'on' | 'off' | 'n/a';
   };
 }
+
+export interface DeviceStatistics {
+  uptimeSeconds: {
+    current: number;
+    overall: number;
+  };
+}

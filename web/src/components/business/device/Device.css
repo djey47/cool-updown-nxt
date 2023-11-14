@@ -1,5 +1,5 @@
 .device-power-cta.is-on {
-  color: green;
+  color: limegreen;
 }
 .device-power-cta.is-off {
   color: red;
@@ -9,7 +9,7 @@
 }
 
 .device-ping-status.is-ok {
-  color: green;
+  color: limegreen;
 }
 .device-ping-status.is-ko {
   color: red;
