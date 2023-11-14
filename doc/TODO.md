@@ -42,8 +42,8 @@ TODOs
       - [X] Basic implementation
       - [] Filters: time window (min/max date), log levels
     - [] Diags service
-      - [] Ping support
-        - [] response time in ms
+      - [X] Ping support
+        - [X] response time in ms
       - [X] Per device (path param)
       - [] Per tags (query string)
       - 
@@ -67,7 +67,8 @@ TODOs
       - [X] Skeleton with configured diag interval
       - [] Ping support
         - [X] base implem
-        - [] Ping latency to be extracted from command output and available in API
+        - [X] Ping latency to be extracted from command output and available in API
+        - ??
       - [] power state
         - [X] last on attempt date (API)
         - [X] last on attempt date (external)
@@ -81,6 +82,7 @@ TODOs
       - [] ?
     - [] Stats
       - [X] Uptimes: app, per device (current and overall)
+      - [] Ping packet loss and RTT on some time interval (day? week? month?...)
       - [] ?
   - Transversal
     - [] Config: validation at startup
