@@ -2,21 +2,29 @@ TODOs
 =====
 
 - COMMON
-  - [] Add package scripts at root to easily install and run the app in prod mode
+  - [X] Add package scripts at root to easily install and run the app in prod mode
 
 - WEB/FRONTEND
   - [X] ESLint
   - [] Unit tests mechanism
+  - [] Configuration
+  - [] Router
+  - [] React Query
   - [] Dashboard
     - [] device tiles
-      - power status,
-      - uptime
-      - diags results
+      - [X] power status,
+      - [X] uptime
+      - [] diags results
+        - detailed view: ping value when available
       - rdp via URI scheme (https://learn.microsoft.com/en-us/windows-server/remote/remote-desktop-services/clients/remote-desktop-uri#ms-rd-uri-scheme)
+      - Menu: 
+        - per-device logs
+        - per-device config
+        - ???
     - 
-  - [] Logs
-  - [] Config (per device, app server)
-  - [] About (web UI méta, server config)
+  - [] Global logs with filters
+  - [] Config (web app, server)
+    - [] About (web UI / server meta)
 
 - API/BACKEND
   - [X] Unit tests mechanism
@@ -34,7 +42,8 @@ TODOs
       - [X] Basic implementation
       - [] Filters: time window (min/max date), log levels
     - [] Diags service
-      - [X] Ping support
+      - [] Ping support
+        - [] response time in ms
       - [X] Per device (path param)
       - [] Per tags (query string)
       - 
@@ -71,7 +80,7 @@ TODOs
       - [] SSH connectivity
       - [] ?
     - [] Stats
-      - [] Uptimes: app, per device (current and overall)
+      - [X] Uptimes: app, per device (current and overall)
       - [] ?
   - Transversal
     - [] Config: validation at startup
