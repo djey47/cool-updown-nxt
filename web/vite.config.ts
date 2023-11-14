@@ -8,7 +8,7 @@ const API_URL = 'http://localhost:3000';
 export default defineConfig({
   plugins: [react()],
   server: {
-    proxy: getProxyConfiguration('/config', '/power-on', '/diags'),
+    proxy: getProxyConfiguration('/config', '/power-on', '/diags', '/stats'),
   },
 });
 
