@@ -10,20 +10,24 @@ import type { FeatureDiagnostics, PingFeatureData } from '../models/diag';
  * @returns Promise with all ping diagnostics
  */
 export async function pingDiag(_deviceId: string, deviceConfig: DeviceConfig): Promise<FeatureDiagnostics> {
-  const result = await ping(deviceConfig.network.hostname);
+  const pingPacketCount = 4;
+  const result = await ping(deviceConfig.network.hostname, pingPacketCount);
 
   return {
-    data: result.status === FeatureStatus.OK ? collectDataFromOutput(result.standardOutput) : undefined,
+    data: result.status === FeatureStatus.OK ? collectDataFromOutput(result.standardOutput, pingPacketCount) : undefined,
     status: result.status,
     message: result.errorOutput,
   };
 }
 
 // Only compatible with Linux output so far, as well as the ping command parameters
-function collectDataFromOutput(standardOutput: string): PingFeatureData {
+function collectDataFromOutput(standardOutput: string, pingPacketCount: number): PingFeatureData {
   const outputLines = standardOutput.split('\n');
-  const lossStats = outputLines[5];
-  const rttStats = outputLines[6];
+
+  console.log({ outputLines });
+
+  const lossStats = outputLines[pingPacketCount + 3];
+  const rttStats = outputLines[pingPacketCount + 4];
 
   console.log({ lossStats, rttStats });
 

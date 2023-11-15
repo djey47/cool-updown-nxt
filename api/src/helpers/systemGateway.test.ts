@@ -18,14 +18,14 @@ describe('systemGateway helper functions', () => {
       })
 
       // when
-      const actualOutput = await ping('host-name');
+      const actualOutput = await ping('host-name', 3);
 
       // then
       expect(actualOutput).toEqual({
         standardOutput: 'std',
         status: 'ok',
       });
-      expect(childProcessMock.exec).toHaveBeenCalledWith('ping -c 2 host-name', expect.any(Function));
+      expect(childProcessMock.exec).toHaveBeenCalledWith('ping -c 3 host-name', expect.any(Function));
     });
 
     it('should create child process with command and callback, for ping failure', async () => {
@@ -36,7 +36,7 @@ describe('systemGateway helper functions', () => {
       })
 
       // when
-      const actualOutput = await ping('host-name');
+      const actualOutput = await ping('host-name', 2);
 
       // then
       expect(actualOutput).toEqual({

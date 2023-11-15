@@ -16,9 +16,9 @@ export interface SysCommandOutput {
  * ICMP Ping command wrapper
  * @returns Promise with the normalized result of the ping command
  */
-export async function ping(host: string): Promise<SysCommandOutput> {
+export async function ping(host: string, packetCount: number): Promise<SysCommandOutput> {
   return new Promise((resolve) => {
-    childProcess.exec(`ping -c 2 ${host}`, (err, stdout, stderr) => {
+    childProcess.exec(`ping -c ${packetCount} ${host}`, (err, stdout, stderr) => {
       const isPingSuccess = !err;
       if (isPingSuccess) {
         resolve({
