@@ -21,6 +21,8 @@ Be sure to `cd` into this `web` folder, then issue `npm install`.
 
 ESlint is used to lint code during dev server execution.
 
+Note: a running API backend in dev mode is required to display some data; see api project `README.md` file for details.
+
 ## Deploy
 
 `npm run build` will produce a release build, ready to use, under the `dist` directory.
