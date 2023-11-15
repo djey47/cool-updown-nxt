@@ -1,7 +1,7 @@
 import { pingDiag } from './ping';
 import { ping as sgPing } from '../../../helpers/systemGateway';
 import { FeatureStatus } from '../../../models/common';
-import { PING_OK_SAMPLE_50_LOSS, PING_OK_SAMPLE_0_LOSS, PING_OK_SAMPLE_100_LOSS } from './test-resources/pingOutputSamples';
+import { PING_OK_SAMPLE_50_LOSS, PING_OK_SAMPLE_0_LOSS, PING_OK_SAMPLE_100_LOSS, PING_OK_SAMPLE_UNEXPECTED } from './test-resources/pingOutputSamples';
 
 import type { DeviceConfig } from '../../../models/configuration';
 import type { SysCommandOutput } from '../../../helpers/systemGateway';
@@ -88,12 +88,30 @@ describe('ping diag item', () => {
         data: {
           packetLossRate: 1,
           roundTripTimeMs: {
-            average: 0.154,
-            max: 0.184,
-            min: 0.125,
-            standardDeviation: 0.029,
+            average: 0,
+            max: 0,
+            min: 0,
+            standardDeviation: 0,
           },
         },
+        status: 'ok',
+      });
+    });
+
+    it('should invoke systemGateway to call ping command when success (unexpected output)', async () => {
+      // given
+      const gatewayResponse: SysCommandOutput = {
+        standardOutput: PING_OK_SAMPLE_UNEXPECTED,
+        status: FeatureStatus.OK,
+      };
+      sgPingMock.mockResolvedValue(gatewayResponse);
+      
+      // when
+      const actual = await pingDiag('0', deviceConfig);
+
+      // then
+      expect(actual).toEqual({
+        data: {},
         status: 'ok',
       });
     });

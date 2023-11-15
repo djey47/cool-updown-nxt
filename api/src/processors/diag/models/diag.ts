@@ -14,8 +14,8 @@ export interface FeatureDiagnostics {
 }
 
 export interface PingFeatureData {
-  packetLossRate: number;
-  roundTripTimeMs: {
+  packetLossRate?: number;
+  roundTripTimeMs?: {
     min: number;
     max: number;
     average: number;
