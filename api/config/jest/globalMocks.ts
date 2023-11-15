@@ -36,9 +36,16 @@ jest.mock('wake_on_lan', () => ({
   wake: (a: string, o: WakeOptions, f: () => void) => mockWOLWake(a, o, f),
 }));
 
+
+// CUSTOM
+const mockAuthReadPrivateKey = jest.fn();
+
 export default {
   appRootDirMock: {
     get: mockAppRootDirGet,
+  },
+  authMock: {
+    readPrivateKey: mockAuthReadPrivateKey,
   },
   node: {
     childProcessMock: {
