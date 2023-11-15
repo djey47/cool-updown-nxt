@@ -25,7 +25,7 @@ export async function powerOnForDevice(deviceId: string, reply: FastifyReply) {
   // No need to power on device if its power status is ON already
   const deviceDiagContext = AppContext.get().diagnostics[deviceId];
   if (deviceDiagContext?.power.state === PowerStatus.ON) {
-    logger.info(`(powerOn::awake) NOOP serverId:${deviceId}`);
+    logger.info(`(powerOn::powerOnForDevice) NOOP serverId:${deviceId}`);
     replyWithJson(reply);
     return;
   }
@@ -39,11 +39,11 @@ export async function powerOnForDevice(deviceId: string, reply: FastifyReply) {
   try {
     await awakeDevice(deviceConfig);
 
-    logger.info(`(powerOn::awake) OK serverId:${deviceId}`);
+    logger.info(`(powerOn::powerOnForDevice) OK serverId:${deviceId}`);
 
     replyWithJson(reply);
   } catch (wolError) {
-    logger.error(`(powerOn::awake) KO serverId:${deviceId}-${wolError}`);
+    logger.error(`(powerOn::powerOnForDevice) KO serverId:${deviceId}-${wolError}`);
 
     replyWithInternalError(reply, `Unable to perform wake on LAN: ${wolError}`);
   }
