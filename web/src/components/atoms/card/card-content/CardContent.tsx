@@ -3,12 +3,14 @@ import { PropsWithChildren } from 'react';
 
 interface CardContentProps extends PropsWithChildren {
   className?: string;
+  alignment?: 'left' | 'right';
 }
 
-const CardContent = ({ className, children }: CardContentProps) => {
+const CardContent = ({ alignment, className, children }: CardContentProps) => {
   const completeClassNames = classNames(
     className,
     'flex',
+    { 'flex-row-reverse': alignment === 'right' },
     'justify-between',
     'items-center',
     'gap-2'

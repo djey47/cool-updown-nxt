@@ -26,47 +26,65 @@ interface DeviceProps {
 const Device = ({ deviceInfo }: DeviceProps) => {
   const [isDetailedMode, setDetailedMode] = useState(false);
   const [isLogDisplayed, setLogDisplayed] = useState(false);
+  const [isPerformingPowerOn, setPerformingPowerOn] = useState(false);
+  const [isPerformingPowerOff, setPerformingPowerOff] = useState(false);
 
   const deviceId = deviceInfo.id;
   const diagsQuery = useQuery({
     queryKey: ['diags', deviceId],
     queryFn: ({ queryKey }) => getDiagnosticsForDevice(queryKey[1]),
     refetchInterval: 5000,
-  });  
+  });
   const statsQuery = useQuery({
     queryKey: ['stats', deviceId],
     queryFn: ({ queryKey }) => getStatisticsForDevice(queryKey[1]),
     refetchInterval: 5000,
   });
 
+  const diagsQueryData = diagsQuery.data;
+  const devicePowerState = diagsQueryData?.power?.state || 'n/a';
+
   const handlePowerClick = async () => {
-    await postPowerOnForDevice(deviceInfo.id);
+    if (devicePowerState === 'off') {
+      await postPowerOnForDevice(deviceInfo.id);
+      setPerformingPowerOn(true);  
+      setPerformingPowerOff(false);  
+    } else if (devicePowerState === 'on') {
+      // TODO OFF
+      setPerformingPowerOff(true);
+      setPerformingPowerOn(false);
+    }
   };
 
   const handleShowLogs = () => {
     console.log('Device::handleShowLogs', { deviceId });
 
     setDetailedMode(false);
-    setLogDisplayed(!isLogDisplayed);
-  };  
-  
+    setLogDisplayed((prev) => !prev);
+  };
+
   const handleShowDetails = () => {
     console.log('Device::handleShowDetails', { deviceId });
 
     setLogDisplayed(false);
-    setDetailedMode(!isDetailedMode);
+    setDetailedMode((prev) => !prev);
   };
 
-  const diagsQueryData = diagsQuery.data;
+  if (isPerformingPowerOn && devicePowerState === 'on') {
+    setPerformingPowerOn(false);
+  }
+  if (isPerformingPowerOff && devicePowerState === 'off') {
+    setPerformingPowerOff(false);
+  }
 
-  const devicePowerState = diagsQueryData?.power?.state || 'n/a';
   const devicePowerClassNames = classNames(
     'device-power-cta',
     'text-xl',
     {
       'is-on': devicePowerState === 'on',
       'is-off': devicePowerState === 'off',
-      'is-na': devicePowerState === 'n/a'
+      'is-na': devicePowerState === 'n/a',
+      'animate-pulse': isPerformingPowerOn || isPerformingPowerOff,
     });
 
   const devicePingStatus = diagsQueryData?.ping?.status || 'n/a';
@@ -93,6 +111,12 @@ const Device = ({ deviceInfo }: DeviceProps) => {
     linkHref: '#',
   }];
 
+  const fetchStatusClassName = classNames({
+    'text-white': diagsQuery.isFetching || statsQuery.isFetching,
+    'text-indigo-900': !diagsQuery.isFetching && !statsQuery.isFetching,
+  });
+
+
   return (
     <>
       <Card key={deviceInfo.id}>
@@ -104,12 +128,12 @@ const Device = ({ deviceInfo }: DeviceProps) => {
         </CardContent>
         <CardContent>
           <DiagItem type={DiagItemType.PING} className={devicePingClassNames} />
-          {(diagsQuery.isFetching || statsQuery.isFetching) && (
-            <MdDownloading />
-          )}
         </CardContent>
         <CardContent>
-          Uptime: {prettyFormatDuration(statsQueryData?.uptimeSeconds.current || 0)}/{prettyFormatDuration(statsQueryData?.uptimeSeconds.overall || 0)}
+          Uptime: {prettyFormatDuration(statsQueryData?.uptimeSeconds.current || 0)} / {prettyFormatDuration(statsQueryData?.uptimeSeconds.overall || 0)}
+        </CardContent>
+        <CardContent alignment='right'>
+          <MdDownloading className={fetchStatusClassName} />
         </CardContent>
         <CardContent>
           <DropDownMenu items={menuItems} />
