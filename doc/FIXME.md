@@ -8,3 +8,5 @@ FIXMEs/BUGs
 - [X] graceful shutdown plugin crashes (?) on dev server with vite => only use plugin in prod mode
 - [X] Refactor: extract routes from app to dedicated scripts
 - [] (stats BUG) Possibly wrong per-device uptimes after app start, same for global overall uptime
+- [] Diags processor: more reliable ping feature (depends on OS implem)
+
