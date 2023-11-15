@@ -5,11 +5,13 @@ TODOs
   - [X] Add package scripts at root to easily install and run the app in prod mode
 
 - WEB/FRONTEND
-  - [X] ESLint
+  - [] PWA
+  - [] ESLint
+    - [] plugin react hooks
   - [] Unit tests mechanism
   - [] Configuration
   - [] Router
-  - [] React Query
+  - [X] React Query
   - [] Dashboard
     - [] device tiles
       - [X] power status,
@@ -76,7 +78,7 @@ TODOs
         - [] last off attempt date (API)
         - [X] last off attempt date (external)
         - [] last off attempt date (scheduled)
-        - [] cause of last on and off attempt(api, scheduled, external...)
+        - [X] cause of last on and off attempt(api, scheduled, external...)
       - [] Web server (page)
       - [] SSH connectivity
       - [] ?
