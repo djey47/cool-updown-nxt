@@ -370,13 +370,14 @@ Here are the diagnostics that are actually processed:
 
 ### Ping
 
-A `ping` command will be issued to the configured device hostname; 2 ICMP PING packets will be sent.
+A `ping` command will be issued to the configured device hostname; 4 ICMP PING packets will be sent.
 
 Diag results:
 
 - `ok` status when the command terminates with success (exit code = 0)
 - `ko` status when the command terminates with failure (exit code not 0)
-- message attribute is available with the error description caught from error output.
+- message attribute is available with the error description caught from error output, if any
+- data attribute contains some statistics, such as packet loss, round trip times.
 
 ### Power
 
