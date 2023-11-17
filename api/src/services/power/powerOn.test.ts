@@ -11,6 +11,7 @@ import type { WakeOptions } from 'wake_on_lan';
 const { wakeonlanMock } = globalMocks;
 
 jest.mock('../../common/api');
+
 const replyWithJsonMock = replyWithJson as jest.Mock;
 const replyWithInternalErrorMock = replyWithInternalError as jest.Mock;
 const replyWithItemNotFoundMock = replyWithItemNotFound as jest.Mock;
@@ -37,7 +38,6 @@ describe('powerOn service', () => {
 
     it('should awake specified device, update diags context and return 204 with empty contents', async () => {
       // given
-      codeMock.mockReturnValue(defaultReply);
       wakeonlanMock.wake.mockImplementation((_a: string, _o: WakeOptions, cb: () => void) => {
         cb();
       });
@@ -75,10 +75,7 @@ describe('powerOn service', () => {
     });    
     
     it('should return 404 when device is not found', async () => {
-      // given
-      codeMock.mockReturnValue(defaultReply);
-
-      // when
+      // given-when
       await powerOnForDevice('foo', defaultReply);
 
       // then
@@ -88,7 +85,6 @@ describe('powerOn service', () => {
     
     it('should not attempt to wake device nor update diags context and return 204 when already powered ON', async () => {
       // given
-      codeMock.mockReturnValue(defaultReply);
       AppContext.get().diagnostics['0'].power.state = PowerStatus.ON;
 
       // when
