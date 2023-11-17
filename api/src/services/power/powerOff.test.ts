@@ -1,4 +1,3 @@
-import { NodeSSH } from 'node-ssh';
 import { replyWithJson } from '../../common/api';
 import { AppContext } from '../../common/context';
 import { getSSHParameters } from '../../helpers/ssh';
