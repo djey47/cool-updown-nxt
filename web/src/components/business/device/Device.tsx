@@ -8,7 +8,7 @@ import Card from '../../atoms/card/Card';
 import CardContent from '../../atoms/card/card-content/CardContent';
 import { getDiagnosticsForDevice } from '../../../api/diagnostics';
 import { getStatisticsForDevice } from '../../../api/statistics';
-import { postPowerOnForDevice } from '../../../api/power';
+import { postPowerOffForDevice, postPowerOnForDevice } from '../../../api/power';
 import DropDownMenu, { type DropDownMenuItem } from '../../atoms/dropdown-menu/DropDownMenu';
 import DiagItem from '../diag-item/DiagItem';
 import Popup from '../../atoms/popup/Popup';
@@ -50,7 +50,7 @@ const Device = ({ deviceInfo }: DeviceProps) => {
       setPerformingPowerOn(true);  
       setPerformingPowerOff(false);  
     } else if (devicePowerState === 'on') {
-      // TODO OFF
+      await postPowerOffForDevice(deviceInfo.id);
       setPerformingPowerOff(true);
       setPerformingPowerOn(false);
     }
