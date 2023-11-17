@@ -29,21 +29,24 @@ TODOs
     - [] About (web UI / server meta)
 
 - API/BACKEND
-  - [X] Unit tests mechanism
+  - Unit tests mechanism
+    - [X] Jest set-up
+    - [] unit tests for routes
   - [X] ESLint
   - [X] Static file server for the web-application
-  - [] unit tests for routes
   - Handle critical errors => 500?
   - Services
     - [] enhancement: Websocket support for diags/stats refresh
     - Config service
       - [X] Basic implementation
+      - [X] Per device (path param)
       - [] Sensitive info obfuscation
-      - [] Per device (path param)
     - [] Logs service
       - [X] Basic implementation
       - [] Filters: time window (min/max date), log levels
     - [] Diags service
+      - [] SSH connectivity
+      - [] Web server
       - [X] Ping support
         - [X] response time in ms
       - [X] Per device (path param)
@@ -58,7 +61,9 @@ TODOs
     - [] ON/OFF service
       - [] Unitary (path param)
         - [X] ON
-        - [] OFF
+        - OFF
+          - [X] Implem
+          - [] Complete unit tests with coverage
       - [] From tag
       - [] ID list (query param)
       - [] All
@@ -67,11 +72,12 @@ TODOs
   - Processors
     - [] Diags
       - [X] Skeleton with configured diag interval
-      - [] Ping support
+      - Ping support
         - [X] base implem
-        - [X] Ping latency to be extracted from command output and available in API
+        - [X] Ping latency to be extracted from command output and available in API (waiting for a better solution)
+        - [X] Send 4 ping packets instead of 2 for more accurate results
         - ??
-      - [] power state
+      - Power state
         - [X] last on attempt date (API)
         - [X] last on attempt date (external)
         - [] last on attempt date (scheduled)
@@ -79,8 +85,10 @@ TODOs
         - [X] last off attempt date (external)
         - [] last off attempt date (scheduled)
         - [X] cause of last on and off attempt(api, scheduled, external...)
+      - SSH connectivity
+        - [] basic suppoort
+        - ?
       - [] Web server (page)
-      - [] SSH connectivity
       - [] ?
     - [] Stats
       - [X] Uptimes: app, per device (current and overall)
@@ -89,6 +97,6 @@ TODOs
   - Transversal
     - [] Config: validation at startup
     - [] Config : App => debugMode
-    - [] Context persistence
+    - Context persistence
       - [X] At start: restore context from file
       - [X] At exit: save to file
