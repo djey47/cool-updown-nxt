@@ -15,10 +15,19 @@ export interface AppConfig {
 
 export interface DeviceConfig {
   network: DeviceNetworkConfig;
+  ssh?: DeviceSSHConfig;
 }
 
 interface DeviceNetworkConfig {
   broadcastIpAddress: string;
   hostname: string;
   macAddress: string;
+}
+
+export interface DeviceSSHConfig {
+  keyPath: string;
+  offCommand?: string;
+  password?: string;
+  port?: number;
+  user: string;
 }

@@ -21,6 +21,10 @@ describe('Configuration service', () => {
       hostname: 'my-nas',
       macAddress: 'aa:bb:cc:dd:ee:ff',
     },
+    ssh: {
+      keyPath: '/id_rsa',
+      user: 'username',
+    },
   };
 
   beforeEach(() => {

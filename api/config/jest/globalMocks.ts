@@ -1,5 +1,6 @@
 import type { ExecException } from 'child_process';
 import { WriteFileOptions } from 'fs';
+import { Config, SSHExecCommandOptions } from 'node-ssh';
 import type { WakeOptions } from 'wake_on_lan';
 
 // NODE API //
@@ -24,6 +25,18 @@ jest.mock('fs/promises', () => ({
 const mockAppRootDirGet = jest.fn(() => './test');
 jest.mock('app-root-dir', () => ({
   get: () => mockAppRootDirGet(),
+}));
+
+// node-ssh
+const mockSSHConnect = jest.fn();
+const mockSSHExecCommand = jest.fn();
+const mockSSHDispose = jest.fn();
+jest.mock('node-ssh', () => ({
+  NodeSSH: jest.fn(() => ({
+    connect: (config: Config) => mockSSHConnect(config),
+    execCommand: (c: string, co: SSHExecCommandOptions) => mockSSHExecCommand(c, co),
+    dispose: () => mockSSHDispose(),
+  })),
 }));
 
 // pino
@@ -56,6 +69,11 @@ export default {
       stat: mockFSStat,
       writeFile: mockFSWriteFile,
     }
+  },
+  nodesshMock: {
+    connect: mockSSHConnect,
+    execCommand: mockSSHExecCommand,
+    dispose: mockSSHDispose,
   },
   pinoMock: mockPino,
   wakeonlanMock: {
