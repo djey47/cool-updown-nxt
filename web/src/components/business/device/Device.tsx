@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
-import { IoPowerSharp, IoStopwatch, IoStopwatchOutline, IoStopwatchSharp } from 'react-icons/io5';
+import { IoPowerSharp, IoStopwatch } from 'react-icons/io5';
 import { MdDownloading } from 'react-icons/md';
 import classNames from 'classnames';
 import Button from '../../atoms/button/Button';
