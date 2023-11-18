@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
-import { IoPowerSharp } from 'react-icons/io5';
+import { IoPowerSharp, IoStopwatch, IoStopwatchOutline, IoStopwatchSharp } from 'react-icons/io5';
 import { MdDownloading } from 'react-icons/md';
 import classNames from 'classnames';
 import Button from '../../atoms/button/Button';
@@ -14,7 +14,7 @@ import DiagItem from '../diag-item/DiagItem';
 import Popup from '../../atoms/popup/Popup';
 import { prettyFormatDuration } from '../../../helpers/time';
 
-import type { DeviceInfo } from '../../../model/device';
+import type { DeviceInfo, FeatureStatus } from '../../../model/device';
 import { DiagItemType } from '../../../model/diagnostics';
 
 import './Device.css';
@@ -70,6 +70,17 @@ const Device = ({ deviceInfo }: DeviceProps) => {
     setDetailedMode((prev) => !prev);
   };
 
+  const getFeatureClassNames = (featureStatus: FeatureStatus) => {
+    return classNames(
+      'device-ping-status',
+      'text-lg',
+      {
+        'is-ok': featureStatus === 'ok',
+        'is-ko': featureStatus === 'ko',
+        'is-na': featureStatus === 'n/a'
+      });
+  } 
+
   if (isPerformingPowerOn && devicePowerState === 'on') {
     setPerformingPowerOn(false);
   }
@@ -88,14 +99,10 @@ const Device = ({ deviceInfo }: DeviceProps) => {
     });
 
   const devicePingStatus = diagsQueryData?.ping?.status || 'n/a';
-  const devicePingClassNames = classNames(
-    'device-ping-status',
-    'text-lg',
-    {
-      'is-ok': devicePingStatus === 'ok',
-      'is-ko': devicePingStatus === 'ko',
-      'is-na': devicePingStatus === 'n/a'
-    });
+  const devicePingClassNames = getFeatureClassNames(devicePingStatus);
+
+  const deviceSSHStatus = diagsQueryData?.ssh?.status || 'n/a';
+  const deviceSSHClassNames = getFeatureClassNames(deviceSSHStatus);
 
   const statsQueryData = statsQuery.data;
 
@@ -116,21 +123,24 @@ const Device = ({ deviceInfo }: DeviceProps) => {
     'text-indigo-900': !diagsQuery.isFetching && !statsQuery.isFetching,
   });
 
-
   return (
     <>
       <Card key={deviceInfo.id}>
-        <CardContent>
+        <CardContent justifyItems>
           <Button onClick={handlePowerClick}>
             <IoPowerSharp className={devicePowerClassNames} />
           </Button>
           {deviceInfo.network.hostname} ({deviceInfo.id})
         </CardContent>
-        <CardContent>
+        <CardContent alignment="right">
+          <DiagItem type={DiagItemType.SSH} className={deviceSSHClassNames} />
           <DiagItem type={DiagItemType.PING} className={devicePingClassNames} />
         </CardContent>
         <CardContent>
-          Uptime: {prettyFormatDuration(statsQueryData?.uptimeSeconds.current || 0)} / {prettyFormatDuration(statsQueryData?.uptimeSeconds.overall || 0)}
+          <IoStopwatch />
+          {prettyFormatDuration(statsQueryData?.uptimeSeconds.current || 0)}
+          &nbsp;/&nbsp; 
+          {prettyFormatDuration(statsQueryData?.uptimeSeconds.overall || 0)} in total
         </CardContent>
         <CardContent alignment='right'>
           <MdDownloading className={fetchStatusClassName} />

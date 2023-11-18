@@ -4,14 +4,15 @@ import { PropsWithChildren } from 'react';
 interface CardContentProps extends PropsWithChildren {
   className?: string;
   alignment?: 'left' | 'right';
+  justifyItems?: boolean;
 }
 
-const CardContent = ({ alignment, className, children }: CardContentProps) => {
+const CardContent = ({ justifyItems, alignment, className, children }: CardContentProps) => {
   const completeClassNames = classNames(
     className,
     'flex',
     { 'flex-row-reverse': alignment === 'right' },
-    'justify-between',
+    { 'justify-between': justifyItems },
     'items-center',
     'gap-2'
   );

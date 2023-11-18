@@ -7,12 +7,17 @@ export interface DeviceInfo {
 
 export interface DeviceDiagnostics {
   ping: {
-    status: 'ok' | 'ko' | 'n/a';
+    status: FeatureStatus;
   };
   power: {
     state: 'on' | 'off' | 'n/a';
   };
+  ssh: {
+    status: FeatureStatus; 
+  }
 }
+
+export type FeatureStatus = 'ok' | 'ko' | 'n/a'; 
 
 export interface DeviceStatistics {
   uptimeSeconds: {

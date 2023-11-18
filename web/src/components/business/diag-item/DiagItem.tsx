@@ -1,4 +1,4 @@
-import { MdNetworkPing } from 'react-icons/md';
+import { MdNetworkPing, MdTerminal } from 'react-icons/md';
 import { DiagItemType } from '../../../model/diagnostics';
 
 interface DiagItemProps {
@@ -10,6 +10,10 @@ const DIAG_ITEMS = {
   PING: {
     Icon: MdNetworkPing,
     label: 'ICMP ping',
+  },
+  SSH: {
+    Icon: MdTerminal,
+    label: 'SSH connectivity',
   },
 }
 
