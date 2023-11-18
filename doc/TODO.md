@@ -17,6 +17,7 @@ TODOs
       - [X] power status,
       - [X] uptime
       - [] diags results
+        - SSH connectivity
         - detailed view: ping value when available
       - rdp via URI scheme (https://learn.microsoft.com/en-us/windows-server/remote/remote-desktop-services/clients/remote-desktop-uri#ms-rd-uri-scheme)
       - Menu: 
@@ -29,6 +30,7 @@ TODOs
     - [] About (web UI / server meta)
 
 - API/BACKEND
+  - Authentication system
   - Unit tests mechanism
     - [X] Jest set-up
     - [] unit tests for routes
@@ -45,7 +47,9 @@ TODOs
       - [X] Basic implementation
       - [] Filters: time window (min/max date), log levels
     - [] Diags service
-      - [] SSH connectivity
+      - SSH connectivity
+        - [X] Base implem
+        - [] unit tests with coverage (same as power off via SSH)
       - [] Web server
       - [X] Ping support
         - [X] response time in ms

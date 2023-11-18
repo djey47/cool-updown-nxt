@@ -7,7 +7,18 @@ FIXMEs/BUGs
 - [X] Diags: model simplification with removing unnecessary 'on' dates per individual items
 - [X] graceful shutdown plugin crashes (?) on dev server with vite => only use plugin in prod mode
 - [X] Refactor: extract routes from app to dedicated scripts
-- [] (stats BUG) Possibly wrong per-device uptimes after app start, same for global overall uptime
-- [] Diags processor: more reliable ping feature (depends on OS implem)
-- [] ViteJS dev + API: No loader is configured for ".node" files: (ssh2)
+- [X] (stats BUG) Possibly wrong per-device uptimes after app start, same for global overall uptime
+- [] Diags processor: more reliable ping feature (currently depends on OS implem)
+✘ [ERROR] No loader is configured for ".node" files: node_modules/ssh2/lib/protocol/crypto/build/Release/sshcrypto.node
+
+    node_modules/ssh2/lib/protocol/crypto.js:30:20:
+      30 │   binding = require('./crypto/build/Release/sshcrypto.node');
+         ╵                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+✘ [ERROR] No loader is configured for ".node" files: node_modules/cpu-features/build/Release/cpufeatures.node
+
+    node_modules/cpu-features/lib/index.js:3:24:
+      3 │ const binding = require('../build/Release/cpufeatures.node');
+        ╵                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+- [] ViteJS dev + API: No loader is configured for ".node" files: (ssh2). Minor issue.
 
