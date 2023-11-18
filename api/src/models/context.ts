@@ -28,6 +28,7 @@ export interface DeviceDiagnosticsContext {
   ping: FeatureDiagnostics;
   power: PowerDiagnostics;
   previous?: DeviceDiagnosticsContext;
+  ssh: FeatureDiagnostics;
 }
 
 export interface DeviceStatisticsContext {

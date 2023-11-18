@@ -6,7 +6,6 @@ import { FeatureStatus, PowerStatus } from '../../../models/common';
 import type { DeviceDiagnosticsContext } from '../../../models/context';
 
 const NOW = new Date();
-const PREVIOUS_MOMENT = new Date(2023, 0, 1);
 const EVEN_MORE_PREVIOUS_MOMENT = new Date(2022, 11, 31);
 const EVEN_MORE_PREVIOUS_MOMENT_MINUS_10MIN = subMinutes(EVEN_MORE_PREVIOUS_MOMENT, 10);
 
@@ -34,6 +33,9 @@ describe('power diag item', () => {
           lastStopAttempt: {
             reason: LastPowerAttemptReason.NONE,
           },
+        },
+        ssh: {
+          status: FeatureStatus.UNAVAILABLE,
         },
       };
 
@@ -68,6 +70,9 @@ describe('power diag item', () => {
             reason: LastPowerAttemptReason.NONE,
           },
         },
+        ssh: {
+          status: FeatureStatus.OK,
+        }
       };
 
       // when
@@ -102,6 +107,9 @@ describe('power diag item', () => {
             on: EVEN_MORE_PREVIOUS_MOMENT,
             reason: LastPowerAttemptReason.EXTERNAL,
           },
+        },
+        ssh: {
+          status: FeatureStatus.OK,
         },
       };
 
@@ -139,6 +147,9 @@ describe('power diag item', () => {
             reason: LastPowerAttemptReason.EXTERNAL,
           },
         },
+        ssh: {
+          status: FeatureStatus.UNAVAILABLE,
+        }
       };
 
       // when

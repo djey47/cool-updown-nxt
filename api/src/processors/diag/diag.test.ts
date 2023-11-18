@@ -6,6 +6,7 @@ import { statsProcessor } from '../stats/stats';
 import { diagProcessor } from './diag';
 import { pingDiag } from './items/ping';
 import { powerDiag } from './items/power';
+import { sshDiag } from './items/ssh';
 
 import { type FeatureDiagnostics, LastPowerAttemptReason, type PowerDiagnostics } from './models/diag';
 
@@ -14,22 +15,16 @@ jest.mock('../../common/logger', () => ({
     info: jest.fn(),
   },
 }));
-jest.mock('../../helpers/recaller', () => ({
-  recall: jest.fn(),
-}));
-jest.mock('./items/ping', () => ({
-  pingDiag: jest.fn(),
-}));
-jest.mock('./items/power', () => ({
-  powerDiag: jest.fn(),
-}));
-jest.mock('../stats/stats', () => ({
-  statsProcessor: jest.fn(),
-}));
+jest.mock('../../helpers/recaller');
+jest.mock('./items/ping');
+jest.mock('./items/ssh');
+jest.mock('./items/power');
+jest.mock('../stats/stats');
 
 const coreLoggerInfoMock = coreLogger.info as jest.Mock<void>;
 const recallMock = recall as jest.Mock<void>;
 const pingDiagMock = pingDiag as jest.Mock<Promise<FeatureDiagnostics>>;
+const sshDiagMock = sshDiag as jest.Mock<Promise<FeatureDiagnostics>>;
 const powerDiagMock = powerDiag as jest.Mock<PowerDiagnostics>;
 const statsProcessorMock = statsProcessor as jest.Mock<Promise<void>>;
 
@@ -44,6 +39,7 @@ afterAll(() => {
 beforeEach(() => {
   coreLoggerInfoMock.mockReset();
   pingDiagMock.mockReset();
+  sshDiagMock.mockReset();
   powerDiagMock.mockReset();
   recallMock.mockReset();
   statsProcessorMock.mockReset();
@@ -53,7 +49,7 @@ beforeEach(() => {
 
 describe('diagnostics processor', () => {
   describe('diag function', () => {
-    const defaultPingResultsOK: FeatureDiagnostics = {
+    const defaultResultsOK: FeatureDiagnostics = {
       status: FeatureStatus.OK,
     };
     const defaultPowerResults: PowerDiagnostics = {
@@ -69,7 +65,8 @@ describe('diagnostics processor', () => {
     it('should init diagnostics when not available yet for the device', async () => {
       // given
       AppContext.get().diagnostics = {};
-      pingDiagMock.mockResolvedValue(defaultPingResultsOK);
+      pingDiagMock.mockResolvedValue(defaultResultsOK);
+      sshDiagMock.mockResolvedValue(defaultResultsOK);
 
       // when
       await diagProcessor();
@@ -83,13 +80,18 @@ describe('diagnostics processor', () => {
         previous: {
           ping: {},
           power: {},
+          ssh: {},
+        },
+        ssh: {
+          status: 'ok',
         },
       });
     });
 
     it('should write logs, perform diagnostics, stats and invoke recaller to call itself again', async () => {
       // given
-      pingDiagMock.mockResolvedValue(defaultPingResultsOK);
+      pingDiagMock.mockResolvedValue(defaultResultsOK);
+      sshDiagMock.mockResolvedValue(defaultResultsOK);
       powerDiagMock.mockReturnValue(defaultPowerResults);
 
       // when
@@ -110,6 +112,9 @@ describe('diagnostics processor', () => {
             reason: 'external',
           },
         },
+        ssh: {
+          status: 'ok',
+        },
         previous: {
           ping: {
             status: 'n/a',
@@ -123,6 +128,9 @@ describe('diagnostics processor', () => {
             },
             state: 'n/a',
           },
+          ssh: {
+            status: 'n/a',
+          }
         },
       });
 
@@ -149,12 +157,20 @@ describe('diagnostics processor', () => {
         ping: {
           status: FeatureStatus.OK,
         },
+        ssh: {
+          status: FeatureStatus.OK,
+        }
       };
       const pingResultsKO: FeatureDiagnostics = {
-        ...defaultPingResultsOK,
+        ...defaultResultsOK,
+        status: FeatureStatus.KO,
+      };
+      const sshResultsKO: FeatureDiagnostics = {
+        ...defaultResultsOK,
         status: FeatureStatus.KO,
       };
       pingDiagMock.mockResolvedValue(pingResultsKO);
+      sshDiagMock.mockResolvedValue(sshResultsKO);
       const powerResults: PowerDiagnostics = {
         ...defaultPowerResults,
         lastStartAttempt: {
@@ -183,6 +199,10 @@ describe('diagnostics processor', () => {
             reason: 'external',
           },
         },
+        ssh: {
+          message: 'Device with id=0 has failed ping test thus SSH connectivity cannot be tested.',
+          status: 'n/a',
+        },
         previous: {
           on: previousDate,
           ping: {
@@ -196,6 +216,9 @@ describe('diagnostics processor', () => {
               reason: 'none',
             },
             state: 'off',
+          },
+          ssh: {
+            status: 'ok',
           },
         },
 

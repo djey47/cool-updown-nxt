@@ -51,6 +51,9 @@ describe('diags service', () => {
           reason: LastPowerAttemptReason.NONE,
         },
       },
+      ssh: {
+        status: FeatureStatus.OK,
+      },
     },
     '1': {
       on: NOW,
@@ -65,6 +68,9 @@ describe('diags service', () => {
         lastStopAttempt: {
           reason: LastPowerAttemptReason.NONE,
         },
+      },
+      ssh: {
+        status: FeatureStatus.KO,
       },
     },
   };
@@ -100,6 +106,9 @@ describe('diags service', () => {
               lastStartAttemptReason: LastPowerAttemptReason.NONE,
               lastStopAttemptReason: LastPowerAttemptReason.NONE,
             },
+            ssh: {
+              status: FeatureStatus.OK,
+            },
           },
           '1': {
             on: NOW,
@@ -110,6 +119,9 @@ describe('diags service', () => {
               state: PowerStatus.OFF,
               lastStartAttemptReason: LastPowerAttemptReason.NONE,
               lastStopAttemptReason: LastPowerAttemptReason.NONE,
+            },
+            ssh: {
+              status: FeatureStatus.KO,
             },
           },
         },
@@ -148,6 +160,9 @@ describe('diags service', () => {
             state: PowerStatus.ON,
             lastStartAttemptReason: LastPowerAttemptReason.NONE,
             lastStopAttemptReason: LastPowerAttemptReason.NONE,
+          },
+          ssh: {
+            status: FeatureStatus.OK,
           },
         },
       };

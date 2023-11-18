@@ -110,6 +110,9 @@ export class AppContext {
             reason: LastPowerAttemptReason.NONE,
           },
         },
+        ssh: {
+          status: FeatureStatus.UNAVAILABLE,
+        }
       };
       return acc;
     }, {});

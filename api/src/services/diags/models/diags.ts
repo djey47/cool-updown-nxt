@@ -13,6 +13,7 @@ export interface DiagsResponseForDevice {
   on?: Date;
   ping: DiagsResponseForFeature;
   power: PowerDiagsResponse;
+  ssh: DiagsResponseForFeature;
 }
 
 export interface DiagsResponseForFeature {

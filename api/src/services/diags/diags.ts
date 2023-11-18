@@ -51,16 +51,17 @@ function diagsContextAllDevicesToResponse(diagsContext: DiagnosticsContext): Dia
 }
 
 function diagsContextForDeviceToResponse(deviceDiags: DeviceDiagnosticsContext): DiagsResponseForDevice {
-  const { on, ping, power } = deviceDiags;
+  const { on, ping, power, ssh } = deviceDiags;
   return {
     on,
     ping: diagsFeatureToResponse(ping),
     power: diagsPowerToResponse(power),
+    ssh: diagsFeatureToResponse(ssh),
   };
 }
 
 function diagsFeatureToResponse(featureDiags: FeatureDiagnostics): DiagsResponseForFeature {
-  const { status, data  } = featureDiags;
+  const { status, data } = featureDiags;
   return {
     data,
     status,

@@ -7,6 +7,10 @@ import { readPrivateKey } from './auth';
 import type { Config } from 'node-ssh';
 import type { DeviceConfig } from '../models/configuration';
 
+export const SSH_DIAG_DEFAULT_COMMAND = "exit";
+
+// FIXME move SSH_OFF_DEFAULT_COMMAND here
+
 /**
  * @returns the proper SSH connection parameters from provider device config
  */

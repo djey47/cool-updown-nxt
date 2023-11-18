@@ -43,6 +43,9 @@ describe('statistics processor', () => {
           lastStartAttempt: { reason: LastPowerAttemptReason.NONE },
           lastStopAttempt: { reason: LastPowerAttemptReason.NONE },
         },
+        ssh: {
+          status: FeatureStatus.OK,
+        },
         previous: {
           on: NOW_MINUS_1MIN,
           ping: {
@@ -53,6 +56,9 @@ describe('statistics processor', () => {
             lastStartAttempt: { reason: LastPowerAttemptReason.NONE },
             lastStopAttempt: { reason: LastPowerAttemptReason.NONE },
           },
+          ssh: {
+            status: FeatureStatus.OK,
+          }
         },
       };
 
@@ -99,6 +105,9 @@ describe('statistics processor', () => {
           lastStartAttempt: { reason: LastPowerAttemptReason.NONE },
           lastStopAttempt: { reason: LastPowerAttemptReason.NONE },
         },
+        ssh: {
+          status: FeatureStatus.OK,
+        }
       };
 
       // when

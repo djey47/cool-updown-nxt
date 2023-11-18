@@ -62,6 +62,9 @@ describe('AppContext singleton class', () => {
               reason: LastPowerAttemptReason.NONE,
             },
           },
+          ssh: {
+            status: FeatureStatus.OK,
+          }
         },
       };
 
@@ -84,6 +87,9 @@ describe('AppContext singleton class', () => {
               lastStopAttempt: {
                 reason: 'none',
               },
+            },
+            ssh: {
+              status: 'n/a',
             },
           },
         },

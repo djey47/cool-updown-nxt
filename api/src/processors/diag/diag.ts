@@ -4,10 +4,12 @@ import { coreLogger } from '../../common/logger';
 import { recall } from '../../helpers/recaller';
 import { statsProcessor } from '../stats/stats';
 import { pingDiag } from './items/ping';
+import { sshDiag } from './items/ssh';
 import { powerDiag } from './items/power';
 
-import type { DiagResults } from './models/diag';
+import type { DiagResults, FeatureDiagnostics } from './models/diag';
 import type { DeviceConfig } from '../../models/configuration';
+import { FeatureStatus } from '../../models/common';
 
 const DIAGS_INTERVAL = getConfig().app.diagnosticsIntervalMs;
 
@@ -35,7 +37,7 @@ async function diagForAllDevices(devicesConfigs: DeviceConfig[]) {
   // Update context
   const appContext = AppContext.get();
   allResults.forEach((result) => {
-    const { deviceId, ping: pingResult } = result;
+    const { deviceId, ping: pingResult, ssh: sshResult } = result;
     const deviceDiags = appContext.diagnostics[deviceId] || { ping: {} };
     appContext.diagnostics[deviceId] = deviceDiags;
 
@@ -44,6 +46,7 @@ async function diagForAllDevices(devicesConfigs: DeviceConfig[]) {
       on: deviceDiags.on,
       ping: { ...deviceDiags.ping },
       power: { ...deviceDiags.power },
+      ssh: { ...deviceDiags.ssh },
     };
 
     // Current diagnostics
@@ -53,6 +56,9 @@ async function diagForAllDevices(devicesConfigs: DeviceConfig[]) {
     // Ping
     deviceDiags.ping = pingResult;
 
+    // SSH
+    deviceDiags.ssh = sshResult;
+
     // Power state
     deviceDiags.power = powerDiag(deviceDiags);
   });
@@ -60,9 +66,21 @@ async function diagForAllDevices(devicesConfigs: DeviceConfig[]) {
 
 async function diagByDevice(deviceId: string, deviceConfig: DeviceConfig): Promise<DiagResults> {
   const pingResults = await pingDiag(deviceId, deviceConfig);
+
+  let sshResults: FeatureDiagnostics;
+  // If ping fails, SSH connectivity cannot be tested
+  if (pingResults.status === FeatureStatus.KO) {
+    sshResults = {
+      status: FeatureStatus.UNAVAILABLE,
+      message: `Device with id=${deviceId} has failed ping test thus SSH connectivity cannot be tested.`,
+    }
+  } else {
+    sshResults = await sshDiag(deviceId, deviceConfig);
+  }
   
   return {
     deviceId,
     ping: pingResults,
+    ssh: sshResults,
   };
 }
