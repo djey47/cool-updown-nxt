@@ -77,7 +77,8 @@ const Device = ({ deviceInfo }: DeviceProps) => {
       {
         'is-ok': featureStatus === 'ok',
         'is-ko': featureStatus === 'ko',
-        'is-na': featureStatus === 'n/a'
+        'is-na': featureStatus === 'n/a',
+        'text-indigo-900': featureStatus === 'n/a',
       });
   } 
 
@@ -95,6 +96,7 @@ const Device = ({ deviceInfo }: DeviceProps) => {
       'is-on': devicePowerState === 'on',
       'is-off': devicePowerState === 'off',
       'is-na': devicePowerState === 'n/a',
+      'text-indigo-900': devicePowerState === 'n/a',
       'animate-pulse': isPerformingPowerOn || isPerformingPowerOff,
     });
 

@@ -30,7 +30,7 @@ const DropDownMenu = ({ items }: DropDownMenuProps) => {
         <IoEllipsisVerticalSharp />
       </Button>
       {isDropDownMenuVisible && (
-      <div className="absolute top-0 left-full bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-indigo-300/50">
+      <div className="absolute top-0 left-full bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-indigo-300/75">
         <ul className="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="deviceDropdownCta">
           {items.map((mi) => (
             <li key={mi.label}>

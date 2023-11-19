@@ -4,16 +4,10 @@
 .device-power-cta.is-off {
   color: red;
 }
-.device-power-cta.is-na {
-  color: indigo;
-}
 
 .device-ping-status.is-ok {
   color: limegreen;
 }
 .device-ping-status.is-ko {
   color: red;
-}
-.device-ping-status.is-na {
-  color: indigo;
 }
