@@ -1,19 +1,13 @@
-import { NodeSSH, SSHExecCommandOptions } from 'node-ssh';
 import { replyWithInternalError, replyWithItemNotFound, replyWithJson } from '../../common/api';
 import { getDeviceConfig } from '../../common/configuration';
 import { AppContext } from '../../common/context';
-import { getSSHParameters } from '../../helpers/ssh';
+import { SSH_DEFAULT_OFF_COMMAND, sshExec } from '../../helpers/ssh';
 
 import type { FastifyReply } from 'fastify/types/reply';
 import type{ DeviceConfig } from '../../models/configuration';
 import { ApiItem } from '../../models/api';
 import { PowerStatus } from '../../models/common';
 import { LastPowerAttemptReason } from '../../processors/diag/models/diag';
-
-const ssh = new NodeSSH();
-
-// Background process (-b), read password from stdin (-S), shutdown server in one minute
-const DEFAULT_SSH_OFF_COMMAND = 'sudo -bS shutdown -h 1;exit';
 
 /** 
  * Power->OFF service implementation: for a specified device
@@ -59,20 +53,10 @@ export async function powerOffForDevice(deviceId: string, reply: FastifyReply) {
 
 async function shutdownDevice(deviceConfig: DeviceConfig) {
   const { ssh: sshConfiguration } = deviceConfig;
-  const sshClientConfig = await getSSHParameters(deviceConfig);
 
   // console.log('powerOff::shutdownDevice', { sshConfiguration, sshClientConfig });
 
-  await ssh.connect(sshClientConfig);
-
-  const commandOptions: SSHExecCommandOptions = {};
-  const password = sshConfiguration?.password;
-  if (password !== undefined) {
-    commandOptions.stdin = `${password}\n`; 
-  }
-
-  const command = sshConfiguration?.offCommand || DEFAULT_SSH_OFF_COMMAND;
-  const { stdout, stderr, code } = await ssh.execCommand(command, commandOptions);
+  const { stdout, stderr, code } = await sshExec(sshConfiguration?.offCommand || SSH_DEFAULT_OFF_COMMAND, deviceConfig)
 
   if (code !== 0) throw stderr;
 

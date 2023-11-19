@@ -1,23 +1,19 @@
 import { replyWithJson } from '../../common/api';
 import { AppContext } from '../../common/context';
-import { getSSHParameters } from '../../helpers/ssh';
 import { getMockedFastifyReply } from '../../helpers/testing/mockObjects';
 import { powerOffForDevice } from './powerOff';
-import globalMocks from '../../../config/jest/globalMocks';
 import resetMocks from '../../../config/jest/resetMocks';
-import { DeviceSSHConfig } from '../../models/configuration';
+import { sshExec } from '../../helpers/ssh';
+
+import type { SSHExecCommandResponse } from 'node-ssh';
+import { DeviceConfig } from '../../models/configuration';
+import { getDeviceConfig } from '../../common/configuration';
 
 jest.mock('../../common/api');
 jest.mock('../../helpers/ssh');
 
 const replyWithJsonMock = replyWithJson as jest.Mock;
-const getSSHParametersMock = getSSHParameters as jest.Mock;
-const {
-  nodesshMock: {
-    connect: connectMock,
-    execCommand: execCommandMock,
-  },
-} = globalMocks;
+const sshExecMock = sshExec as jest.Mock<Promise<SSHExecCommandResponse>, [c: string, dc: DeviceConfig, wp: boolean]>;
 
 describe('powerOff service', () => {
   const codeMock = jest.fn();
@@ -27,21 +23,18 @@ describe('powerOff service', () => {
   beforeEach(() => {
     resetMocks();
     replyWithJsonMock.mockReset();
-    getSSHParametersMock.mockReset();
+    sshExecMock.mockReset();
   });
 
   describe('powerOffForDevice async function', () => {
     it('should shutdown specified device, update diags context and return 204', async () => {
       // given
-      const sshConfig: DeviceSSHConfig = {
-        keyPath: '/id_rsa',
-        user: 'username',
-      };
-      getSSHParametersMock.mockResolvedValue(sshConfig);
-      execCommandMock.mockResolvedValue({
+      const deviceConfig = getDeviceConfig('0');
+      sshExecMock.mockResolvedValue({
         stdout: 'stdout',
         stderr: 'stderr',
         code: 0,
+        signal: null,
       });
 
       // when
@@ -52,10 +45,11 @@ describe('powerOff service', () => {
       expect(lastStopAttempt.reason).toBe('api');
       expect(lastStopAttempt.on).not.toBeUndefined();
 
-      expect(connectMock).toHaveBeenCalledWith(sshConfig);
-      expect(execCommandMock).toHaveBeenCalledWith('sudo -bS shutdown -h 1;exit', {});
+      expect(sshExecMock).toHaveBeenCalledWith('sudo -bS shutdown -h 1;exit', deviceConfig);
 
       expect(replyWithJsonMock).toHaveBeenCalledWith(defaultReply);
     });
+
+    // TODO add tests cases to improve coverage
   });
 });

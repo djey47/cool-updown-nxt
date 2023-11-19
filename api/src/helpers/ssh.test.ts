@@ -1,22 +1,27 @@
 import globalMocks from '../../config/jest/globalMocks';
 import resetMocks from '../../config/jest/resetMocks';
-import { getSSHParameters } from './ssh';
+import { sshExec } from './ssh';
 
 import type { DeviceConfig } from '../models/configuration';
 
 jest.mock('./auth', () => globalMocks.authMock);
 
-const { authMock } = globalMocks;
+const { authMock, nodesshMock } = globalMocks;
 
 beforeEach(() => {
   resetMocks();
+
+  authMock.readPrivateKey.mockResolvedValue('=== PRIVATE KEY ===');
+  nodesshMock.execCommand.mockResolvedValue({ code: 0, stdout: '/bin /usr/bin\n', stderr: '' });
 });
 
 describe('SSH support functions', () => {
-  describe('getSSHParameters function', () => {
-    const defaultServerConfig: DeviceConfig = {
+  describe('sshExec function', () => {
+    const defaultCommand = 'echo $path';
+    const defaultDeviceConfig: DeviceConfig = {
       ssh: {
         keyPath: '/key-path',
+        password: 'my-pass',
         user: 'user',
       },
       network: {
@@ -26,34 +31,57 @@ describe('SSH support functions', () => {
       },
     };
 
-    it('should return right connection params', async () => {
-      // given
-      authMock.readPrivateKey.mockResolvedValue('=== PRIVATE KEY ===');
-
-      // when
-      const actual = await getSSHParameters({ ...defaultServerConfig });
+    it('should execute specified command and return results', async () => {
+      // given-when
+      const actual = await sshExec(defaultCommand, {...defaultDeviceConfig});
 
       // then
-      expect(actual).toEqual({
+      expect(nodesshMock.connect).toHaveBeenCalledWith({
         host: 'hostname',
         privateKey: '=== PRIVATE KEY ===',
         username: 'user',
       });
+      expect(nodesshMock.execCommand).toHaveBeenCalledWith('echo $path', {});
+      expect(actual).toEqual({
+        code: 0,
+        stderr: '',
+        stdout: '/bin /usr/bin\n',
+      });
     });
 
-    it('should handle no SSH configuration section', async () => {
-      // given
-      const config: DeviceConfig = {
-        ...defaultServerConfig,
-        ssh: undefined,
-      };
-
-      // when
-      const actual = await getSSHParameters(config);
+    it('should execute specified command with sudo password and return results', async () => {
+      // given-when
+      const actual = await sshExec(defaultCommand, {...defaultDeviceConfig}, true);
 
       // then
+      expect(nodesshMock.connect).toHaveBeenCalled();
+      expect(nodesshMock.execCommand).toHaveBeenCalledWith('echo $path', { stdin: 'my-pass\n'});
       expect(actual).toEqual({
-        host: 'hostname',
+        code: 0,
+        stderr: '',
+        stdout: '/bin /usr/bin\n',
+      });
+    });
+
+    it('should execute specified command without sudo password and return results', async () => {
+      // given
+      const deviceConfig: DeviceConfig = {
+        ...defaultDeviceConfig,
+      };
+      if (deviceConfig.ssh) {
+        deviceConfig.ssh.password = undefined;
+      }
+
+      // when
+      const actual = await sshExec(defaultCommand, deviceConfig, true);
+
+      // then
+      expect(nodesshMock.connect).toHaveBeenCalled();
+      expect(nodesshMock.execCommand).toHaveBeenCalledWith('echo $path', {});
+      expect(actual).toEqual({
+        code: 0,
+        stderr: '',
+        stdout: '/bin /usr/bin\n',
       });
     });
   });
