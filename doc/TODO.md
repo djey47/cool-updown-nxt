@@ -33,7 +33,7 @@ TODOs
   - Authentication system
   - Unit tests mechanism
     - [X] Jest set-up
-    - [] unit tests for routes
+    - [X] unit tests for routes
   - [X] ESLint
   - [X] Static file server for the web-application
   - Handle critical errors => 500?
@@ -42,19 +42,21 @@ TODOs
     - [] Dispose
   - Services
     - [] enhancement: Websocket support for diags/stats refresh
+    - Home service
+      - [] Display configuration (obfuscated)
     - Config service
       - [X] Basic implementation
       - [X] Per device (path param)
       - [] Sensitive info obfuscation
-    - [] Logs service
+    - Logs service
       - [X] Basic implementation
       - [] Filters: time window (min/max date), log levels
-    - [] Diags service
+    - Diags service
       - SSH connectivity
         - [X] Base implem
-        - [] unit tests with coverage (same as power off via SSH)
+        - [X] unit tests with coverage (same as power off via SSH)
       - [] Web server
-      - [X] Ping support
+      - Ping support
         - [X] response time in ms
       - [X] Per device (path param)
       - [] Per tags (query string)
