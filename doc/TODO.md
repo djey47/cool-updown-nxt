@@ -37,6 +37,9 @@ TODOs
   - [X] ESLint
   - [X] Static file server for the web-application
   - Handle critical errors => 500?
+  - SSH
+    - [] Always execute exit command automatically
+    - [] Dispose
   - Services
     - [] enhancement: Websocket support for diags/stats refresh
     - Config service
