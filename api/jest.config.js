@@ -1,5 +1,8 @@
 /** @type {import('ts-jest').JestConfigWithTsJest} */
-module.exports = {  
+module.exports = { 
+  coveragePathIgnorePatterns: [
+    '<rootDir>/src/app.ts'
+  ],
   clearMocks: true,
   preset: 'ts-jest',
   setupFiles: [
