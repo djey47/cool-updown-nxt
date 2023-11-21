@@ -55,9 +55,11 @@ async function shutdownDevice(deviceConfig: DeviceConfig) {
   const { ssh: sshConfiguration } = deviceConfig;
 
   // console.log('powerOff::shutdownDevice', { sshConfiguration, sshClientConfig });
-
+  
   const { stdout, stderr, code } = await sshExec(sshConfiguration?.offCommand || SSH_DEFAULT_OFF_COMMAND, deviceConfig)
-
+  
+  // console.log('powerOff::shutdownDevice', { stdout, stderr, code });
+  
   if (code !== 0) throw stderr;
 
   return {
