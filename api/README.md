@@ -52,6 +52,13 @@ Default configuration is defined in `api/config/default.json` file.
       "hostname": "my-nas",
       "macAddress": "aa:bb:cc:dd:ee:ff",
       "broadcastIpAddress": "255.255.255.255"
+    },
+    "ssh": {
+        "offCommand": "shutdown -h now",
+        "keyPath": "/home/barney/.ssh/id_rsa",
+        "password": "my-nas-password",
+        "port": 2122,      
+        "user": "my-nas-user"
     }
   }]
 }
@@ -72,6 +79,26 @@ To override settings, create a copy to `api/config/production.json` file and mak
 | `.. broadcastIpAddress`| Broadcast IP address (mandatory for WOL) | / |
 | `.. hostname`| Device name or IP address (mandatory) | / |
 | `.. macAddress`| MAC address for this device (mandatory for WOL) | / |
+| `. ssh`| SSH related parameters (mandatory for power-off feature), see below: |  |
+| `.. offCommand`| Custom command to shutdown device via SSH connection | `sudo -bS shutdown -h 1;exit` |
+| `.. keyPath`| Path of private key for direct access (mandatory, PEM RSA only supported) | / |
+| `.. password`| Password to use when invoking a command with sudo (mandatory for sudoer) | / |
+| `.. port`| Custom SSH port to be accessed | 22 |
+|
+
+### SSH Configuration
+
+Power-off service does require a working communication via SSH; to achieve this, you should check both parts below.
+
+*Note: SSH access to Windows 10+ devices are not officially supported for now.*
+
+#### Client side (instance hosting cool-updown-nxt server)
+- Get or generate RSA key pairs
+- Connect manually at least once to managed device; to add it to known hosts.
+
+#### Device side, for each of those to be managed
+- Allow public key authentication in SSH service parameters
+- Add client public key in `~/.ssh/authorized_keys` file for the user you wanna connect with.
 
 ## Start production server
 
@@ -239,6 +266,9 @@ Returns some diagnostics for a configured device.
     "power": {
       "state": "off" 
     }
+    "ssh": {
+      "state": "n/a",
+    }
   }
 }
 ```
@@ -346,7 +376,36 @@ This service does not provide any output in nominal case (HTTP code being 204).
 }
 ```
 
-## Monitoring
+### POST /power-off/[deviceId]
+
+Attempts to shutdownspecified device up through commands sent via SSH.
+
+**Sample output**
+
+This service does not provide any output in nominal case (HTTP code being 204).
+
+**Notes**
+- This feature relies on SSH, thus missing device SSH configuration will make a NO-OP
+- `deviceId` acts as unique identifier for a configured device; it matches the 0-based rank of the device in the configuration array
+- If no device exists with this identifier, a 404 is replied with following output:
+
+```json
+{
+  "errorMessage": "Specified item was not found",
+  "itemType": "deviceId",
+  "itemValue": "foo"
+}
+```
+
+- If for some reason either the SSH connection or issued command fail, a 500 is replied with following output: 
+
+```json
+{
+  "errorMessage": "<...>",
+}
+```
+
+## Monitoring cool-updown-nxt server instance
 
 ### Logs
 
@@ -393,6 +452,18 @@ At time of every diagnostics processing, it can track the power state change and
 - if power state switched from `off` to `on` and last start attempt date is older than 10 minutes (should it be tweakable?), an external start attempt is registered and attempt date is updated to current moment
 - if power state switched from `on` to `off` and last stop attempt date is older than 10 minutes (should it be tweakable?), an external stop attempt is registered and attempt date is updated to current moment.
 
+### SSH connectivity
+
+Diagnostics also include asserting the SSH connectivity state, when SSH settings are set into device configuration.
+
+It tries connecting via SSH to issue the `exit` command; this way it can guarantee that service is properly up on the device, user having access, and accepting commands.
+
+Diag results:
+
+- `ok` status when the issued command terminates with success (exit code = 0)
+- `ko` status when either SSH connectivity is broken or the command terminates with failure (exit code not 0)
+- `n/a` if device SSH parameters are not properly set, or if the current ping diagnostics are ko (meaning it's no use testing SSH connectivity, as the device cannot be found LAN-wise already)
+- message attribute is available with the error description caught from error output, if any.
 
 ## Processing details: statistics
 
