@@ -3,6 +3,7 @@
     "esModuleInterop": true,
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
+    "resolveJsonModule": true,
     "strictNullChecks": true,
     "strict": true,
     "target": "ES2021"
