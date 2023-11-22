@@ -1,4 +1,4 @@
-import { SSH_DIAG_DEFAULT_COMMAND, sshExec } from '../../../helpers/ssh';
+import { sshExec } from '../../../helpers/ssh';
 
 import type { DeviceConfig } from '../../../models/configuration';
 import type { FeatureDiagnostics } from '../models/diag';
@@ -19,7 +19,7 @@ export async function sshDiag(deviceId: string, deviceConfig: DeviceConfig): Pro
   console.log('ssh::sshDiag', { deviceId, sshConfiguration });
 
   try {
-    await sshExec(SSH_DIAG_DEFAULT_COMMAND, deviceConfig);
+    await sshExec('', deviceConfig, { exitOnFinished: true });
     return {
       status: FeatureStatus.OK,
     };

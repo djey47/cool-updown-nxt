@@ -3,7 +3,7 @@ import { AppContext } from '../../common/context';
 import { getMockedFastifyReply } from '../../helpers/testing/mockObjects';
 import { powerOffForDevice } from './powerOff';
 import resetMocks from '../../../config/jest/resetMocks';
-import { sshExec } from '../../helpers/ssh';
+import { type ExecOptions, sshExec } from '../../helpers/ssh';
 
 import type { SSHExecCommandResponse } from 'node-ssh';
 import { DeviceConfig } from '../../models/configuration';
@@ -16,7 +16,7 @@ jest.mock('../../helpers/ssh');
 const replyWithJsonMock = replyWithJson as jest.Mock;
 const replyWithItemNotFoundMock = replyWithItemNotFound as jest.Mock;
 const replyWithInternalErrorMock = replyWithInternalError as jest.Mock;
-const sshExecMock = sshExec as jest.Mock<Promise<SSHExecCommandResponse>, [c: string, dc: DeviceConfig, wp: boolean]>;
+const sshExecMock = sshExec as jest.Mock<Promise<SSHExecCommandResponse>, [c: string, dc: DeviceConfig, o: ExecOptions]>;
 
 describe('powerOff service', () => {
   const codeMock = jest.fn();
@@ -52,7 +52,10 @@ describe('powerOff service', () => {
       expect(lastStopAttempt.reason).toBe('api');
       expect(lastStopAttempt.on).not.toBeUndefined();
 
-      expect(sshExecMock).toHaveBeenCalledWith('sudo -bS shutdown -h 1;exit', deviceConfig);
+      expect(sshExecMock).toHaveBeenCalledWith(
+        'sudo -bS shutdown -h 1',
+        deviceConfig,
+        { password: 'pwd', exitOnFinished: true });
 
       expect(replyWithJsonMock).toHaveBeenCalledWith(defaultReply);
     });

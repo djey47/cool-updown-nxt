@@ -11,7 +11,8 @@
       },
       "ssh": {
         "keyPath": "/id_rsa",
-        "user": "username"
+        "user": "username",
+        "password": "pwd"
       }
     }
   ]

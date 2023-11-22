@@ -1,6 +1,6 @@
 import globalMocks from '../../config/jest/globalMocks';
 import resetMocks from '../../config/jest/resetMocks';
-import { sshExec } from './ssh';
+import { ExecOptions, sshExec } from './ssh';
 
 import type { DeviceConfig } from '../models/configuration';
 
@@ -41,7 +41,9 @@ describe('SSH support functions', () => {
         privateKey: '=== PRIVATE KEY ===',
         username: 'user',
       });
+      expect(nodesshMock.execCommand).toHaveBeenCalledTimes(1);
       expect(nodesshMock.execCommand).toHaveBeenCalledWith('echo $path', {});
+      expect(nodesshMock.dispose).toHaveBeenCalled();
       expect(actual).toEqual({
         code: 0,
         stderr: '',
@@ -50,12 +52,40 @@ describe('SSH support functions', () => {
     });
 
     it('should execute specified command with sudo password and return results', async () => {
-      // given-when
-      const actual = await sshExec(defaultCommand, {...defaultDeviceConfig}, true);
+      // given
+      const opts: ExecOptions = {
+        password: defaultDeviceConfig.ssh?.password,
+      };
+
+      // then
+      const actual = await sshExec(defaultCommand, {...defaultDeviceConfig}, opts);
 
       // then
       expect(nodesshMock.connect).toHaveBeenCalled();
+      expect(nodesshMock.execCommand).toHaveBeenCalledTimes(1);
       expect(nodesshMock.execCommand).toHaveBeenCalledWith('echo $path', { stdin: 'my-pass\n'});
+      expect(nodesshMock.dispose).toHaveBeenCalled();
+      expect(actual).toEqual({
+        code: 0,
+        stderr: '',
+        stdout: '/bin /usr/bin\n',
+      });
+    });
+
+    it('should execute specified command with auto exit and return results', async () => {
+      // given
+      const opts: ExecOptions = {
+        exitOnFinished: true,
+      };
+
+      // then
+      const actual = await sshExec(defaultCommand, {...defaultDeviceConfig}, opts);
+
+      // then
+      expect(nodesshMock.connect).toHaveBeenCalled();
+      expect(nodesshMock.execCommand).toHaveBeenCalledWith('echo $path', {});
+      expect(nodesshMock.execCommand).toHaveBeenCalledWith('exit', undefined);
+      expect(nodesshMock.dispose).toHaveBeenCalled();
       expect(actual).toEqual({
         code: 0,
         stderr: '',
@@ -73,11 +103,12 @@ describe('SSH support functions', () => {
       }
 
       // when
-      const actual = await sshExec(defaultCommand, deviceConfig, true);
+      const actual = await sshExec(defaultCommand, deviceConfig);
 
       // then
       expect(nodesshMock.connect).toHaveBeenCalled();
       expect(nodesshMock.execCommand).toHaveBeenCalledWith('echo $path', {});
+      expect(nodesshMock.dispose).toHaveBeenCalled();
       expect(actual).toEqual({
         code: 0,
         stderr: '',

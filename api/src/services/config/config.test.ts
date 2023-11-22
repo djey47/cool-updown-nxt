@@ -23,6 +23,7 @@ describe('Configuration service', () => {
     },
     ssh: {
       keyPath: '/id_rsa',
+      password: 'pwd',
       user: 'username',
     },
   };

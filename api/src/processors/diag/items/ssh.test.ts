@@ -35,6 +35,7 @@ describe('ssh diag item', () => {
       const actual = await sshDiag('0', defaultDeviceConfig);
 
       // then
+      expect(sshExecMock).toHaveBeenCalledWith('', defaultDeviceConfig, { exitOnFinished: true });
       expect(actual).toEqual({
         status: 'ok',
       });

@@ -1,7 +1,7 @@
 import { replyWithInternalError, replyWithItemNotFound, replyWithJson } from '../../common/api';
 import { getDeviceConfig } from '../../common/configuration';
 import { AppContext } from '../../common/context';
-import { SSH_DEFAULT_OFF_COMMAND, sshExec } from '../../helpers/ssh';
+import { ExecOptions, SSH_DEFAULT_OFF_COMMAND, sshExec } from '../../helpers/ssh';
 
 import type { FastifyReply } from 'fastify/types/reply';
 import type{ DeviceConfig } from '../../models/configuration';
@@ -55,8 +55,12 @@ async function shutdownDevice(deviceConfig: DeviceConfig) {
   const { ssh: sshConfiguration } = deviceConfig;
 
   // console.log('powerOff::shutdownDevice', { sshConfiguration, sshClientConfig });
-  
-  const { stdout, stderr, code } = await sshExec(sshConfiguration?.offCommand || SSH_DEFAULT_OFF_COMMAND, deviceConfig)
+
+  const execOpts: ExecOptions = {
+    password: sshConfiguration?.password,
+    exitOnFinished: true,
+  };
+  const { stdout, stderr, code } = await sshExec(sshConfiguration?.offCommand || SSH_DEFAULT_OFF_COMMAND, deviceConfig, execOpts);
   
   // console.log('powerOff::shutdownDevice', { stdout, stderr, code });
   
