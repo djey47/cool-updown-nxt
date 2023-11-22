@@ -13,6 +13,7 @@ TODOs
   - [] Router
   - [X] React Query
   - [] Dashboard
+    - [] Click outside to close drop down menu...  [https://www.robinwieruch.de/react-hook-detect-click-outside-component/]
     - [] device tiles
       - [X] power status,
       - [X] uptime
