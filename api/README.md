@@ -129,14 +129,14 @@ Returns name, version and current context of the server; it is not advised to us
 }
 ```
 
-### GET /logs
+### GET /logs[?maxNbEvents=<>]
 
-Returns all log entries with log file size and entry count.
+Returns some or all log entries with log file size and entry count.
 
 **Sample output**
 ```json
 {
-  "entryCount": 100,
+  "entryCount": 1,
   "logs": [
     {
       "level": "info",
@@ -151,9 +151,23 @@ Returns all log entries with log file size and entry count.
         "remotePort": 56906
       }
     }
-  ]
+  ],
+  "totalEntryCount": 100,
 }   
 ```
+
+**Query parameters**
+
+They are optional, default behaviour is given below:
+
+| Name | Description | Default behaviour |
+| ---- | ----------- | ----------------- |
+| `maxNbEvents` | Limits returned log events to specified amount | Returns all matching events |
+
+**Notes**
+
+- `entryCount` will be either the total number of available events, or the fixed limit with `maxNbEvents` query parameter
+- `totalEntryCount` will always be the total number of available events, no matter if a limit or filtering have been applied.
 
 ### GET /config
 

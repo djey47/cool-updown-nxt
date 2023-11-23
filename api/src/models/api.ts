@@ -25,4 +25,8 @@ export type ApiWithDeviceIdParameterRequest = FastifyRequest<{
   Params: { deviceId: string; }
 }>;
 
+export type ApiWithLogsQueryParametersRequest = FastifyRequest<{
+  Querystring: { maxNbEvents: number; }
+}>;
+
 type DefaultResponse = Record<string, never>;

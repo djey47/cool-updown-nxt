@@ -1,14 +1,16 @@
-import { getMockedFastifyApp, getMockedFastifyReply, getMockedRequestWithDeviceIdParameter } from '../helpers/testing/mockObjects';
+import { FastifyReply } from 'fastify/types/reply';
+import { getMockedFastifyApp, getMockedFastifyReply, getMockedRequestWithLogsQueryParameters } from '../helpers/testing/mockObjects';
 import { logs } from '../services/logs/logs';
 import { logsRoutes } from './logs';
 
 jest.mock('../services/logs/logs');
 
-const logsMock = logs as jest.Mock;
+const logsMock = logs as jest.Mock<Promise<void>, [number | undefined, FastifyReply]>;
 
 describe('logs API routes', () => {
   const mockedApp = getMockedFastifyApp();
-  const mockedRequest = getMockedRequestWithDeviceIdParameter('0');
+  const mockedRequest = getMockedRequestWithLogsQueryParameters();
+  const mockedRequestWithLimitation = getMockedRequestWithLogsQueryParameters(100);
   const mockedReply = getMockedFastifyReply(jest.fn(), jest.fn());
 
   beforeEach(() => {
@@ -24,7 +26,7 @@ describe('logs API routes', () => {
       expect(mockedApp.get).toHaveBeenCalledWith('/logs', expect.any(Function));
     });
 
-    it('should call corresponding services', () => {
+    it('should call corresponding service', () => {
       // given
       (mockedApp.get as jest.Mock).mockImplementation((_path, getCallback) => {
         getCallback(mockedRequest, mockedReply);
@@ -34,7 +36,20 @@ describe('logs API routes', () => {
       logsRoutes(mockedApp);
 
       // then
-      expect(logsMock).toHaveBeenCalledWith(mockedReply);
+      expect(logsMock).toHaveBeenCalledWith(undefined, mockedReply);
+    });
+
+    it('should call corresponding service with event limitation', () => {
+      // given
+      (mockedApp.get as jest.Mock).mockImplementation((_path, getCallback) => {
+        getCallback(mockedRequestWithLimitation, mockedReply);
+      });
+
+      // when
+      logsRoutes(mockedApp);
+
+      // then
+      expect(logsMock).toHaveBeenCalledWith(100, mockedReply);
     });
   });
 });

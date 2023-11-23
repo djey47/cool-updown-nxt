@@ -59,6 +59,14 @@ export function getMockedRequestWithDeviceIdParameter(deviceId: string) {
   };
 }
 
+export function getMockedRequestWithLogsQueryParameters(maxNbEvents?: number) {
+  return {
+    query: {
+      maxNbEvents,
+    },
+  };
+}
+
 export function getMockedFastifyApp(): FastifyInstance {
   return {
     server: {

@@ -24,6 +24,7 @@ export interface LogEntry {
 
 export interface LogsResponse {
   entryCount: number;
+  totalEntryCount: number;
   logs: LogEntry[];
   fileSizeBytes: number;
 }

@@ -10,7 +10,7 @@ import type { LogEntry, LogsResponse } from './models/logs';
 /**
  * Logs service implementation
  */
-export async function logs(reply: FastifyReply) {
+export async function logs(maxNbEvents: number | undefined, reply: FastifyReply) {
   const loggerConfig = getLoggerConfig() as FastifyLoggerOptions;
   if (!loggerConfig.file) {
     replyWithJson(reply);
@@ -21,14 +21,16 @@ export async function logs(reply: FastifyReply) {
   const logsFileStats = await stat(logFilePath);
   const logsContents = await readLogs(logFilePath);
   
-  // console.log('logs::logs', { logsContents });
+  console.log('logs::logs', { maxNbEvents, logsContents });
   
   const logs = parseLogs(logsContents);
+  const limitedLogs = applyEventLimit(logs, maxNbEvents);
 
   // TODO filtering
   const output: LogsResponse = {
-    entryCount: logs.length,
-    logs,
+    entryCount: limitedLogs.length,
+    totalEntryCount: logs.length,
+    logs: limitedLogs,
     fileSizeBytes: logsFileStats.size,
   };
 
@@ -61,6 +63,15 @@ function parseLogs(contents: string[]) {
     })
     // Most recent events first
     .sort((parsed1, parsed2) => parsed2.time - parsed1.time);
+}
+
+function applyEventLimit(parsedLogs: LogEntry[], maxNbEvents?: number) {
+  if (maxNbEvents === undefined) {
+    return parsedLogs;
+  }
+  return parsedLogs
+    // Apply event count limiter when specified
+    .filter((_p, index) => index < maxNbEvents);
 }
 
 function parsePinoLogLevel(level: number): LogLevel {
