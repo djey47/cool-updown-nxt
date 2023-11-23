@@ -39,8 +39,8 @@ TODOs
   - [X] Static file server for the web-application
   - Handle critical errors => 500?
   - SSH
-    - [] Always execute exit command automatically
-    - [] Dispose
+    - [X] Always execute exit command automatically
+    - [X] Dispose
   - Services
     - [] enhancement: Websocket support for diags/stats refresh
     - Home service
@@ -51,7 +51,13 @@ TODOs
       - [] Sensitive info obfuscation
     - Logs service
       - [X] Basic implementation
-      - [] Filters: time window (min/max date), log levels
+      - Path params
+        - [] per device id
+        - [] per device tag        
+      - Filters 
+        - [X] nb of last events
+        - [] time window (min/max date),
+        - [] log levels?
     - Diags service
       - SSH connectivity
         - [X] Base implem
