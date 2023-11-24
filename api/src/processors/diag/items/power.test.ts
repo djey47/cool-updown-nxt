@@ -37,6 +37,9 @@ describe('power diag item', () => {
         ssh: {
           status: FeatureStatus.UNAVAILABLE,
         },
+        http: {
+          status: FeatureStatus.UNAVAILABLE,
+        },
       };
 
       // when
@@ -72,6 +75,12 @@ describe('power diag item', () => {
         },
         ssh: {
           status: FeatureStatus.OK,
+        },
+        http: {
+          status: FeatureStatus.OK,
+          data: {
+            statusCode: 200,
+          },
         }
       };
 
@@ -111,6 +120,12 @@ describe('power diag item', () => {
         ssh: {
           status: FeatureStatus.OK,
         },
+        http: {
+          status: FeatureStatus.OK,
+          data: {
+            statusCode: 200,
+          },
+        },
       };
 
       // when
@@ -148,6 +163,9 @@ describe('power diag item', () => {
           },
         },
         ssh: {
+          status: FeatureStatus.UNAVAILABLE,
+        },
+        http: {
           status: FeatureStatus.UNAVAILABLE,
         }
       };

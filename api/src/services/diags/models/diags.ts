@@ -11,6 +11,7 @@ export interface DiagsResponseForAllDevices {
 
 export interface DiagsResponseForDevice {
   on?: Date;
+  http: DiagsResponseForFeature,
   ping: DiagsResponseForFeature;
   power: PowerDiagsResponse;
   ssh: DiagsResponseForFeature;

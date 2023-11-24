@@ -27,6 +27,10 @@ jest.mock('app-root-dir', () => ({
   get: () => mockAppRootDirGet(),
 }));
 
+// node-fetch
+const mockNodeFetch = jest.fn();
+jest.mock('node-fetch', () => mockNodeFetch);
+
 // node-ssh
 const mockSSHConnect = jest.fn();
 const mockSSHExecCommand = jest.fn();
@@ -70,6 +74,7 @@ export default {
       writeFile: mockFSWriteFile,
     }
   },
+  nodefetchMock: mockNodeFetch,
   nodesshMock: {
     connect: mockSSHConnect,
     execCommand: mockSSHExecCommand,

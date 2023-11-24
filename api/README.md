@@ -53,12 +53,15 @@ Default configuration is defined in `api/config/default.json` file.
       "macAddress": "aa:bb:cc:dd:ee:ff",
       "broadcastIpAddress": "255.255.255.255"
     },
+    "http": {
+      "url": "http://my-nas:5000"
+    },
     "ssh": {
-        "offCommand": "shutdown -h now",
-        "keyPath": "/home/barney/.ssh/id_rsa",
-        "password": "my-nas-password",
-        "port": 2122,      
-        "user": "my-nas-user"
+      "offCommand": "shutdown -h now",
+      "keyPath": "/home/barney/.ssh/id_rsa",
+      "password": "my-nas-password",
+      "port": 2122,      
+      "user": "my-nas-user"
     }
   }]
 }
@@ -79,6 +82,8 @@ To override settings, create a copy to `api/config/production.json` file and mak
 | `.. broadcastIpAddress`| Broadcast IP address (mandatory for WOL) | / |
 | `.. hostname`| Device name or IP address (mandatory) | / |
 | `.. macAddress`| MAC address for this device (mandatory for WOL) | / |
+| `. http`| HTTP related parameters (mandatory for some diagnostics), see below: |  |
+| `.. url`| URL of web page served via HTTP server | / |
 | `. ssh`| SSH related parameters (mandatory for power-off feature), see below: |  |
 | `.. offCommand`| Custom command to shutdown device via SSH connection | `sudo -bS shutdown -h 1;exit` |
 | `.. keyPath`| Path of private key for direct access (mandatory, PEM RSA only supported) | / |
@@ -222,7 +227,7 @@ Returns registered configuration for a configured device.
 
 ### GET /diags
 
-Returns some diagnostics for all configured devices (ping, power state).
+Returns some diagnostics for all configured devices (ping, power state, ssh, http).
 
 **Sample output**
 
@@ -248,6 +253,15 @@ Returns some diagnostics for all configured devices (ping, power state).
         "lastStartAttemptReason": "api",
         "lastStopAttemptReason": "none",
         "state": "off"
+      },
+      "ssh": {
+        "status": "ok",
+      },
+      "http": {
+        "status": "ok",
+        "data": {
+          "statusCode": 200
+        }
       }
     }
   }
@@ -261,6 +275,7 @@ Returns some diagnostics for all configured devices (ping, power state).
 - Ping `data`: are collected values from the ICMP command results (only Linux with english messages are supported for now):
   - `packetLossRate` (decimal between 0 and 1) is the count of lost packets / total amount sent
   - `roundTripTimeMs` (in milliseconds) are average, maximum, minimum, standard deviation times on sent packets 
+- HTTP `data`: gives status code of the last call
 - Power `state`: available values are either `on`, `off` or `n/a`.
 - Power `lastStartAttemptReason` or `lastStartAttemptReason`: available values are one of the following: `none`, `api`, `scheduled` or `external`.
 
@@ -281,6 +296,9 @@ Returns some diagnostics for a configured device.
       "state": "off" 
     }
     "ssh": {
+      "state": "n/a",
+    },
+    "http": {
       "state": "n/a",
     }
   }
@@ -478,6 +496,14 @@ Diag results:
 - `ko` status when either SSH connectivity is broken or the command terminates with failure (exit code not 0)
 - `n/a` if device SSH parameters are not properly set, or if the current ping diagnostics are ko (meaning it's no use testing SSH connectivity, as the device cannot be found LAN-wise already)
 - message attribute is available with the error description caught from error output, if any.
+
+### HTTP test
+
+A GET request is sent to configured URL, when specified. Feature status depends on the HTTP status code:
+
+- `ok` with a status code < 400
+- `ko` with a status code >= 400, or any error during HTTP request execution
+- `n/a` if device HTTP parameters are not properly set, or if the current ping diagnostics are ko (meaning it's no use testing HTTP, as the device cannot be found LAN-wise already).
 
 ## Processing details: statistics
 

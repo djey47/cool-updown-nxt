@@ -64,7 +64,13 @@ describe('AppContext singleton class', () => {
           },
           ssh: {
             status: FeatureStatus.OK,
-          }
+          },
+          http: {
+            status: FeatureStatus.OK,
+            data: {
+              statusCode: 200,
+            },
+          },
         },
       };
 
@@ -89,6 +95,9 @@ describe('AppContext singleton class', () => {
               },
             },
             ssh: {
+              status: 'n/a',
+            },
+            http: {
               status: 'n/a',
             },
           },

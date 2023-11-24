@@ -1,9 +1,10 @@
 import { FeatureStatus, PowerStatus } from '../../../models/common';
 
-export type FeatureData = PingFeatureData | Error;
+export type FeatureData = PingFeatureData | HttpFeatureData | Error;
 
 export interface DiagResults {
   deviceId: string;
+  http: FeatureDiagnostics;
   ping: FeatureDiagnostics;
   ssh: FeatureDiagnostics;
 }
@@ -22,6 +23,10 @@ export interface PingFeatureData {
     average: number;
     standardDeviation: number;
   };
+}
+
+export interface HttpFeatureData {
+  statusCode?: number;
 }
 
 export interface PowerDiagnostics {

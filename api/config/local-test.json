@@ -9,6 +9,9 @@
         "macAddress": "aa:bb:cc:dd:ee:ff",
         "broadcastIpAddress": "255.255.255.255"
       },
+      "http": {
+        "url": "http://my-nas:5000"
+      },
       "ssh": {
         "keyPath": "/id_rsa",
         "user": "username",

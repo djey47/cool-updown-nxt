@@ -26,6 +26,9 @@ describe('Configuration service', () => {
       password: 'pwd',
       user: 'username',
     },
+    http: {
+      url: 'http://my-nas:5000',
+    },
   };
 
   beforeEach(() => {

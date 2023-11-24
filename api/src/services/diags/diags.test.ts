@@ -54,6 +54,12 @@ describe('diags service', () => {
       ssh: {
         status: FeatureStatus.OK,
       },
+      http: {
+        status: FeatureStatus.OK,
+        data: {
+          statusCode: 200,
+        }
+      },
     },
     '1': {
       on: NOW,
@@ -70,6 +76,9 @@ describe('diags service', () => {
         },
       },
       ssh: {
+        status: FeatureStatus.KO,
+      },
+      http: {
         status: FeatureStatus.KO,
       },
     },
@@ -109,6 +118,12 @@ describe('diags service', () => {
             ssh: {
               status: FeatureStatus.OK,
             },
+            http: {
+              status: FeatureStatus.OK,
+              data: {
+                statusCode: 200,
+              },
+            },
           },
           '1': {
             on: NOW,
@@ -121,6 +136,9 @@ describe('diags service', () => {
               lastStopAttemptReason: LastPowerAttemptReason.NONE,
             },
             ssh: {
+              status: FeatureStatus.KO,
+            },
+            http: {
               status: FeatureStatus.KO,
             },
           },
@@ -163,6 +181,12 @@ describe('diags service', () => {
           },
           ssh: {
             status: FeatureStatus.OK,
+          },
+          http: {
+            status: FeatureStatus.OK,
+            data: {
+              statusCode: 200,
+            },
           },
         },
       };

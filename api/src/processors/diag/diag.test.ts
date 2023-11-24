@@ -7,6 +7,7 @@ import { diagProcessor } from './diag';
 import { pingDiag } from './items/ping';
 import { powerDiag } from './items/power';
 import { sshDiag } from './items/ssh';
+import { httpDiag } from './items/http';
 
 import { type FeatureDiagnostics, LastPowerAttemptReason, type PowerDiagnostics } from './models/diag';
 
@@ -18,6 +19,7 @@ jest.mock('../../common/logger', () => ({
 jest.mock('../../helpers/recaller');
 jest.mock('./items/ping');
 jest.mock('./items/ssh');
+jest.mock('./items/http');
 jest.mock('./items/power');
 jest.mock('../stats/stats');
 
@@ -25,6 +27,7 @@ const coreLoggerInfoMock = coreLogger.info as jest.Mock<void>;
 const recallMock = recall as jest.Mock<void>;
 const pingDiagMock = pingDiag as jest.Mock<Promise<FeatureDiagnostics>>;
 const sshDiagMock = sshDiag as jest.Mock<Promise<FeatureDiagnostics>>;
+const httpDiagMock = httpDiag as jest.Mock<Promise<FeatureDiagnostics>>;
 const powerDiagMock = powerDiag as jest.Mock<PowerDiagnostics>;
 const statsProcessorMock = statsProcessor as jest.Mock<Promise<void>>;
 
@@ -40,6 +43,7 @@ beforeEach(() => {
   coreLoggerInfoMock.mockReset();
   pingDiagMock.mockReset();
   sshDiagMock.mockReset();
+  httpDiagMock.mockReset();
   powerDiagMock.mockReset();
   recallMock.mockReset();
   statsProcessorMock.mockReset();
@@ -67,6 +71,12 @@ describe('diagnostics processor', () => {
       AppContext.get().diagnostics = {};
       pingDiagMock.mockResolvedValue(defaultResultsOK);
       sshDiagMock.mockResolvedValue(defaultResultsOK);
+      httpDiagMock.mockResolvedValue({
+        ...defaultResultsOK,
+        data: {
+          statusCode: 200,
+        },
+      });
 
       // when
       await diagProcessor();
@@ -81,9 +91,16 @@ describe('diagnostics processor', () => {
           ping: {},
           power: {},
           ssh: {},
+          http: {},
         },
         ssh: {
           status: 'ok',
+        },
+        http: {
+          status: 'ok',
+          data: {
+            statusCode: 200,
+          },
         },
       });
     });
@@ -130,6 +147,9 @@ describe('diagnostics processor', () => {
           },
           ssh: {
             status: 'n/a',
+          },
+          http: {
+            status: 'n/a',
           }
         },
       });
@@ -158,6 +178,9 @@ describe('diagnostics processor', () => {
           status: FeatureStatus.OK,
         },
         ssh: {
+          status: FeatureStatus.OK,
+        },
+        http: {
           status: FeatureStatus.OK,
         }
       };
@@ -203,6 +226,10 @@ describe('diagnostics processor', () => {
           message: 'Device with id=0 has failed ping test thus SSH connectivity cannot be tested.',
           status: 'n/a',
         },
+        http: {
+          message: 'Device with id=0 has failed ping test thus HTTP cannot be tested.',
+          status: 'n/a',
+        },
         previous: {
           on: previousDate,
           ping: {
@@ -218,6 +245,9 @@ describe('diagnostics processor', () => {
             state: 'off',
           },
           ssh: {
+            status: 'ok',
+          },
+          http: {
             status: 'ok',
           },
         },

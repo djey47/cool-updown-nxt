@@ -15,6 +15,7 @@ export interface AppConfig {
 
 export interface DeviceConfig {
   network: DeviceNetworkConfig;
+  http?: DeviceHTTPConfig;
   ssh?: DeviceSSHConfig;
 }
 
@@ -30,4 +31,8 @@ export interface DeviceSSHConfig {
   password?: string;
   port?: number;
   user: string;
+}
+
+export interface DeviceHTTPConfig {
+  url: string;
 }

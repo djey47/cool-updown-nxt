@@ -6,6 +6,7 @@ import { statsProcessor } from '../stats/stats';
 import { pingDiag } from './items/ping';
 import { sshDiag } from './items/ssh';
 import { powerDiag } from './items/power';
+import { httpDiag } from './items/http';
 
 import type { DiagResults, FeatureDiagnostics } from './models/diag';
 import type { DeviceConfig } from '../../models/configuration';
@@ -37,13 +38,14 @@ async function diagForAllDevices(devicesConfigs: DeviceConfig[]) {
   // Update context
   const appContext = AppContext.get();
   allResults.forEach((result) => {
-    const { deviceId, ping: pingResult, ssh: sshResult } = result;
+    const { deviceId, http: httpResult, ping: pingResult, ssh: sshResult } = result;
     const deviceDiags = appContext.diagnostics[deviceId] || { ping: {} };
     appContext.diagnostics[deviceId] = deviceDiags;
 
     // Previous diagnostics
     deviceDiags.previous = {
       on: deviceDiags.on,
+      http: { ...deviceDiags.http },
       ping: { ...deviceDiags.ping },
       power: { ...deviceDiags.power },
       ssh: { ...deviceDiags.ssh },
@@ -58,6 +60,9 @@ async function diagForAllDevices(devicesConfigs: DeviceConfig[]) {
 
     // SSH
     deviceDiags.ssh = sshResult;
+
+    // HTTP
+    deviceDiags.http = httpResult;
 
     // Power state
     deviceDiags.power = powerDiag(deviceDiags);
@@ -77,9 +82,21 @@ async function diagByDevice(deviceId: string, deviceConfig: DeviceConfig): Promi
   } else {
     sshResults = await sshDiag(deviceId, deviceConfig);
   }
+
+  let httpResults: FeatureDiagnostics;
+  // If ping fails, HTTP cannot be tested
+  if (pingResults.status === FeatureStatus.KO) {
+    httpResults = {
+      status: FeatureStatus.UNAVAILABLE,
+      message: `Device with id=${deviceId} has failed ping test thus HTTP cannot be tested.`,
+    }
+  } else {
+    httpResults = await httpDiag(deviceId, deviceConfig);
+  }
   
   return {
     deviceId,
+    http: httpResults,
     ping: pingResults,
     ssh: sshResults,
   };

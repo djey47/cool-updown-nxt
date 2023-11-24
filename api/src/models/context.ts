@@ -25,6 +25,7 @@ export interface PerDeviceStatisticsContext {
 
 export interface DeviceDiagnosticsContext {
   on?: Date;
+  http: FeatureDiagnostics,
   ping: FeatureDiagnostics;
   power: PowerDiagnostics;
   previous?: DeviceDiagnosticsContext;

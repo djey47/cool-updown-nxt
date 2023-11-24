@@ -46,6 +46,12 @@ describe('statistics processor', () => {
         ssh: {
           status: FeatureStatus.OK,
         },
+        http: {
+          status: FeatureStatus.OK,
+          data: {
+            statusCode: 200,
+          },
+        },
         previous: {
           on: NOW_MINUS_1MIN,
           ping: {
@@ -58,7 +64,13 @@ describe('statistics processor', () => {
           },
           ssh: {
             status: FeatureStatus.OK,
-          }
+          },
+          http: {
+            status: FeatureStatus.OK,
+            data: {
+              statusCode: 200,
+            },
+          },
         },
       };
 
@@ -107,6 +119,12 @@ describe('statistics processor', () => {
         },
         ssh: {
           status: FeatureStatus.OK,
+        },
+        http: {
+          status: FeatureStatus.OK,
+          data: {
+            statusCode: 200,
+          },
         }
       };
 

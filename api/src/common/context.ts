@@ -112,6 +112,9 @@ export class AppContext {
         },
         ssh: {
           status: FeatureStatus.UNAVAILABLE,
+        },
+        http: {
+          status: FeatureStatus.UNAVAILABLE,
         }
       };
       return acc;

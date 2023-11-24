@@ -1,12 +1,13 @@
 import globalMocks from './globalMocks';
 
 const {
-  appRootDirMock, authMock, nodesshMock, pinoMock, node: { childProcessMock, fsMock }, wakeonlanMock
+  appRootDirMock, authMock, nodefetchMock, nodesshMock, pinoMock, node: { childProcessMock, fsMock }, wakeonlanMock
 } = globalMocks;
 
 export default function () {
   appRootDirMock.get.mockReset();
   authMock.readPrivateKey.mockReset();
+  nodefetchMock.mockReset();
   nodesshMock.connect.mockReset();
   nodesshMock.execCommand.mockReset();
   nodesshMock.dispose.mockReset();
