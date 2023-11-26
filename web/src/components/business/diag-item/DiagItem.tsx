@@ -1,9 +1,11 @@
 import { MdHttp, MdNetworkPing, MdTerminal } from 'react-icons/md';
 import { DiagItemType } from '../../../model/diagnostics';
+import { FeatureData } from '../../../model/device';
 
 interface DiagItemProps {
   className?: string;
   type: DiagItemType;
+  data?: FeatureData;
 }
 
 const DIAG_ITEMS = {
@@ -21,10 +23,19 @@ const DIAG_ITEMS = {
   },
 }
 
-const DiagItem = ({ className, type }: DiagItemProps) => {
+const DiagItem = ({ className, data, type }: DiagItemProps) => {
   const itemConfig = DIAG_ITEMS[type];
   return (
-    <itemConfig.Icon className={className} />
+    <>
+      {type === DiagItemType.HTTP && data && (
+        <a href={data.url} target="_blank">
+          <itemConfig.Icon className={className} />
+        </a>
+      )}
+      {type !== DiagItemType.HTTP && (
+        <itemConfig.Icon className={className} />
+      )}
+    </>
   );
 }
 

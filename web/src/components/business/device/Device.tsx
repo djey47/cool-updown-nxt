@@ -138,7 +138,7 @@ const Device = ({ deviceInfo }: DeviceProps) => {
           {deviceInfo.network.hostname} ({deviceInfo.id})
         </CardContent>
         <CardContent alignment="right">
-          <DiagItem type={DiagItemType.HTTP} className={deviceHTTPClassNames} />
+          <DiagItem type={DiagItemType.HTTP} className={deviceHTTPClassNames} data={diagsQueryData?.http.data} />
           <DiagItem type={DiagItemType.SSH} className={deviceSSHClassNames} />
           <DiagItem type={DiagItemType.PING} className={devicePingClassNames} />
         </CardContent>

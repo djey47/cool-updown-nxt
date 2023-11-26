@@ -16,11 +16,19 @@ export interface DeviceDiagnostics {
     status: FeatureStatus; 
   };
   http: {
+    data?: FeatureData;
     status: FeatureStatus; 
   }
 }
 
 export type FeatureStatus = 'ok' | 'ko' | 'n/a'; 
+
+export type FeatureData = HTTPFeatureData;
+
+export interface HTTPFeatureData {
+  statusCode: number;
+  url: string;
+}
 
 export interface DeviceStatistics {
   uptimeSeconds: {
