@@ -3,6 +3,7 @@ TODOs
 
 - COMMON
   - [X] Add package scripts at root to easily install and run the app in prod mode
+  - [] See to create transverse api model at highest level to be used with API/WEB
 
 - WEB/FRONTEND
   - [] PWA
@@ -17,9 +18,10 @@ TODOs
     - [] device tiles
       - [X] power status,
       - [X] uptime
-      - [] diags results
-        - SSH connectivity
-        - detailed view: ping value when available
+      - diags results
+        - [X] SSH connectivity
+        - [X] HTTP with link
+        - [] detailed view: ping value when available
       - rdp via URI scheme (https://learn.microsoft.com/en-us/windows-server/remote/remote-desktop-services/clients/remote-desktop-uri#ms-rd-uri-scheme)
       - Menu: 
         - per-device logs
