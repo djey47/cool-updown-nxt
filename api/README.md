@@ -260,7 +260,8 @@ Returns some diagnostics for all configured devices (ping, power state, ssh, htt
       "http": {
         "status": "ok",
         "data": {
-          "statusCode": 200
+          "statusCode": 200,
+          "url": "http://my-nas:5001"
         }
       }
     }
