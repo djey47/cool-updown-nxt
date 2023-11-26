@@ -75,6 +75,7 @@ describe('diagnostics processor', () => {
         ...defaultResultsOK,
         data: {
           statusCode: 200,
+          url: 'http://my-nas:5000',
         },
       });
 
@@ -100,6 +101,7 @@ describe('diagnostics processor', () => {
           status: 'ok',
           data: {
             statusCode: 200,
+            url: 'http://my-nas:5000',
           },
         },
       });

@@ -50,6 +50,7 @@ describe('statistics processor', () => {
           status: FeatureStatus.OK,
           data: {
             statusCode: 200,
+            url: 'http://my-nas:5000',
           },
         },
         previous: {
@@ -69,6 +70,7 @@ describe('statistics processor', () => {
             status: FeatureStatus.OK,
             data: {
               statusCode: 200,
+              url: 'http://my-nas:5000',
             },
           },
         },
@@ -124,6 +126,7 @@ describe('statistics processor', () => {
           status: FeatureStatus.OK,
           data: {
             statusCode: 200,
+            url: 'http://my-nas:5000',
           },
         }
       };

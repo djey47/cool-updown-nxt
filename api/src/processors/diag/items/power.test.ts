@@ -80,6 +80,7 @@ describe('power diag item', () => {
           status: FeatureStatus.OK,
           data: {
             statusCode: 200,
+            url: 'http://my-nas:5000',
           },
         }
       };
@@ -124,6 +125,7 @@ describe('power diag item', () => {
           status: FeatureStatus.OK,
           data: {
             statusCode: 200,
+            url: 'http://my-nas:5000',
           },
         },
       };

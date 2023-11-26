@@ -69,6 +69,7 @@ describe('AppContext singleton class', () => {
             status: FeatureStatus.OK,
             data: {
               statusCode: 200,
+              url: 'http://my-nas:5000',
             },
           },
         },

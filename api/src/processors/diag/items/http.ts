@@ -11,36 +11,27 @@ export async function httpDiag(deviceId: string, deviceConfig: DeviceConfig): Pr
   if (!httpConfiguration) {
     return {
       status: FeatureStatus.UNAVAILABLE,
-      message: `Device with id=${deviceId} has no configured HTTP capability.`
+      message: `Device with id=${deviceId} has no configured HTTP capability.`,
     };
   }
 
-  console.log('http::httpDiag', { deviceId, httpConfiguration });
+  // console.log('http::httpDiag', { deviceId, httpConfiguration });
 
+  const { url } = httpConfiguration;
   try {
-    const { status, statusText } = await fetch(httpConfiguration.url);
-
-    if (status >= 400) {
-      return {
-        status: FeatureStatus.KO,
-        data: {
-          statusCode: status,
-        },
-        message: statusText,
-      };
-    }
-
+    const { status, statusText } = await fetch(url);
     return {
-      status: FeatureStatus.OK,
+      status: status < 400 ? FeatureStatus.OK : FeatureStatus.KO,
       data: {
         statusCode: status,
+        url,
       },
       message: statusText,
     };
   } catch (error) {
     const fetchError = error as Error;
     return {
-      data: fetchError,
+      data:  { ...fetchError, url },
       status: FeatureStatus.KO,
       message: fetchError.message,
     }

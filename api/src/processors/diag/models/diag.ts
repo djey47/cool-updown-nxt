@@ -27,6 +27,7 @@ export interface PingFeatureData {
 
 export interface HttpFeatureData {
   statusCode?: number;
+  url: string;
 }
 
 export interface PowerDiagnostics {

@@ -58,6 +58,7 @@ describe('diags service', () => {
         status: FeatureStatus.OK,
         data: {
           statusCode: 200,
+          url: 'http://my-nas:5000',
         }
       },
     },
@@ -122,6 +123,7 @@ describe('diags service', () => {
               status: FeatureStatus.OK,
               data: {
                 statusCode: 200,
+                url: 'http://my-nas:5000',
               },
             },
           },
@@ -186,6 +188,7 @@ describe('diags service', () => {
             status: FeatureStatus.OK,
             data: {
               statusCode: 200,
+              url: 'http://my-nas:5000',
             },
           },
         },

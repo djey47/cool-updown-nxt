@@ -14,6 +14,9 @@ export interface DeviceDiagnostics {
   };
   ssh: {
     status: FeatureStatus; 
+  };
+  http: {
+    status: FeatureStatus; 
   }
 }
 

@@ -42,6 +42,7 @@ describe('http diag item', () => {
         status: 'ok',
         data: {
           statusCode: 200,
+          url: 'http://my-nas:5000',
         },
       });
     });
@@ -62,6 +63,7 @@ describe('http diag item', () => {
         status: 'ko',
         data: {
           statusCode: 400,
+          url: 'http://my-nas:5000',
         },
         message: 'error',
       });
@@ -98,6 +100,7 @@ describe('http diag item', () => {
           message: 'HTTP error',
           name: 'error-name',
           stack: 'error-stack',
+          url: 'http://my-nas:5000'
         },
         message: 'HTTP error',
         status: 'ko',

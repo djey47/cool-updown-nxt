@@ -100,11 +100,14 @@ const Device = ({ deviceInfo }: DeviceProps) => {
       'animate-pulse': isPerformingPowerOn || isPerformingPowerOff,
     });
 
-  const devicePingStatus = diagsQueryData?.ping?.status || 'n/a';
+  const devicePingStatus = diagsQueryData?.ping.status || 'n/a';
   const devicePingClassNames = getFeatureClassNames(devicePingStatus);
 
-  const deviceSSHStatus = diagsQueryData?.ssh?.status || 'n/a';
+  const deviceSSHStatus = diagsQueryData?.ssh.status || 'n/a';
   const deviceSSHClassNames = getFeatureClassNames(deviceSSHStatus);
+
+  const deviceHTTPStatus = diagsQueryData?.http.status || 'n/a';
+  const deviceHTTPClassNames = getFeatureClassNames(deviceHTTPStatus);
 
   const statsQueryData = statsQuery.data;
 
@@ -135,6 +138,7 @@ const Device = ({ deviceInfo }: DeviceProps) => {
           {deviceInfo.network.hostname} ({deviceInfo.id})
         </CardContent>
         <CardContent alignment="right">
+          <DiagItem type={DiagItemType.HTTP} className={deviceHTTPClassNames} />
           <DiagItem type={DiagItemType.SSH} className={deviceSSHClassNames} />
           <DiagItem type={DiagItemType.PING} className={devicePingClassNames} />
         </CardContent>
