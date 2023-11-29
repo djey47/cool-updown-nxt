@@ -1,21 +1,19 @@
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
-import { IoPowerSharp, IoStopwatch } from 'react-icons/io5';
-import { MdDownloading } from 'react-icons/md';
-import classNames from 'classnames';
-import Button from '../../atoms/button/Button';
 import Card from '../../atoms/card/Card';
 import CardContent from '../../atoms/card/card-content/CardContent';
 import { getDiagnosticsForDevice } from '../../../api/diagnostics';
 import { getStatisticsForDevice } from '../../../api/statistics';
 import { postPowerOffForDevice, postPowerOnForDevice } from '../../../api/power';
 import DropDownMenu, { type DropDownMenuItem } from '../../atoms/dropdown-menu/DropDownMenu';
-import DiagItem from '../diag-item/DiagItem';
 import Popup from '../../atoms/popup/Popup';
-import { prettyFormatDuration } from '../../../helpers/time';
+import PowerItemButton from '../power-item-button/PowerItemButton';
+import UptimeItem from '../uptime-item/UptimeItem';
+import FetchStatus from '../fetch-status/FetchStatus';
+import DiagItems, { DiagItemsProps } from '../diag-items/DiagItems';
 
-import type { DeviceInfo } from '../../../model/device';
 import { DiagItemType } from '../../../model/diagnostics';
+import { STATUS_UNAVAIL, type DeviceInfo } from '../../../model/device';
 
 import './Device.css';
 
@@ -23,9 +21,10 @@ interface DeviceProps {
   deviceInfo: DeviceInfo;
 }
 
+type PopupDisplayMode  = 'details' | 'logs' | 'none';
+
 const Device = ({ deviceInfo }: DeviceProps) => {
-  const [isDetailedMode, setDetailedMode] = useState(false);
-  const [isLogDisplayed, setLogDisplayed] = useState(false);
+  const [popupDisplayMode, setPopupDisplayMode] = useState<PopupDisplayMode>('none');
   const [isPerformingPowerOn, setPerformingPowerOn] = useState(false);
   const [isPerformingPowerOff, setPerformingPowerOff] = useState(false);
 
@@ -42,6 +41,8 @@ const Device = ({ deviceInfo }: DeviceProps) => {
   });
 
   const diagsQueryData = diagsQuery.data;
+  const statsQueryData = statsQuery.data;
+
   const devicePowerState = diagsQueryData?.power?.state || 'n/a';
 
   const handlePowerClick = async () => {
@@ -56,93 +57,78 @@ const Device = ({ deviceInfo }: DeviceProps) => {
     }
   };
 
-  const handleShowLogs = () => {
-    console.log('Device::handleShowLogs', { deviceId });
+  const handleShowPopup = (mode: PopupDisplayMode) => () => {
+    console.log('Device::handleShowPopup', { mode, deviceId });
 
-    setDetailedMode(false);
-    setLogDisplayed((prev) => !prev);
+    setPopupDisplayMode(mode);
   };
 
-  const handleShowDetails = () => {
-    console.log('Device::handleShowDetails', { deviceId });
-
-    setLogDisplayed(false);
-    setDetailedMode((prev) => !prev);
-  };
-
-  if (isPerformingPowerOn && devicePowerState === 'on') {
-    setPerformingPowerOn(false);
-  }
-  if (isPerformingPowerOff && devicePowerState === 'off') {
-    setPerformingPowerOff(false);
+  const handleEndedPowerOps = () => {
+    if (isPerformingPowerOn && devicePowerState === 'on') {
+      setPerformingPowerOn(false);
+    }
+    if (isPerformingPowerOff && devicePowerState === 'off') {
+      setPerformingPowerOff(false);
+    }  
   }
 
-  const devicePowerClassNames = classNames(
-    'device-power-cta',
-    'text-xl',
-    {
-      'is-on': devicePowerState === 'on',
-      'is-off': devicePowerState === 'off',
-      'is-na': devicePowerState === 'n/a',
-      'text-indigo-900': devicePowerState === 'n/a',
-      'animate-pulse': isPerformingPowerOn || isPerformingPowerOff,
-    });
+  handleEndedPowerOps();
 
-  const devicePingStatus = diagsQueryData?.ping.status || 'n/a';
-  const deviceSSHStatus = diagsQueryData?.ssh.status || 'n/a';
-  const deviceHTTPStatus = diagsQueryData?.http.status || 'n/a';
-
-  const statsQueryData = statsQuery.data;
-
-  console.log('Device::render', { diagsQueryData, statsQueryData });
+  // console.log('Device::render', { diagsQueryData, statsQueryData });
 
   const menuItems: DropDownMenuItem[] = [{
     label: 'Details',
-    clickHandler: handleShowDetails,
+    clickHandler: handleShowPopup('details') ,
     linkHref: '#',
   }, {
     label: 'Logs',
-    clickHandler: handleShowLogs,
+    clickHandler: handleShowPopup('logs') ,
     linkHref: '#',
   }];
 
-  const fetchStatusClassName = classNames({
-    'text-white': diagsQuery.isFetching || statsQuery.isFetching,
-    'text-indigo-900': !diagsQuery.isFetching && !statsQuery.isFetching,
-  });
+  const diagItems: DiagItemsProps['items'] = [{
+    type: DiagItemType.HTTP,
+    status: diagsQueryData?.ping.status || STATUS_UNAVAIL,
+    data: diagsQueryData?.http.data,
+  }, {
+    type: DiagItemType.SSH,
+    status: diagsQueryData?.ssh.status || STATUS_UNAVAIL,
+  }, {
+    type: DiagItemType.PING,
+    status: diagsQueryData?.http.status || STATUS_UNAVAIL,
+  }];
 
   return (
     <>
       <Card key={deviceInfo.id}>
         <CardContent justifyItems>
-          <Button onClick={handlePowerClick}>
-            <IoPowerSharp className={devicePowerClassNames} />
-          </Button>
+          <PowerItemButton
+            isPerformingPowerOperation={isPerformingPowerOn || isPerformingPowerOff}
+            onPowerAction={handlePowerClick}
+            devicePowerState={devicePowerState}
+          />
           {deviceInfo.network.hostname} ({deviceInfo.id})
         </CardContent>
         <CardContent alignment="right">
-          <DiagItem type={DiagItemType.HTTP} status={deviceHTTPStatus} data={diagsQueryData?.http.data} />
-          <DiagItem type={DiagItemType.SSH} status={deviceSSHStatus} />
-          <DiagItem type={DiagItemType.PING}  status={devicePingStatus} />
+          <DiagItems items={diagItems} />
         </CardContent>
         <CardContent>
-          <IoStopwatch />
-          {prettyFormatDuration(statsQueryData?.uptimeSeconds.current || 0)}
-          &nbsp;/&nbsp; 
-          {prettyFormatDuration(statsQueryData?.uptimeSeconds.overall || 0)} in total
+          <UptimeItem deviceUptimeStats={statsQueryData?.uptimeSeconds} />
         </CardContent>
         <CardContent alignment='right'>
-          <MdDownloading className={fetchStatusClassName} />
+          <FetchStatus isFetchingDiags={diagsQuery.isFetching} isFetchingStats={statsQuery.isFetching} />
         </CardContent>
         <CardContent>
           <DropDownMenu items={menuItems} />
         </CardContent>
       </Card>
-      <Popup isShown={isDetailedMode}>
-        Details
-      </Popup>
-      <Popup isShown={isLogDisplayed}>
-        Logs
+      <Popup isShown={popupDisplayMode !== 'none'}>
+        {popupDisplayMode === 'details' && (
+          <>Details</>
+        )}
+        {popupDisplayMode === 'logs' && (
+          <>Logs</>
+        )}
       </Popup>
     </>
   );
