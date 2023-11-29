@@ -14,7 +14,7 @@ import DiagItem from '../diag-item/DiagItem';
 import Popup from '../../atoms/popup/Popup';
 import { prettyFormatDuration } from '../../../helpers/time';
 
-import type { DeviceInfo, FeatureStatus } from '../../../model/device';
+import type { DeviceInfo } from '../../../model/device';
 import { DiagItemType } from '../../../model/diagnostics';
 
 import './Device.css';
@@ -70,18 +70,6 @@ const Device = ({ deviceInfo }: DeviceProps) => {
     setDetailedMode((prev) => !prev);
   };
 
-  const getFeatureClassNames = (featureStatus: FeatureStatus) => {
-    return classNames(
-      'device-ping-status',
-      'text-lg',
-      {
-        'is-ok': featureStatus === 'ok',
-        'is-ko': featureStatus === 'ko',
-        'is-na': featureStatus === 'n/a',
-        'text-indigo-900': featureStatus === 'n/a',
-      });
-  } 
-
   if (isPerformingPowerOn && devicePowerState === 'on') {
     setPerformingPowerOn(false);
   }
@@ -101,13 +89,8 @@ const Device = ({ deviceInfo }: DeviceProps) => {
     });
 
   const devicePingStatus = diagsQueryData?.ping.status || 'n/a';
-  const devicePingClassNames = getFeatureClassNames(devicePingStatus);
-
   const deviceSSHStatus = diagsQueryData?.ssh.status || 'n/a';
-  const deviceSSHClassNames = getFeatureClassNames(deviceSSHStatus);
-
   const deviceHTTPStatus = diagsQueryData?.http.status || 'n/a';
-  const deviceHTTPClassNames = getFeatureClassNames(deviceHTTPStatus);
 
   const statsQueryData = statsQuery.data;
 
@@ -138,9 +121,9 @@ const Device = ({ deviceInfo }: DeviceProps) => {
           {deviceInfo.network.hostname} ({deviceInfo.id})
         </CardContent>
         <CardContent alignment="right">
-          <DiagItem type={DiagItemType.HTTP} className={deviceHTTPClassNames} data={diagsQueryData?.http.data} />
-          <DiagItem type={DiagItemType.SSH} className={deviceSSHClassNames} />
-          <DiagItem type={DiagItemType.PING} className={devicePingClassNames} />
+          <DiagItem type={DiagItemType.HTTP} status={deviceHTTPStatus} data={diagsQueryData?.http.data} />
+          <DiagItem type={DiagItemType.SSH} status={deviceSSHStatus} />
+          <DiagItem type={DiagItemType.PING}  status={devicePingStatus} />
         </CardContent>
         <CardContent>
           <IoStopwatch />
