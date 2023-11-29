@@ -29,36 +29,33 @@ const Device = ({ deviceInfo }: DeviceProps) => {
   const [isPerformingPowerOff, setPerformingPowerOff] = useState(false);
 
   const deviceId = deviceInfo.id;
-  const diagsQuery = useQuery({
+  const { data: diagsQueryData, isFetching: isFetchingDiags} = useQuery({
     queryKey: ['diags', deviceId],
     queryFn: ({ queryKey }) => getDiagnosticsForDevice(queryKey[1]),
     refetchInterval: 5000,
   });
-  const statsQuery = useQuery({
+  const { data: statsQueryData, isFetching: isFetchingStats} = useQuery({
     queryKey: ['stats', deviceId],
     queryFn: ({ queryKey }) => getStatisticsForDevice(queryKey[1]),
     refetchInterval: 5000,
   });
 
-  const diagsQueryData = diagsQuery.data;
-  const statsQueryData = statsQuery.data;
-
-  const devicePowerState = diagsQueryData?.power?.state || 'n/a';
+  const devicePowerState = diagsQueryData?.power?.state || STATUS_UNAVAIL;
 
   const handlePowerClick = async () => {
     if (devicePowerState === 'off') {
-      await postPowerOnForDevice(deviceInfo.id);
+      await postPowerOnForDevice(deviceId);
       setPerformingPowerOn(true);  
       setPerformingPowerOff(false);  
     } else if (devicePowerState === 'on') {
-      await postPowerOffForDevice(deviceInfo.id);
+      await postPowerOffForDevice(deviceId);
       setPerformingPowerOff(true);
       setPerformingPowerOn(false);
     }
   };
 
   const handleShowPopup = (mode: PopupDisplayMode) => () => {
-    console.log('Device::handleShowPopup', { mode, deviceId });
+    // console.log('Device::handleShowPopup', { mode, deviceId });
 
     setPopupDisplayMode(mode);
   };
@@ -88,26 +85,26 @@ const Device = ({ deviceInfo }: DeviceProps) => {
 
   const diagItems: DiagItemsProps['items'] = [{
     type: DiagItemType.HTTP,
-    status: diagsQueryData?.ping.status || STATUS_UNAVAIL,
+    status: diagsQueryData?.http.status || STATUS_UNAVAIL,
     data: diagsQueryData?.http.data,
   }, {
     type: DiagItemType.SSH,
     status: diagsQueryData?.ssh.status || STATUS_UNAVAIL,
   }, {
     type: DiagItemType.PING,
-    status: diagsQueryData?.http.status || STATUS_UNAVAIL,
+    status: diagsQueryData?.ping.status || STATUS_UNAVAIL,
   }];
 
   return (
     <>
-      <Card key={deviceInfo.id}>
+      <Card key={deviceId}>
         <CardContent justifyItems>
           <PowerItemButton
             isPerformingPowerOperation={isPerformingPowerOn || isPerformingPowerOff}
             onPowerAction={handlePowerClick}
             devicePowerState={devicePowerState}
           />
-          {deviceInfo.network.hostname} ({deviceInfo.id})
+          {deviceInfo.network.hostname} ({deviceId})
         </CardContent>
         <CardContent alignment="right">
           <DiagItems items={diagItems} />
@@ -116,7 +113,7 @@ const Device = ({ deviceInfo }: DeviceProps) => {
           <UptimeItem deviceUptimeStats={statsQueryData?.uptimeSeconds} />
         </CardContent>
         <CardContent alignment='right'>
-          <FetchStatus isFetchingDiags={diagsQuery.isFetching} isFetchingStats={statsQuery.isFetching} />
+          <FetchStatus isFetchingDiags={isFetchingDiags} isFetchingStats={isFetchingStats} />
         </CardContent>
         <CardContent>
           <DropDownMenu items={menuItems} />
