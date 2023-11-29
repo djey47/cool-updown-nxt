@@ -3,7 +3,7 @@ import { getConfiguration } from '../../../api/configuration';
 import Device from '../device/Device';
 
 const Devices = () => {
-  const devicesQuery = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ['config'],
     queryFn: getConfiguration,
     select: (config) => config.devices,
@@ -11,11 +11,11 @@ const Devices = () => {
 
   return (
     <div className="relative flex flex-wrap gap-4 justify-center md:justify-start">
-      {devicesQuery.isLoading && (
+      {isLoading && (
         <p>Getting configured devices, one moment please...</p>
       )}
-      {devicesQuery.data?.map((device) => (
-        <Device deviceInfo={device} key={device.id} />
+      {data?.map((deviceInfo) => (
+        <Device deviceInfo={deviceInfo} key={deviceInfo.id} />
       ))}
     </div>
   );
