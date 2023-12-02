@@ -6,7 +6,9 @@ TODOs
   - [] See to create transverse api model at highest level to be used with API/WEB
 
 - WEB/FRONTEND
-  - [] PWA
+  - PWA
+    - Basic support
+    - [] Standalone chrome app on android
   - [] ESLint
     - [] plugin react hooks
   - [] Unit tests mechanism
