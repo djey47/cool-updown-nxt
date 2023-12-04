@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
+import { showAlert } from 'tailwind-toastify';
 import Card from '../../atoms/card/Card';
 import CardContent from '../../atoms/card/card-content/CardContent';
 import { getDiagnosticsForDevice } from '../../../api/diagnostics';
@@ -10,7 +11,7 @@ import Popup from '../../atoms/popup/Popup';
 import PowerItemButton from '../power-item-button/PowerItemButton';
 import UptimeItem from '../uptime-item/UptimeItem';
 import FetchStatus from '../fetch-status/FetchStatus';
-import DiagItems, { DiagItemsProps } from '../diag-items/DiagItems';
+import DiagItems, { type DiagItemsProps } from '../diag-items/DiagItems';
 
 import { DiagItemType } from '../../../model/diagnostics';
 import { STATUS_UNAVAIL, type DeviceInfo } from '../../../model/device';
@@ -45,10 +46,24 @@ const Device = ({ deviceInfo }: DeviceProps) => {
   const handlePowerClick = async () => {
     if (devicePowerState === 'off') {
       await postPowerOnForDevice(deviceId);
+
+      if (isPerformingPowerOn) {
+        showAlert('info', 'Power ON', 'Command has already been sent to the device');
+      } else {
+        showAlert('success', 'Power ON', 'Command has been sent to the device');
+      }
+
       setPerformingPowerOn(true);  
       setPerformingPowerOff(false);  
     } else if (devicePowerState === 'on') {
       await postPowerOffForDevice(deviceId);
+
+      if (isPerformingPowerOff) {
+        showAlert('info', 'Power OFF', 'Command has already been sent to the device');
+      } else {
+        showAlert('success', 'Power OFF', 'Command has been sent to the device');
+      }
+
       setPerformingPowerOff(true);
       setPerformingPowerOn(false);
     }
