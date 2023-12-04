@@ -34,6 +34,8 @@
     "logs": "less ./logs/cool-updown-nxt.log"
   },
   "dependencies": {
+    "@fastify/auth": "4.4.0",
+    "@fastify/basic-auth": "5.1.1",
     "@fastify/static": "6.11.2",
     "app-root-dir": "1.0.2",
     "config": "3.3.9",
