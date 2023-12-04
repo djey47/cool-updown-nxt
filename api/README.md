@@ -43,6 +43,11 @@ Default configuration is defined in `api/config/default.json` file.
 ```json
 {
   "app": {
+    "authentication": {
+      "enabled": true,
+      "login": "my-login",
+      "password": "my-password",
+    },
     "port": 3001,
     "host": "127.0.0.1",
     "diagnosticsIntervalMs": "60000"
@@ -71,9 +76,13 @@ To override settings, create a copy to `api/config/production.json` file and mak
 
 ### Available settings
 
-| Setting | Description | Default value |
+| Setting | Description | Default value or behaviour |
 | ------- | ----------- | ------------- |
 | `app` | Set of application config items as described below |  |
+| `. authentication`| Set of application authentication (basic auth) as described below | No authentication |
+| `.. enabled`| `true` to enable authentication, `false` to disable it (mandatory) | / |
+| `.. login`| user login to restrict app access to (mandatory) | / |
+| `.. password`| password for login above (mandatory) | / |
 | `. port`| TCP port to be used by the service in production mode | 3001 |
 | `. host`| IP address to which the server will listen from requests in production mode | 127.0.0.1 |
 | `. diagnosticsIntervalMs`| Specifies time interval (in milliseconds) between a completed diagnostics processing and the next one | 60000 |
@@ -118,6 +127,10 @@ The integrated web application is available under the `/ui/` path.
 For more information, please refer to its own documentation, located under the `<root>/web` path.
 
 ## API usage
+
+### Authentication
+
+When enabled (see config section above), every API path will require the user to be authenticated. For now, secure mechanism used is basic authentication. More details are available at https://developer.mozilla.org/en-US/docs/Web/HTTP/Authentication.
 
 ### GET / (home)
 

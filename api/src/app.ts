@@ -16,6 +16,7 @@ import { configRoutes } from './routes/config';
 import { diagsRoutes } from './routes/diags';
 import { statsRoutes } from './routes/stats';
 import { powerRoutes } from './routes/power';
+import { initAppAuthentication } from './helpers/auth';
 
 const IS_PRODUCTION = !!import.meta.env.PROD;
 
@@ -26,11 +27,14 @@ function initAppInfo() {
 }
 
 const app = async () => {
+  const config = getConfig();
+
   const app = fastify({
     logger: getLoggerConfig(),
   });
 
   // Plugins
+  initAppAuthentication(app, config.app.authentication);
   app.register(fastifyStaticPlugin, {
     root: path.join(appRootDir.get(), '..', 'web', 'dist'),
     prefix: '/ui/',
@@ -55,25 +59,29 @@ const app = async () => {
 
   powerRoutes(app);
 
-  // Shutdown management
   app.after(() => {
+    // Auth on every route
+    if (config.app.authentication?.enabled) {
+      app.addHook('onRequest', app.basicAuth);
+    }
+
+    // Shutdown management
     if (IS_PRODUCTION) {
       // As this plugin is incompatible with vite during development
       app.gracefulShutdown(async (signal, next) => {
         app.log.info('cool-updown-nxt received signal %s, server will terminate', signal);
-  
+
         // Should persist context
         await contextProcessor()
-  
+
         next();
-      });  
+      });
     }
   })
 
   // Must match the vite config file
   if (IS_PRODUCTION) {
-    const config = getConfig();
-    const { host, port } = config.app;
+    const { app: { host, port }} = config;
     app.listen({ port, host });
 
     coreLogger.info('cool-updown-nxt API running on port %s, host %s', port, host);

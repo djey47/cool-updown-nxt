@@ -175,8 +175,9 @@ export function getMockedFastifyApp(): FastifyInstance {
     printRoutes: jest.fn(),
     printPlugins: jest.fn(),
     initialConfig: {},
-    gracefulShutdown:jest.fn(),
+    gracefulShutdown: jest.fn(),
     [Symbol.asyncDispose]: jest.fn(),
+    basicAuth: jest.fn(),
   };
 }
 

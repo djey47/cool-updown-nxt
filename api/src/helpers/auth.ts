@@ -1,4 +1,10 @@
 import { readFile } from 'fs/promises';
+import fastifyBasicAuthPlugin from '@fastify/basic-auth';
+
+import type { AuthConfig } from '../models/configuration';
+import type { FastifyInstance } from 'fastify/types/instance';
+import type { FastifyRequest } from 'fastify/types/request';
+import type { FastifyReply } from 'fastify/types/reply';
 
 /**
  * @return Promise which resolves to String,
@@ -13,4 +19,35 @@ export async function readPrivateKey(privateKeyPath?: string) {
   // console.log('auth::readPrivateKey', { privateKeyPath, privateKey });
 
   return privateKey;
+}
+
+/**
+ * Invokes basic auth plugin to provide authentication capabilities when required
+ * @param app 
+ * @param authConfiguration 
+ */
+export function initAppAuthentication(app: FastifyInstance, authConfiguration?: AuthConfig) {
+  if (!authConfiguration) {
+    app.log.warn('Authentication configuration is not available; please consider adding one.');
+    return;
+  }
+
+  const { enabled, login: appLogin, password: appPassword } = authConfiguration;
+  if (!enabled) {
+    app.log.warn('Authentication is currently disabled!');
+    return;
+  }
+
+  const validate = (username: string, password: string, _req: FastifyRequest, _reply: FastifyReply, done: (err?: Error) => void) => {
+    if (username === appLogin && password === appPassword) {
+      app.log.info('User {} authenticated succesfully.', appLogin);
+      done();
+    } else {
+      app.log.error('Authentication failed for user {}.', appLogin);
+      done(new Error('Authentication failed!'));
+    }
+  }
+
+  const authenticate = { realm: 'cud-nxt' };
+  app.register(fastifyBasicAuthPlugin, { validate, authenticate });
 }

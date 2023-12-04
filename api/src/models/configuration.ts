@@ -8,9 +8,16 @@ export interface BaseConfig {
 }
 
 export interface AppConfig {
+  authentication?: AuthConfig;
   host: string;
   port: number;
   diagnosticsIntervalMs: number;
+}
+
+export interface AuthConfig {
+  enabled: boolean;
+  login: string;
+  password: string;    
 }
 
 export interface DeviceConfig {
