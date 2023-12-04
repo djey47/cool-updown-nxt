@@ -132,6 +132,19 @@ For more information, please refer to its own documentation, located under the `
 
 When enabled (see config section above), every API path will require the user to be authenticated. For now, secure mechanism used is basic authentication. More details are available at https://developer.mozilla.org/en-US/docs/Web/HTTP/Authentication.
 
+In case of missing authentication headers in API requests, an error will be returned:
+
+```json
+{
+  "statusCode": 401,
+  "code": "FST_BASIC_AUTH_MISSING_OR_BAD_AUTHORIZATION_HEADER",
+  "error": "Unauthorized",
+  "message": "Missing or bad formatted authorization header"
+}
+```
+
+If invalid credentials are provided, the server will answer with a 401 as well.
+
 ### GET / (home)
 
 Returns name, version and current context of the server; it is not advised to use context directly to get stats/diags etc. as dedicated services are made for this.
