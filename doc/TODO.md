@@ -29,13 +29,14 @@ TODOs
         - per-device logs
         - per-device config
         - ???
-    - 
+    - [] Toaster on power actions
   - [] Global logs with filters
   - [] Config (web app, server)
     - [] About (web UI / server meta)
 
 - API/BACKEND
   - Authentication system
+    - [X] Basic auth
   - Unit tests mechanism
     - [X] Jest set-up
     - [X] unit tests for routes
