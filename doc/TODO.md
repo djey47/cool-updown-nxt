@@ -24,12 +24,13 @@ TODOs
         - [X] SSH connectivity
         - [X] HTTP with link
         - [] detailed view: ping value when available
+            - [] UX (modal?)
       - rdp via URI scheme (https://learn.microsoft.com/en-us/windows-server/remote/remote-desktop-services/clients/remote-desktop-uri#ms-rd-uri-scheme)
       - Menu: 
         - per-device logs
         - per-device config
         - ???
-    - [] Toaster on power actions
+    - [X] Toaster on power actions
   - [] Global logs with filters
   - [] Config (web app, server)
     - [] About (web UI / server meta)
