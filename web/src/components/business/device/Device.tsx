@@ -29,7 +29,7 @@ const Device = ({ deviceInfo }: DeviceProps) => {
   const [isPerformingPowerOn, setPerformingPowerOn] = useState(false);
   const [isPerformingPowerOff, setPerformingPowerOff] = useState(false);
 
-  const deviceId = deviceInfo.id;
+  const { id: deviceId, network: { hostname: deviceName } } = deviceInfo;
   const { data: diagsQueryData, isFetching: isFetchingDiags} = useQuery({
     queryKey: ['diags', deviceId],
     queryFn: ({ queryKey }) => getDiagnosticsForDevice(queryKey[1]),
@@ -44,13 +44,17 @@ const Device = ({ deviceInfo }: DeviceProps) => {
   const devicePowerState = diagsQueryData?.power?.state || STATUS_UNAVAIL;
 
   const handlePowerClick = async () => {
+    const deviceLabel = `${deviceName}(${deviceId})`;
+    const infoCommandMessage = `Command has already been sent to device ${deviceLabel}`;
+    const successCommandMessage = `Command has been sent to device ${deviceLabel}`;
+
     if (devicePowerState === 'off') {
       await postPowerOnForDevice(deviceId);
 
       if (isPerformingPowerOn) {
-        showAlert('info', 'Power ON', 'Command has already been sent to the device');
+        showAlert('info', 'Power ON', infoCommandMessage);
       } else {
-        showAlert('success', 'Power ON', 'Command has been sent to the device');
+        showAlert('success', 'Power ON', successCommandMessage);
       }
 
       setPerformingPowerOn(true);  
@@ -59,9 +63,9 @@ const Device = ({ deviceInfo }: DeviceProps) => {
       await postPowerOffForDevice(deviceId);
 
       if (isPerformingPowerOff) {
-        showAlert('info', 'Power OFF', 'Command has already been sent to the device');
+        showAlert('info', 'Power OFF', infoCommandMessage);
       } else {
-        showAlert('success', 'Power OFF', 'Command has been sent to the device');
+        showAlert('success', 'Power OFF', successCommandMessage);
       }
 
       setPerformingPowerOff(true);
