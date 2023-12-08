@@ -49,12 +49,11 @@ TODOs
     - [X] Dispose
   - Services
     - [] enhancement: Websocket support for diags/stats refresh
-    - Home service
-      - [] Display configuration (obfuscated)
+    - [X] Home service
     - Config service
       - [X] Basic implementation
       - [X] Per device (path param)
-      - [] Sensitive info obfuscation
+      - [X] Sensitive info obfuscation
     - Logs service
       - [X] Basic implementation
       - Path params
