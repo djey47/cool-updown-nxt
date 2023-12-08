@@ -1,14 +1,25 @@
 import { replyWithJson, replyWithItemNotFound } from '../../common/api';
+import { getBaseConfig, getDeviceConfig } from '../../common/configuration';
 import { getMockedFastifyReply } from '../../helpers/testing/mockObjects';
 import { ApiItem } from '../../models/api';
-import { DeviceConfig } from '../../models/configuration';
+import { BaseConfig, DeviceConfig } from '../../models/configuration';
 import { config, configForDevice } from './config';
 import { ConfigResponse } from './models/config';
 
 jest.mock('../../common/api');
+jest.mock('../../common/configuration');
 
 const replyWithJsonMock = replyWithJson as jest.Mock;
 const replyWithItemNotFoundMock = replyWithItemNotFound as jest.Mock;
+const getBaseConfigMock = getBaseConfig as jest.Mock;
+const getDeviceConfigMock = getDeviceConfig as jest.Mock;
+
+beforeEach(() => {
+  replyWithJsonMock.mockReset();
+  replyWithItemNotFoundMock.mockReset();
+  getBaseConfigMock.mockReset();
+  getDeviceConfigMock.mockReset();
+});
 
 describe('Configuration service', () => {
   const codeMock = jest.fn();
@@ -31,14 +42,40 @@ describe('Configuration service', () => {
     },
   };
 
-  beforeEach(() => {
-    replyWithJsonMock.mockReset();
-    replyWithItemNotFoundMock.mockReset();
-  })
+  const baseConfig: BaseConfig = {
+    app: {
+      authentication: {
+        enabled: false,
+        login: 'user',
+        password: 'pwd',
+      },
+      host: '127.0.0.1',
+      diagnosticsIntervalMs: 0,
+      port: 3001,
+    },
+    devices: [{
+      http: {
+        url: 'http://my-nas:5000',
+      },
+      network: {
+        hostname: 'my-nas',
+        broadcastIpAddress: '255.255.255.255',
+        macAddress: 'aa:bb:cc:dd:ee:ff',
+      },
+      ssh: {
+        keyPath: '/id_rsa',
+        password: 'ssh-pwd',
+        user: 'ssh-user',
+      },
+    }]
+  };
 
   describe('config function', () => {
     it('should reply with configuration as JSON', () => {
-      // given-when
+      // given
+      getBaseConfigMock.mockReturnValue({ ...baseConfig });
+
+      // when
       config(defaultReply);
 
       // then
@@ -47,9 +84,21 @@ describe('Configuration service', () => {
           app: {
             host: '127.0.0.1',
             port: 3001,
-            diagnosticsIntervalMs: 0
+            diagnosticsIntervalMs: 0,
+            authentication: {
+              enabled: false,
+              login: '********',
+              password: '********',
+            },
           },
-          devices: [deviceConfig],
+          devices: [{
+            ...deviceConfig,
+            ssh: {
+              keyPath: '/id_rsa',
+              user: '********',
+              password: '********',
+            },
+          }],
         },
       };
       expect(replyWithJsonMock).toHaveBeenCalledWith(defaultReply, expectedOutput);
@@ -58,12 +107,69 @@ describe('Configuration service', () => {
 
   describe('configForDevice function', () => {
     it('should provide configuration as JSON for existing device', () => {
-      // given-when
+      // given
+      getDeviceConfigMock.mockReturnValue({ ...deviceConfig });
+
+      // when
       configForDevice('0', defaultReply);
 
       // then
       const expectedOutput: ConfigResponse = {
-        configuration: deviceConfig,
+        configuration: {
+          ...deviceConfig,
+          ssh: {
+            keyPath: '/id_rsa',
+            user: '********',
+            password: '********',
+          },
+        },
+      };
+      expect(replyWithJsonMock).toHaveBeenCalledWith(defaultReply, expectedOutput);
+    });
+
+    it('should provide configuration as JSON for existing device without SSH configuration', () => {
+      // given
+      const {
+        ssh: _sshConfig,
+        ...deviceConfigWithoutSSH
+      } = deviceConfig;
+      getDeviceConfigMock.mockReturnValue(deviceConfigWithoutSSH);
+
+      // when
+      configForDevice('0', defaultReply);
+
+      // then
+      const expectedOutput: ConfigResponse = {
+        configuration: {
+          ...deviceConfigWithoutSSH,
+        },
+      };
+      expect(replyWithJsonMock).toHaveBeenCalledWith(defaultReply, expectedOutput);
+    });
+
+    it('should provide configuration as JSON for existing device, SSH configuration without password', () => {
+      // given
+      const deviceConfigWithoutSSHPassword: DeviceConfig = {
+        ...deviceConfig,
+        ssh: {
+          keyPath: '/id_rsa',
+          user: 'username',
+        },
+      };
+      getDeviceConfigMock.mockReturnValue(deviceConfigWithoutSSHPassword);
+
+      // when
+      configForDevice('0', defaultReply);
+
+      // then
+      const expectedOutput: ConfigResponse = {
+        configuration: {
+          ...deviceConfig,
+          ssh: {
+            keyPath: '/id_rsa',
+            user: '********',
+          },
+        },
       };
       expect(replyWithJsonMock).toHaveBeenCalledWith(defaultReply, expectedOutput);
     });

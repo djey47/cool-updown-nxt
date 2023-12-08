@@ -1,18 +1,57 @@
 import { replyWithItemNotFound, replyWithJson } from '../../common/api';
 import { getBaseConfig, getDeviceConfig } from '../../common/configuration';
 
-import type { FastifyReply } from 'fastify/types/reply';
-import { ConfigResponse } from './models/config';
 import { ApiItem } from '../../models/api';
+import type { FastifyReply } from 'fastify/types/reply';
+import type { ConfigResponse } from './models/config';
+import type { BaseConfig, DeviceConfig } from '../../models/configuration';
+
+const OBFUSCATED_VALUE = '********';
+
+function obfuscateDeviceConfig(deviceConfig: DeviceConfig): DeviceConfig {
+  if (deviceConfig.ssh) {
+    return {
+      ...deviceConfig,
+      ssh: {
+        ...deviceConfig.ssh,
+        user: OBFUSCATED_VALUE,
+        password: deviceConfig.ssh.password !== undefined ? OBFUSCATED_VALUE : undefined ,
+      },
+    };    
+  }
+  return {...deviceConfig};
+}
+
+function obfuscateBaseConfig(baseConfig: BaseConfig): BaseConfig {
+  let baseObfuscatedConfig: BaseConfig = { ...baseConfig };
+  if (baseConfig.app.authentication) {
+    baseObfuscatedConfig = {
+      ...baseConfig,
+      app: {
+        ...baseConfig.app,
+        authentication: {
+          ...baseConfig.app.authentication,
+          login: OBFUSCATED_VALUE,
+          password: OBFUSCATED_VALUE,
+        },
+      },
+    };
+  }
+
+  return { 
+    ...baseObfuscatedConfig,
+    devices: baseConfig.devices
+      .map((deviceConfig) => obfuscateDeviceConfig(deviceConfig)),
+  };
+}
 
 /**
  * Provides global app + all devices configuration 
  */
 export function config(reply: FastifyReply) {
   const output: ConfigResponse = {
-    configuration: getBaseConfig(),
+    configuration: obfuscateBaseConfig(getBaseConfig()),
   };
-  // TODO obfuscate sensitive parameters
   replyWithJson(reply, output);
 }
 
@@ -28,9 +67,8 @@ export function configForDevice(deviceId: string, reply: FastifyReply) {
   }
 
   const output: ConfigResponse = {
-    configuration: deviceConfig,
+    configuration: obfuscateDeviceConfig(deviceConfig),
   };
 
-  // TODO obfuscate sensitive parameters
   replyWithJson(reply, output);
 }

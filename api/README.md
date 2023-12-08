@@ -241,6 +241,7 @@ Returns registered configuration for a configured device.
 **Notes**
 - Please refer to `/config` documentation above for details
 - `deviceId` acts as unique identifier for a configured device; it matches the 0-based rank of the device in the configuration array
+- Sensitive information, such as user/login or password, are automatically obfuscated (`********`)
 - If no configuration is available for specified device, a 404 is replied with following output:
 
 ```json
