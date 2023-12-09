@@ -7,11 +7,13 @@ TODOs
 
 - WEB/FRONTEND
   - PWA
-    - Basic support
+    - [X] Basic support
     - [] Standalone chrome app on android
-  - [] ESLint
+  - ESLint
+    - [X] Basic support
     - [] plugin react hooks
-  - [] Unit tests mechanism
+  - Unit tests mechanism
+    - [] Basic support
   - [] Configuration
   - [] Router
   - [X] React Query
