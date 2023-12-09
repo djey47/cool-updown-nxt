@@ -43,8 +43,9 @@ const Device = ({ deviceInfo }: DeviceProps) => {
 
   const devicePowerState = diagsQueryData?.power?.state || STATUS_UNAVAIL;
 
+  const deviceLabel = `${deviceName} (${deviceId})`;
+
   const handlePowerClick = async () => {
-    const deviceLabel = `${deviceName}(${deviceId})`;
     const infoCommandMessage = `Command has already been sent to device ${deviceLabel}`;
     const successCommandMessage = `Command has been sent to device ${deviceLabel}`;
 
@@ -123,7 +124,7 @@ const Device = ({ deviceInfo }: DeviceProps) => {
             onPowerAction={handlePowerClick}
             devicePowerState={devicePowerState}
           />
-          {deviceInfo.network.hostname} ({deviceId})
+          {deviceLabel}
         </CardContent>
         <CardContent alignment="right">
           <DiagItems items={diagItems} />
