@@ -17,5 +17,5 @@ describe('Common logger functions', () => {
       // given-when-then
       expect(coreLogger).toHaveProperty('pino');
     });    
-  })
+  });
 });

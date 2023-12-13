@@ -20,7 +20,7 @@ describe('Home service', () => {
 
   beforeEach(() => {
     replyWithJsonMock.mockReset();
-  })
+  });
 
   describe('home function', () => {
     it('should reply with package info and context as JSON', () => {

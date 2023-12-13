@@ -13,7 +13,7 @@ describe('Common API functions', () => {
     beforeEach(() => {
       codeMock.mockReset();
       sendMock.mockReset();
-    })
+    });
 
     it('should reply a 200 with provided object', () => {
       // given
@@ -53,7 +53,7 @@ describe('Common API functions', () => {
     beforeEach(() => {
       codeMock.mockReset();
       sendMock.mockReset();
-    })
+    });
 
     it('should reply a 404 with correct error', () => {
       // given
@@ -82,7 +82,7 @@ describe('Common API functions', () => {
     beforeEach(() => {
       codeMock.mockReset();
       sendMock.mockReset();
-    })
+    });
 
     it('should reply a 500 with correct error', () => {
       // given

@@ -78,7 +78,7 @@ async function diagByDevice(deviceId: string, deviceConfig: DeviceConfig): Promi
     sshResults = {
       status: FeatureStatus.UNAVAILABLE,
       message: `Device with id=${deviceId} has failed ping test thus SSH connectivity cannot be tested.`,
-    }
+    };
   } else {
     sshResults = await sshDiag(deviceId, deviceConfig);
   }
@@ -89,7 +89,7 @@ async function diagByDevice(deviceId: string, deviceConfig: DeviceConfig): Promi
     httpResults = {
       status: FeatureStatus.UNAVAILABLE,
       message: `Device with id=${deviceId} has failed ping test thus HTTP cannot be tested.`,
-    }
+    };
   } else {
     httpResults = await httpDiag(deviceId, deviceConfig);
   }

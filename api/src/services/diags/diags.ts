@@ -36,7 +36,7 @@ export async function diagsForDevice(deviceId: string, reply: FastifyReply) {
 
   const output: DiagsResponse = {
     diagnostics: diagsContextForDeviceToResponse(deviceDiags),
-  }
+  };
   
   replyWithJson(reply, output);
 }

@@ -21,7 +21,7 @@ const NOW = new Date();
 beforeAll(() => {
   jest.useFakeTimers({
     now: NOW,
-  })
+  });
 });
 
 beforeEach(() => {

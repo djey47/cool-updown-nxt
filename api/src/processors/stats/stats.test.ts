@@ -32,7 +32,7 @@ describe('statistics processor', () => {
       statistics.perDevice['0'].uptimeSeconds = {
         current: 10,
         overall: 100,
-      }
+      };
       diagnostics['0'] = {
         on: NOW,
         ping: {
@@ -109,7 +109,7 @@ describe('statistics processor', () => {
       statistics.perDevice['0'].uptimeSeconds = {
         current: 10,
         overall: 100,
-      }
+      };
       diagnostics['0'] = {
         ping: {
           status: FeatureStatus.OK,

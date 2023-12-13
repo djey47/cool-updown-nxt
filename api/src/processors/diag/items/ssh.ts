@@ -29,6 +29,6 @@ export async function sshDiag(deviceId: string, deviceConfig: DeviceConfig): Pro
       data: sshError,
       status: FeatureStatus.KO,
       message: sshError.message,
-    }
+    };
   }
 }

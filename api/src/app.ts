@@ -72,12 +72,12 @@ const app = async () => {
         app.log.info('cool-updown-nxt received signal %s, server will terminate', signal);
 
         // Should persist context
-        await contextProcessor()
+        await contextProcessor();
 
         next();
       });
     }
-  })
+  });
 
   // Must match the vite config file
   if (IS_PRODUCTION) {

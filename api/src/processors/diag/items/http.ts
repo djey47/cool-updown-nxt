@@ -34,6 +34,6 @@ export async function httpDiag(deviceId: string, deviceConfig: DeviceConfig): Pr
       data:  { ...fetchError, url },
       status: FeatureStatus.KO,
       message: fetchError.message,
-    }
+    };
   }
 }

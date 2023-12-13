@@ -9,7 +9,7 @@ describe('recaller helper', () => {
         const callback = () => {
           // then
           done();
-        }
+        };
 
         // when
         recall(callback, 30000); 

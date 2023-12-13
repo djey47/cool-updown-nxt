@@ -46,7 +46,7 @@ export function initAppAuthentication(app: FastifyInstance, authConfiguration?: 
       app.log.error('Authentication failed for user {}.', appLogin);
       done(new Error('Authentication failed!'));
     }
-  }
+  };
 
   const authenticate = { realm: 'cud-nxt' };
   app.register(fastifyBasicAuthPlugin, { validate, authenticate });

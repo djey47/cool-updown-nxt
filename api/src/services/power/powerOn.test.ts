@@ -21,7 +21,7 @@ afterEach(() => {
   replyWithJsonMock.mockReset();
   replyWithInternalErrorMock.mockReset();
   replyWithItemNotFoundMock.mockReset();
-})
+});
 
 describe('powerOn service', () => {
   const codeMock = jest.fn();

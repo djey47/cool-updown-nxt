@@ -39,7 +39,7 @@ export async function statsForDevice(deviceId: string, reply: FastifyReply) {
 
   const output: StatsResponse = {
     statistics: statsContextForDeviceToResponse(deviceStats),
-  }
+  };
   
   replyWithJson(reply, output);  
 }

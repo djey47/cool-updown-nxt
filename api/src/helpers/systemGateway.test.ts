@@ -15,7 +15,7 @@ describe('systemGateway helper functions', () => {
       // Force promise resolution by invoking callback
       childProcessMock.exec.mockImplementation((_cmd, cb) => { 
         cb(null, 'std', '');
-      })
+      });
 
       // when
       const actualOutput = await ping('host-name', 3);
@@ -33,7 +33,7 @@ describe('systemGateway helper functions', () => {
       // Force promise resolution
       childProcessMock.exec.mockImplementation((_cmd, cb) => { 
         cb({}, '', 'An error has occurred');
-      })
+      });
 
       // when
       const actualOutput = await ping('host-name', 2);
