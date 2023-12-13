@@ -39,6 +39,7 @@
     "@fastify/static": "6.11.2",
     "app-root-dir": "1.0.2",
     "config": "3.3.9",
+    "cron": "3.1.6",
     "date-fns": "2.30.0",
     "fastify": "4.24.1",
     "fastify-graceful-shutdown": "3.5.1",
