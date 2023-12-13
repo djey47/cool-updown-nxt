@@ -113,8 +113,7 @@ describe('diags service', () => {
             },
             power: {
               state: PowerStatus.ON,
-              lastStartAttemptReason: LastPowerAttemptReason.NONE,
-              lastStopAttemptReason: LastPowerAttemptReason.NONE,
+              lastStateChangeReason: LastPowerAttemptReason.NONE,
             },
             ssh: {
               status: FeatureStatus.OK,
@@ -134,8 +133,7 @@ describe('diags service', () => {
             },
             power: {
               state: PowerStatus.OFF,
-              lastStartAttemptReason: LastPowerAttemptReason.NONE,
-              lastStopAttemptReason: LastPowerAttemptReason.NONE,
+              lastStateChangeReason: LastPowerAttemptReason.NONE,
             },
             ssh: {
               status: FeatureStatus.KO,
@@ -178,8 +176,59 @@ describe('diags service', () => {
           },
           power: {
             state: PowerStatus.ON,
-            lastStartAttemptReason: LastPowerAttemptReason.NONE,
-            lastStopAttemptReason: LastPowerAttemptReason.NONE,
+            lastStateChangeReason: LastPowerAttemptReason.NONE,
+          },
+          ssh: {
+            status: FeatureStatus.OK,
+          },
+          http: {
+            status: FeatureStatus.OK,
+            data: {
+              statusCode: 200,
+              url: 'http://my-nas:5000',
+            },
+          },
+        },
+      };
+      expect(replyWithJsonMock).toHaveBeenCalledWith(defaultReply, expectedOutput);
+    });
+
+    it('should send current diags result for specified device, when power state is unavailable', async () => {
+      // given
+      const appContext = AppContext.get();
+      appContext.diagnostics = {
+        ...defaultDiags,
+        '0': {
+          ...defaultDiags['0'],
+          power: {
+            ...defaultDiags['0'].power,
+            state: PowerStatus.UNAVAILABLE,
+          },
+        },
+      };
+
+      // when
+      await diagsForDevice('0', defaultReply);
+
+      // then
+      const expectedOutput: DiagsResponse = {
+        diagnostics: {
+          on: NOW,
+          ping: {
+            status: FeatureStatus.OK,
+            data: {
+              packetLossRate: 0.5,
+              roundTripTimeMs: {
+                average: 2,
+                max: 3,
+                min: 1,
+                standardDeviation: 1,  
+              },      
+            },
+          },
+          power: {
+            state: PowerStatus.UNAVAILABLE,
+            lastStateChangeReason: LastPowerAttemptReason.NONE,
           },
           ssh: {
             status: FeatureStatus.OK,

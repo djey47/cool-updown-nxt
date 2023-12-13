@@ -4,8 +4,9 @@ import { AppContext } from '../../common/context';
 import type { FastifyReply } from 'fastify';
 import type { DiagsResponse, DiagsResponseForAllDevices, DiagsResponseForDevice, DiagsResponseForFeature, PowerDiagsResponse as DiagsResponseForPower } from './models/diags';
 import type { DeviceDiagnosticsContext, DiagnosticsContext } from '../../models/context';
-import type { FeatureDiagnostics, PowerDiagnostics } from '../../processors/diag/models/diag';
+import { LastPowerAttemptReason, type FeatureDiagnostics, type PowerDiagnostics } from '../../processors/diag/models/diag';
 import { ApiItem } from '../../models/api';
+import { PowerStatus } from '../../models/common';
 
 /** 
  * Diagnostics service implementation: for all configured devices
@@ -70,12 +71,19 @@ function diagsFeatureToResponse(featureDiags: FeatureDiagnostics): DiagsResponse
 }
 
 function diagsPowerToResponse(powerDiagnostics: PowerDiagnostics): DiagsResponseForPower {
-  const { lastStartAttempt, lastStopAttempt } = powerDiagnostics; 
+  const { lastStartAttempt, lastStopAttempt, state } = powerDiagnostics; 
+  let lastStateChangeReason;
+  if (state === PowerStatus.ON) {
+    lastStateChangeReason = lastStartAttempt.reason;
+  } else if (state === PowerStatus.OFF) {
+    lastStateChangeReason = lastStopAttempt.reason;
+  } else {
+    lastStateChangeReason = LastPowerAttemptReason.NONE;
+  }
   return {
     lastStartAttemptOn: lastStartAttempt?.on,
-    lastStartAttemptReason: lastStartAttempt?.reason,
+    lastStateChangeReason,
     lastStopAttemptOn: lastStopAttempt?.on,
-    lastStopAttemptReason: lastStopAttempt?.reason,
     state: powerDiagnostics.state,
   };
 }

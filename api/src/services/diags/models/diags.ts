@@ -25,7 +25,6 @@ export interface DiagsResponseForFeature {
 export interface PowerDiagsResponse {
   state: PowerStatus;
   lastStartAttemptOn?: Date;
-  lastStartAttemptReason: LastPowerAttemptReason;
   lastStopAttemptOn?: Date;
-  lastStopAttemptReason: LastPowerAttemptReason;
+  lastStateChangeReason: LastPowerAttemptReason;
 }
