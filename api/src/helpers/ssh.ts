@@ -27,7 +27,7 @@ const sshClient = new NodeSSH();
 export async function sshExec(command: string, deviceConfig: DeviceConfig, execOptions?: ExecOptions) {
   const sshClientConfig = await getSSHParameters(deviceConfig);
 
-  console.log('ssh::sshExec', { sshClientConfig });
+  // console.log('ssh::sshExec', { sshClientConfig });
 
   await sshClient.connect(sshClientConfig);
 

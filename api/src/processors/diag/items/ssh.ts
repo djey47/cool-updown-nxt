@@ -16,7 +16,7 @@ export async function sshDiag(deviceId: string, deviceConfig: DeviceConfig): Pro
     };
   }
 
-  console.log('ssh::sshDiag', { deviceId, sshConfiguration });
+  // console.log('ssh::sshDiag', { deviceId, sshConfiguration });
 
   try {
     await sshExec('', deviceConfig, { exitOnFinished: true });
