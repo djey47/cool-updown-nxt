@@ -18,5 +18,13 @@
         "password": "pwd"
       }
     }
+  ],
+  "defaultSchedules": [
+    {
+      "deviceIds": [
+        "0"
+      ],
+      "enabled": false
+    }
   ]
 }

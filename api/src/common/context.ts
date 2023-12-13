@@ -7,7 +7,7 @@ import { getConfig } from './configuration';
 import { coreLogger } from './logger';
 
 import type { DeviceConfig } from '../models/configuration';
-import type { Context, DiagnosticsContext, PerDeviceStatisticsContext, PersistedContext, StatisticsContext } from '../models/context';
+import type { Context, DiagnosticsContext, PerDeviceStatisticsContext, PersistedContext, ScheduleContext, StatisticsContext } from '../models/context';
 import { LastPowerAttemptReason } from '../processors/diag/models/diag';
 
 /**
@@ -91,7 +91,8 @@ export class AppContext {
     return {
       appInfo: {},
       diagnostics: AppContext.createDefaultDiags(),
-      statistics: AppContext.createDefaultStats()
+      statistics: AppContext.createDefaultStats(),
+      schedules: AppContext.createDefaultSchedules(),
     };
   }
 
@@ -138,6 +139,15 @@ export class AppContext {
       };
       return acc;
     }, {});
+  }
+
+  private static createDefaultSchedules(): ScheduleContext[] {
+    return getConfig().defaultSchedules.map((sc, i) => {
+      return ({
+        ...sc,
+        id: `sch-${i}`,
+      });
+    });
   }
 
   private static contextReviver(key: string, value: unknown) {

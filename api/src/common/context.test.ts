@@ -114,6 +114,11 @@ describe('AppContext singleton class', () => {
             },
           },
         },
+        schedules: [{
+          deviceIds: ['0'],
+          enabled: false,
+          id: 'sch-0',
+        }],
       });
     });
   });

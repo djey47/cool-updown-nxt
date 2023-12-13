@@ -5,6 +5,7 @@ export type Config = BaseConfig & IConfig;
 export interface BaseConfig {
   app: AppConfig;
   devices: DeviceConfig[];
+  defaultSchedules: ScheduleConfig[];
 }
 
 export interface AppConfig {
@@ -42,4 +43,11 @@ export interface DeviceSSHConfig {
 
 export interface DeviceHTTPConfig {
   url: string;
+}
+
+export interface ScheduleConfig {
+  deviceIds: string[];
+  enabled: boolean;
+  powerOnCron?: string;
+  powerOffCron?: string;
 }

@@ -67,7 +67,8 @@ describe('Configuration service', () => {
         password: 'ssh-pwd',
         user: 'ssh-user',
       },
-    }]
+    }],
+    defaultSchedules: [],
   };
 
   describe('config function', () => {
@@ -99,6 +100,7 @@ describe('Configuration service', () => {
               password: '********',
             },
           }],
+          defaultSchedules: [],
         },
       };
       expect(replyWithJsonMock).toHaveBeenCalledWith(defaultReply, expectedOutput);

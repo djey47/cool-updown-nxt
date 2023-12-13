@@ -1,9 +1,11 @@
 import { FeatureDiagnostics, PowerDiagnostics } from '../processors/diag/models/diag';
+import { ScheduleConfig } from './configuration';
 
 export interface Context {
   appInfo: AppInfoContext;
   diagnostics: DiagnosticsContext;
   statistics: StatisticsContext;
+  schedules: ScheduleContext[];
 }
 
 export interface AppInfoContext {
@@ -50,4 +52,8 @@ export interface GlobalStatisticsContext {
 export interface UptimeStatisticsContext {
   current: number;
   overall: number;
-} 
+}
+
+export interface ScheduleContext extends ScheduleConfig {
+  id: string;
+}
