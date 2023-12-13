@@ -13,5 +13,6 @@ module.exports = {
     '@typescript-eslint/object-curly-spacing': 'off',
     '@typescript-eslint/indent': 'off',
     '@typescript-eslint/no-unused-vars': ['warn', { varsIgnorePattern: '_' }],
+    'semi': 'warn',
 	},
 };
