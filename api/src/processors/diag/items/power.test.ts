@@ -5,6 +5,12 @@ import { FeatureStatus, PowerStatus } from '../../../models/common';
 
 import type { DeviceDiagnosticsContext } from '../../../models/context';
 
+jest.mock('../../../common/logger', () => ({
+  coreLogger: {
+    info: jest.fn(),
+  },
+}));
+
 const NOW = new Date();
 const EVEN_MORE_PREVIOUS_MOMENT = new Date(2022, 11, 31);
 const EVEN_MORE_PREVIOUS_MOMENT_MINUS_10MIN = subMinutes(EVEN_MORE_PREVIOUS_MOMENT, 10);
@@ -43,7 +49,7 @@ describe('power diag item', () => {
       };
 
       // when
-      const actualDiags = powerDiag(deviceDiags);
+      const actualDiags = powerDiag('0', deviceDiags);
 
       // then
       expect(actualDiags).toEqual({
@@ -86,7 +92,7 @@ describe('power diag item', () => {
       };
 
       // when
-      const actualDiags = powerDiag(deviceDiags);
+      const actualDiags = powerDiag('0', deviceDiags);
 
       // then
       expect(actualDiags).toEqual({
@@ -131,7 +137,7 @@ describe('power diag item', () => {
       };
 
       // when
-      const actualDiags = powerDiag(deviceDiags);
+      const actualDiags = powerDiag('0', deviceDiags);
 
       // then
       expect(actualDiags).toEqual({
@@ -173,7 +179,7 @@ describe('power diag item', () => {
       };
 
       // when
-      const actualDiags = powerDiag(deviceDiags);
+      const actualDiags = powerDiag('0', deviceDiags);
 
       // then
       expect(actualDiags).toEqual({

@@ -65,7 +65,7 @@ async function diagForAllDevices(devicesConfigs: DeviceConfig[]) {
     deviceDiags.http = httpResult;
 
     // Power state
-    deviceDiags.power = powerDiag(deviceDiags);
+    deviceDiags.power = powerDiag(deviceId, deviceDiags);
   });
 }
 

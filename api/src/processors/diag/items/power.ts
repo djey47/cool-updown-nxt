@@ -2,8 +2,9 @@ import differenceInMinutes from 'date-fns/differenceInMinutes/index.js';
 import { FeatureStatus, PowerStatus } from '../../../models/common';
 import type { DeviceDiagnosticsContext } from '../../../models/context';
 import { LastPowerAttemptDiagnostics, LastPowerAttemptReason, type PowerDiagnostics } from '../models/diag';
+import { coreLogger } from '../../../common/logger';
 
-export function powerDiag(diags: DeviceDiagnosticsContext): PowerDiagnostics {
+export function powerDiag(deviceId: string, diags: DeviceDiagnosticsContext): PowerDiagnostics {
     const { power: powerDiags, ping: { status: currentPingStatus }} = diags;
   
     // TODO See if still necessary
@@ -25,6 +26,10 @@ export function powerDiag(diags: DeviceDiagnosticsContext): PowerDiagnostics {
     }
     if (currentPingStatus === FeatureStatus.KO) {
       newPowerState = PowerStatus.OFF;
+    }
+
+    if (powerDiags.state !== newPowerState) {
+      coreLogger.info(`{power::powerDiag} Power state change detected for device ${deviceId}: ${powerDiags.state} => ${newPowerState}`);
     }
   
     return {
