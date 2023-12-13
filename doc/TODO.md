@@ -1,9 +1,12 @@
 TODOs
 =====
+- Code TODOs
 
 - COMMON
   - [X] Add package scripts at root to easily install and run the app in prod mode
   - [ ] See to create transverse api model at highest level to be used with API/WEB
+    - Requires deps to external types so may be an external library
+    - Alternative solution: replace external types with minimum required interfaces (but at risk of type incompatibility)
 
 - WEB/FRONTEND
   - PWA
@@ -19,6 +22,7 @@ TODOs
   - [ ] Router
   - [X] React Query
   - [ ] Dashboard
+    - [ ] Handle API call errors (4xx, 5xx)
     - [ ] Click outside to close drop down menu...  [https://www.robinwieruch.de/react-hook-detect-click-outside-component/]
     - [ ] device tiles
       - [X] power status,
@@ -84,18 +88,18 @@ TODOs
       - [ ] ....?
     - [ ] Scheduling service
     - [ ] ON/OFF service
-      - [ ] Unitary (path param)
+      - [X] Unitary (path param)
         - [X] ON
         - OFF
           - [X] Implem
-          - [ ] Complete unit tests with coverage
+          - [X] Complete unit tests with coverage
       - [ ] From tag
       - [ ] ID list (query param)
       - [ ] All
     - [ ] Devices service
       - [ ] lists all devices with Id and basic info
   - Processors
-    - [ ] Diags
+    - Diags
       - [X] Skeleton with configured diag interval
       - Ping support
         - [X] base implem
@@ -110,10 +114,12 @@ TODOs
         - [X] last off attempt date (external)
         - [ ] last off attempt date (scheduled)
         - [X] cause of last on and off attempt(api, scheduled, external...)
+        - [ ] log power state change
       - SSH connectivity
         - [ ] basic suppoort
         - ?
-      - [ ] Web server (page)
+      - Web server (page)
+        - [ ] basic support
       - [ ] ?
     - [ ] Stats
       - [X] Uptimes: app, per device (current and overall)
