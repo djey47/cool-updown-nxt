@@ -12,7 +12,7 @@ const Devices = () => {
   return (
     <div className="relative flex flex-wrap gap-4 justify-center md:justify-start">
       {isLoading && (
-        <p>Getting configured devices, one moment please...</p>
+        <p>Retrieving configured devices, one moment please...</p>
       )}
       {data?.map((deviceInfo) => (
         <Device deviceInfo={deviceInfo} key={deviceInfo.id} />
