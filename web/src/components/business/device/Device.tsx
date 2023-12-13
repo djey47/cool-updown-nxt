@@ -12,9 +12,10 @@ import PowerItemButton from '../power-item-button/PowerItemButton';
 import UptimeItem from '../uptime-item/UptimeItem';
 import FetchStatus from '../fetch-status/FetchStatus';
 import DiagItems, { type DiagItemsProps } from '../diag-items/DiagItems';
+import { POWER_STATE_CHANGE_REASON_LABELS, POWER_STATE_LABELS } from '../../../common/constants';
 
 import { DiagItemType } from '../../../model/diagnostics';
-import { STATUS_UNAVAIL, type DeviceInfo } from '../../../model/device';
+import { STATUS_UNAVAIL, type DeviceInfo, PowerState, REASON_NONE } from '../../../model/device';
 
 import './Device.css';
 
@@ -28,6 +29,7 @@ const Device = ({ deviceInfo }: DeviceProps) => {
   const [popupDisplayMode, setPopupDisplayMode] = useState<PopupDisplayMode>('none');
   const [isPerformingPowerOn, setPerformingPowerOn] = useState(false);
   const [isPerformingPowerOff, setPerformingPowerOff] = useState(false);
+  const [previousPowerState, setPreviousPowerState] = useState<PowerState>('n/a');
 
   const { id: deviceId, network: { hostname: deviceName } } = deviceInfo;
   const { data: diagsQueryData, isFetching: isFetchingDiags } = useQuery({
@@ -42,6 +44,7 @@ const Device = ({ deviceInfo }: DeviceProps) => {
   });
 
   const devicePowerState = diagsQueryData?.power?.state || STATUS_UNAVAIL;
+  const deviceLastPowerChangeReason = diagsQueryData?.power?.lastStateChangeReason || REASON_NONE;
 
   const deviceLabel = `${deviceName} (${deviceId})`;
 
@@ -89,9 +92,27 @@ const Device = ({ deviceInfo }: DeviceProps) => {
     if (isPerformingPowerOff && devicePowerState === 'off') {
       setPerformingPowerOff(false);
     }
-  }
+  };
+
+  const handlePowerStateChange = () => {
+    if (previousPowerState === devicePowerState || previousPowerState === 'n/a' || devicePowerState === 'n/a') {
+      return;
+    }
+
+    setPreviousPowerState((powerState) => {
+      const previousPowerStateLabel = POWER_STATE_LABELS[powerState];
+      const newPowerStateLabel = POWER_STATE_LABELS[powerState];
+      const changeReasonLabel = POWER_STATE_CHANGE_REASON_LABELS[deviceLastPowerChangeReason];
+      const changeMessage = `Device ${deviceLabel}: ${previousPowerStateLabel} >> ${newPowerStateLabel}. Reason: ${changeReasonLabel}`;
+      showAlert('info', 'Power state change detected', changeMessage);
+
+      return devicePowerState;
+    });
+  };
 
   handleEndedPowerOps();
+
+  handlePowerStateChange();
 
   // console.log('Device::render', { diagsQueryData, statsQueryData });
 
@@ -151,6 +172,6 @@ const Device = ({ deviceInfo }: DeviceProps) => {
       </Popup>
     </>
   );
-}
+};
 
 export default Device;

@@ -11,6 +11,7 @@ export interface DeviceDiagnostics {
   };
   power: {
     state: PowerState;
+    lastStateChangeReason: PowerStateChangeReason;
   };
   ssh: {
     status: FeatureStatus;
@@ -22,10 +23,13 @@ export interface DeviceDiagnostics {
 }
 
 export const STATUS_UNAVAIL = 'n/a';
+export const REASON_NONE = 'none';
 
 export type FeatureStatus = 'ok' | 'ko' | 'n/a';
 
 export type PowerState = 'on' | 'off' | 'n/a';
+
+export type PowerStateChangeReason = 'none' | 'api' | 'scheduled' | 'external';
 
 export type FeatureData = HTTPFeatureData;
 
