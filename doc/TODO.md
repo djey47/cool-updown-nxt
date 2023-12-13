@@ -3,39 +3,41 @@ TODOs
 
 - COMMON
   - [X] Add package scripts at root to easily install and run the app in prod mode
-  - [] See to create transverse api model at highest level to be used with API/WEB
+  - [ ] See to create transverse api model at highest level to be used with API/WEB
 
 - WEB/FRONTEND
   - PWA
     - [X] Basic support
-    - [] Standalone chrome app on android
+    - [ ] Standalone chrome app on android
+      - Requires DNS for URL? + port redirection
   - ESLint
     - [X] Basic support
-    - [] plugin react hooks
+    - [ ] plugin react hooks
   - Unit tests mechanism
-    - [] Basic support
-  - [] Configuration
-  - [] Router
+    - [ ] Basic support
+  - [ ] Configuration
+  - [ ] Router
   - [X] React Query
-  - [] Dashboard
-    - [] Click outside to close drop down menu...  [https://www.robinwieruch.de/react-hook-detect-click-outside-component/]
-    - [] device tiles
+  - [ ] Dashboard
+    - [ ] Click outside to close drop down menu...  [https://www.robinwieruch.de/react-hook-detect-click-outside-component/]
+    - [ ] device tiles
       - [X] power status,
       - [X] uptime
       - diags results
         - [X] SSH connectivity
         - [X] HTTP with link
-        - [] detailed view: ping value when available
-            - [] UX (modal?)
+        - [ ] detailed view: ping value when available
+            - [ ] UX (modal?)
       - rdp via URI scheme (https://learn.microsoft.com/en-us/windows-server/remote/remote-desktop-services/clients/remote-desktop-uri#ms-rd-uri-scheme)
       - Menu: 
         - per-device logs
         - per-device config
         - ???
+      - [ ] Power notifications: when ON/OFF status changes, display toast
     - [X] Toaster on power actions
-  - [] Global logs with filters
-  - [] Config (web app, server)
-    - [] About (web UI / server meta)
+  - [ ] Global logs with filters
+  - [ ] Config (web app, server)
+    - [ ] About (web UI / server meta)
 
 - API/BACKEND
   - Authentication system
@@ -50,7 +52,7 @@ TODOs
     - [X] Always execute exit command automatically
     - [X] Dispose
   - Services
-    - [] enhancement: Websocket support for diags/stats refresh
+    - [ ] enhancement: Websocket support for diags/stats refresh
     - [X] Home service
     - Config service
       - [X] Basic implementation
@@ -59,41 +61,41 @@ TODOs
     - Logs service
       - [X] Basic implementation
       - Path params
-        - [] per device id
-        - [] per device tag        
+        - [ ] per device id
+        - [ ] per device tag        
       - Filters 
         - [X] nb of last events
-        - [] time window (min/max date),
-        - [] log levels?
+        - [ ] time window (min/max date),
+        - [ ] log levels?
     - Diags service
       - SSH connectivity
         - [X] Base implem
         - [X] unit tests with coverage (same as power off via SSH)
-      - [] Web server
+      - [ ] Web server
       - Ping support
         - [X] response time in ms
       - [X] Per device (path param)
-      - [] Per tags (query string)
+      - [ ] Per tags (query string)
       - 
-    - [] Stats service
+    - [ ] Stats service
       - [X] Per device (path param)
-      - [] Per tags (query string)
-      - [] Uptime (app and per device)
-      - [] ....?
-    - [] Scheduling service
-    - [] ON/OFF service
-      - [] Unitary (path param)
+      - [ ] Per tags (query string)
+      - [ ] Uptime (app and per device)
+      - [ ] ....?
+    - [ ] Scheduling service
+    - [ ] ON/OFF service
+      - [ ] Unitary (path param)
         - [X] ON
         - OFF
           - [X] Implem
-          - [] Complete unit tests with coverage
-      - [] From tag
-      - [] ID list (query param)
-      - [] All
-    - [] Devices service
-      - [] lists all devices with Id and basic info
+          - [ ] Complete unit tests with coverage
+      - [ ] From tag
+      - [ ] ID list (query param)
+      - [ ] All
+    - [ ] Devices service
+      - [ ] lists all devices with Id and basic info
   - Processors
-    - [] Diags
+    - [ ] Diags
       - [X] Skeleton with configured diag interval
       - Ping support
         - [X] base implem
@@ -103,23 +105,23 @@ TODOs
       - Power state
         - [X] last on attempt date (API)
         - [X] last on attempt date (external)
-        - [] last on attempt date (scheduled)
-        - [] last off attempt date (API)
+        - [ ] last on attempt date (scheduled)
+        - [ ] last off attempt date (API)
         - [X] last off attempt date (external)
-        - [] last off attempt date (scheduled)
+        - [ ] last off attempt date (scheduled)
         - [X] cause of last on and off attempt(api, scheduled, external...)
       - SSH connectivity
-        - [] basic suppoort
+        - [ ] basic suppoort
         - ?
-      - [] Web server (page)
-      - [] ?
-    - [] Stats
+      - [ ] Web server (page)
+      - [ ] ?
+    - [ ] Stats
       - [X] Uptimes: app, per device (current and overall)
-      - [] Ping packet loss and RTT on some time interval (day? week? month?...)
-      - [] ?
+      - [ ] Ping packet loss and RTT on some time interval (day? week? month?...)
+      - [ ] ?
   - Transversal
-    - [] Config: validation at startup
-    - [] Config : App => debugMode
+    - [ ] Config: validation at startup
+    - [ ] Config : App => debugMode
     - Context persistence
       - [X] At start: restore context from file
       - [X] At exit: save to file
