@@ -14,7 +14,7 @@ const FetchStatus = ({ isFetchingDiags, isFetchingStats }: FetchStatusProps) => 
 
   return (
     <MdDownloading className={fetchStatusClassName} />
-  )
+  );
 };
 
 export default FetchStatus;

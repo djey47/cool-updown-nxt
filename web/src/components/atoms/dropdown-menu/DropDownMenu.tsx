@@ -17,12 +17,12 @@ const DropDownMenu = ({ items }: DropDownMenuProps) => {
 
   const handleDeviceDropDownClick = () => {
     setDropDownMenuVisible(!isDropDownMenuVisible);
-  }
+  };
 
   const handleMenuAction = (clickHandler: () => void) => () => {
     setDropDownMenuVisible(false);
     clickHandler();
-  }
+  };
 
   return (
     <div className="dropdown-menu relative">
@@ -42,6 +42,6 @@ const DropDownMenu = ({ items }: DropDownMenuProps) => {
       )}
     </div>
   );
-}
+};
 
 export default DropDownMenu;

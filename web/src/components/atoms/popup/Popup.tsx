@@ -14,6 +14,6 @@ const Popup = ({ isShown, children }: PopupProps) => {
       )}
     </>
   );
-}
+};
 
 export default Popup;

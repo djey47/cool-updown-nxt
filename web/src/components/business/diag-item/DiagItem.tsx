@@ -24,7 +24,7 @@ const DIAG_ITEMS = {
     Icon: MdHttp,
     label: 'HTTP server',
   },
-}
+};
 
 const DiagItem = ({ className, data, status, type }: DiagItemProps) => {
   const itemConfig = DIAG_ITEMS[type];
@@ -40,7 +40,7 @@ const DiagItem = ({ className, data, status, type }: DiagItemProps) => {
         'is-na': featureStatus === 'n/a',
         'text-indigo-900': featureStatus === 'n/a',
       });
-  } 
+  }; 
 
   const customClassName = getFeatureClassNames(status);
 
@@ -56,6 +56,6 @@ const DiagItem = ({ className, data, status, type }: DiagItemProps) => {
       )}
     </>
   );
-}
+};
 
 export default DiagItem;

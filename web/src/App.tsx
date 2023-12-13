@@ -14,7 +14,7 @@ const App = () => {
         <Dashboard />
       </PageContainer>
     </QueryClientProvider>
-  )
+  );
 };
 
 export default App;

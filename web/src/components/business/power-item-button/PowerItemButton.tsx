@@ -27,6 +27,6 @@ const PowerItemButton = ({ onPowerAction, isPerformingPowerOperation, devicePowe
       <IoPowerSharp className={devicePowerClassNames} />
     </Button>
   );
-}
+};
 
 export default PowerItemButton;

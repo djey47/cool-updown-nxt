@@ -21,6 +21,6 @@ const Divider = ({
       className={finalClassNames}
     />
   );
-}
+};
 
 export default Divider;
