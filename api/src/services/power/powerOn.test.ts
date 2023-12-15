@@ -4,17 +4,28 @@ import { replyWithInternalError, replyWithItemNotFound, replyWithJson } from '..
 import { AppContext } from '../../common/context';
 import { getMockedFastifyReply } from '../../helpers/testing/mockObjects';
 import { PowerStatus } from '../../models/common';
-import { powerOnForDevice } from './powerOn';
+import { powerOnForDevice, powerOnForDevicesScheduled } from './powerOn';
 
 import type { WakeOptions } from 'wake_on_lan';
 
 const { wakeonlanMock } = globalMocks;
 
 jest.mock('../../common/api');
+jest.mock('../../common/logger', () => ({
+  coreLogger: {
+    info: jest.fn(),
+  },
+}));
 
 const replyWithJsonMock = replyWithJson as jest.Mock;
 const replyWithInternalErrorMock = replyWithInternalError as jest.Mock;
 const replyWithItemNotFoundMock = replyWithItemNotFound as jest.Mock;
+
+beforeEach(() => {
+  wakeonlanMock.wake.mockImplementation((_a, _o, cb) => {
+    cb();
+  });
+});
 
 afterEach(() => {
   resetMocks();
@@ -96,6 +107,21 @@ describe('powerOn service', () => {
       expect(lastStartAttempt.on).toBeUndefined();
       expect(wakeonlanMock.wake).not.toHaveBeenCalled();
       expect(replyWithJsonMock).toHaveBeenCalledWith(defaultReply);
+    });
+  });
+
+  describe('powerOnForDevicesScheduled async function', () => {
+    it('should awake specified device', async () => {
+      // given
+      AppContext.get().diagnostics['0'].power.state = PowerStatus.OFF;
+
+      // when
+      await powerOnForDevicesScheduled(['0']);
+
+      // then
+      const { power: { lastStartAttempt }} = AppContext.get().diagnostics['0'];
+      expect(lastStartAttempt.reason).toBe('scheduled');
+      expect(wakeonlanMock.wake).toHaveBeenCalledTimes(1);
     });
   });
 });
