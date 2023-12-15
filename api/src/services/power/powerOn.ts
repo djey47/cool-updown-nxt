@@ -3,6 +3,7 @@ import { getDeviceConfig } from '../../common/configuration';
 import { replyWithInternalError, replyWithItemNotFound, replyWithJson } from '../../common/api';
 import { coreLogger } from '../../common/logger';
 import { AppContext } from '../../common/context';
+import { ERROR_DEVICE_NOT_FOUND, ERROR_NOOP } from '../common/errors';
 
 import type { FastifyBaseLogger } from 'fastify';
 import type { FastifyReply } from 'fastify/types/reply';
@@ -11,9 +12,6 @@ import type { DeviceConfig } from '../../models/configuration';
 import { ApiItem } from '../../models/api';
 import { PowerStatus } from '../../models/common';
 import { LastPowerAttemptReason } from '../../processors/diag/models/diag';
-
-const ERROR_DEVICE_NOT_FOUND = 'DNF';
-const ERROR_NOOP = 'NOOP';
 
 /** 
  * Power->ON service implementation: for a specified device
@@ -30,7 +28,7 @@ export async function powerOnForDevice(deviceId: string, reply: FastifyReply) {
     } else if (error === ERROR_NOOP) {
       replyWithJson(reply);
     } else {
-      // WOL ERROR
+      // WOL error
       replyWithInternalError(reply, `Unable to perform wake on LAN: ${error}`);
     }
     return;
