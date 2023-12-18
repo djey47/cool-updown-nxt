@@ -86,15 +86,23 @@ TODOs
       - [ ] Per tags (query string)
       - [ ] Uptime (app and per device)
       - [ ] ....?
-    - [ ] Scheduling service
-    - [ ] ON/OFF service
-      - [X] Unitary (path param)
-        - [X] ON
+    - Scheduling service
+      - [ ] Recreate jobs from saved context at app start + start if enabled. Override default schedules values.
+      - [ ] Add schedule
+      - [ ] Remove schedule by id
+      - [ ] List all schedules
+      - [ ] Display schedule by id
+    - ON/OFF service
+      - From schedule
+        - [X] ID list as parameter for ON and OFF
+        - [ ] Schedule deviceId special value 'ALL' to apply on every device
+      - Unitary (path param)
+        - ON
         - OFF
           - [X] Implem
           - [X] Complete unit tests with coverage
+      - [ ] From ID list (query param)
       - [ ] From tag
-      - [ ] ID list (query param)
       - [ ] All
     - [ ] Devices service
       - [ ] lists all devices with Id and basic info
@@ -109,14 +117,14 @@ TODOs
       - Power state
         - [X] last on attempt date (API)
         - [X] last on attempt date (external)
-        - [ ] last on attempt date (scheduled)
-        - [ ] last off attempt date (API)
+        - [X] last on attempt date (scheduled)
+        - [X] last off attempt date (API)
         - [X] last off attempt date (external)
-        - [ ] last off attempt date (scheduled)
+        - [X] last off attempt date (scheduled)
         - [X] cause of last on and off attempt(api, scheduled, external...)
-        - [ ] log power state change
+        - [X] log power state change
       - SSH connectivity
-        - [ ] basic suppoort
+        - [X] basic suppoort
         - ?
       - Web server (page)
         - [ ] basic support
