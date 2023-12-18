@@ -41,7 +41,12 @@ export async function powerOnForDevice(deviceId: string, reply: FastifyReply) {
  */
 export async function powerOnForDevicesScheduled(deviceIds: string[]) {
   const powerOnPromises = deviceIds.map((deviceId) => powerOnForDeviceBase(deviceId, coreLogger, LastPowerAttemptReason.SCHEDULED));
-  await Promise.all(powerOnPromises);
+
+  try {
+    await Promise.all(powerOnPromises);
+  } catch (error) {
+    coreLogger.error('(powerOnForDevicesScheduled) error when attempting scheduled power ON operation');
+  }
 }
 
 async function powerOnForDeviceBase(deviceId: string, logger: FastifyBaseLogger, reason: LastPowerAttemptReason) {

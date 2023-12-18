@@ -8,9 +8,12 @@ import { pingDiag } from './items/ping';
 import { powerDiag } from './items/power';
 import { sshDiag } from './items/ssh';
 import { httpDiag } from './items/http';
+import { getDefaultContext } from '../../helpers/testing/mockObjects';
 
 import { type FeatureDiagnostics, LastPowerAttemptReason, type PowerDiagnostics } from './models/diag';
+import type { Context } from '../../models/context';
 
+jest.mock('../../common/context');
 jest.mock('../../common/logger', () => ({
   coreLogger: {
     info: jest.fn(),
@@ -30,6 +33,7 @@ const sshDiagMock = sshDiag as jest.Mock<Promise<FeatureDiagnostics>>;
 const httpDiagMock = httpDiag as jest.Mock<Promise<FeatureDiagnostics>>;
 const powerDiagMock = powerDiag as jest.Mock<PowerDiagnostics>;
 const statsProcessorMock = statsProcessor as jest.Mock<Promise<void>>;
+const contextGetMock = AppContext.get as jest.Mock<Context, []>;
 
 const NOW = new Date();
 
@@ -47,11 +51,12 @@ beforeEach(() => {
   powerDiagMock.mockReset();
   recallMock.mockReset();
   statsProcessorMock.mockReset();
-
-  AppContext.resetAll();
+  contextGetMock.mockReset();
 });
 
 describe('diagnostics processor', () => {
+  const defaultContext = getDefaultContext();
+
   describe('diag function', () => {
     const defaultResultsOK: FeatureDiagnostics = {
       status: FeatureStatus.OK,
@@ -68,7 +73,11 @@ describe('diagnostics processor', () => {
 
     it('should init diagnostics when not available yet for the device', async () => {
       // given
-      AppContext.get().diagnostics = {};
+      const appContext: Context = {
+        ...defaultContext,
+        diagnostics: {},
+      };
+      contextGetMock.mockReturnValue(appContext);
       pingDiagMock.mockResolvedValue(defaultResultsOK);
       sshDiagMock.mockResolvedValue(defaultResultsOK);
       httpDiagMock.mockResolvedValue({
@@ -83,7 +92,7 @@ describe('diagnostics processor', () => {
       await diagProcessor();
 
       // then
-      expect(AppContext.get().diagnostics['0']).toEqual({
+      expect(appContext.diagnostics['0']).toEqual({
         on: NOW,
         ping: {
           status: 'ok',
@@ -109,6 +118,32 @@ describe('diagnostics processor', () => {
 
     it('should write logs, perform diagnostics, stats and invoke recaller to call itself again', async () => {
       // given
+      const appContext: Context = {
+        ...defaultContext,
+        diagnostics: {
+          '0': {
+            http: {
+              status: FeatureStatus.UNAVAILABLE,
+            },
+            ping: {
+              status: FeatureStatus.UNAVAILABLE,
+            },
+            power: {
+              lastStartAttempt: {
+                reason: LastPowerAttemptReason.NONE,
+              },
+              lastStopAttempt: {
+                reason: LastPowerAttemptReason.NONE,
+              },
+              state: PowerStatus.UNAVAILABLE,
+            },
+            ssh: {
+              status: FeatureStatus.UNAVAILABLE,
+            },
+          },
+        }, 
+      };
+      contextGetMock.mockReturnValue(appContext);
       pingDiagMock.mockResolvedValue(defaultResultsOK);
       sshDiagMock.mockResolvedValue(defaultResultsOK);
       powerDiagMock.mockReturnValue(defaultPowerResults);
@@ -117,7 +152,7 @@ describe('diagnostics processor', () => {
       await diagProcessor();
 
       // then
-      expect(AppContext.get().diagnostics['0']).toEqual({
+      expect(appContext.diagnostics['0']).toEqual({
         on: NOW,
         ping: {
           status: 'ok',
@@ -164,28 +199,33 @@ describe('diagnostics processor', () => {
     it('should update diagnostics in context on a next call', async () => {
       // given
       const previousDate = new Date(2023, 0, 1);
-      const appContext = AppContext.get();
-      appContext.diagnostics[0] = {
-        on: previousDate,
-        power: {
-          state: PowerStatus.OFF,
-          lastStartAttempt: {
-            reason: LastPowerAttemptReason.NONE,
+      const appContext: Context = {
+        ...defaultContext,
+        diagnostics: {
+          '0': {
+            on: previousDate,
+            power: {
+              state: PowerStatus.OFF,
+              lastStartAttempt: {
+                reason: LastPowerAttemptReason.NONE,
+              },
+              lastStopAttempt: {
+                reason: LastPowerAttemptReason.NONE,
+              },
+            },
+            ping: {
+              status: FeatureStatus.OK,
+            },
+            ssh: {
+              status: FeatureStatus.OK,
+            },
+            http: {
+              status: FeatureStatus.OK,
+            },
           },
-          lastStopAttempt: {
-            reason: LastPowerAttemptReason.NONE,
-          },
         },
-        ping: {
-          status: FeatureStatus.OK,
-        },
-        ssh: {
-          status: FeatureStatus.OK,
-        },
-        http: {
-          status: FeatureStatus.OK,
-        }
       };
+      contextGetMock.mockReturnValue(appContext);
       const pingResultsKO: FeatureDiagnostics = {
         ...defaultResultsOK,
         status: FeatureStatus.KO,

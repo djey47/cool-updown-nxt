@@ -40,7 +40,11 @@ export async function powerOffForDevice(deviceId: string, reply: FastifyReply) {
  */
 export async function powerOffForDevicesScheduled(deviceIds: string[]) {
   const powerOffPromises = deviceIds.map((deviceId) => powerOffForDeviceBase(deviceId, coreLogger, LastPowerAttemptReason.SCHEDULED));
-  await Promise.all(powerOffPromises);
+  try {
+    await Promise.all(powerOffPromises);
+  } catch (error) {
+    coreLogger.error('(powerOffForDevicesScheduled) error when attempting scheduled power OFF operation');
+  }
 }
 
 async function powerOffForDeviceBase(deviceId: string, logger: FastifyBaseLogger, reason: LastPowerAttemptReason) {
