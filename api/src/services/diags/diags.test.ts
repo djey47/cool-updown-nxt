@@ -1,31 +1,35 @@
 import { replyWithJson, replyWithItemNotFound } from '../../common/api';
 import { AppContext } from '../../common/context';
-import { getMockedFastifyReply } from '../../helpers/testing/mockObjects';
+import { getDefaultContext, getMockedFastifyReply } from '../../helpers/testing/mockObjects';
 import { FeatureStatus, PowerStatus } from '../../models/common';
 import { diags, diagsForDevice } from './diags';
 import { ApiItem } from '../../models/api';
 
 import type { DiagsResponse } from './models/diags';
-import type { DiagnosticsContext } from '../../models/context';
+import type { Context, DiagnosticsContext } from '../../models/context';
 import { LastPowerAttemptReason } from '../../processors/diag/models/diag';
 
 jest.useFakeTimers();
 const NOW = new Date();
 
 jest.mock('../../common/api');
+jest.mock('../../common/context');
+
 const replyWithJsonMock = replyWithJson as jest.Mock;
 const replyWithItemNotFoundMock = replyWithItemNotFound as jest.Mock;
+const contextGetMock = AppContext.get as jest.Mock<Context, []>; 
 
 beforeEach(() => {
   replyWithJsonMock.mockReset();
   replyWithItemNotFoundMock.mockReset();
-  AppContext.resetAll();
+  contextGetMock.mockReset();
 });
 
 describe('diags service', () => {
   const codeMock = jest.fn();
   const sendMock = jest.fn();
   const defaultReply = getMockedFastifyReply(codeMock, sendMock);
+  const defaultContext = getDefaultContext();
 
   const defaultDiags: DiagnosticsContext = {
     '0': {
@@ -88,8 +92,10 @@ describe('diags service', () => {
   describe('diags async function', () => {
     it('should send current diags results for all devices', async () => {
       // given
-      const appContext = AppContext.get();
-      appContext.diagnostics = defaultDiags;
+      contextGetMock.mockReturnValue({
+        ...defaultContext,
+        diagnostics: defaultDiags,
+      });
 
       // when
       await diags(defaultReply);
@@ -152,8 +158,10 @@ describe('diags service', () => {
   describe('diagsForDevice async function', () => {
     it('should send current diags result for specified device', async () => {
       // given
-      const appContext = AppContext.get();
-      appContext.diagnostics = defaultDiags;
+      contextGetMock.mockReturnValue({
+        ...defaultContext,
+        diagnostics: defaultDiags,
+      });
 
       // when
       await diagsForDevice('0', defaultReply);
@@ -195,17 +203,19 @@ describe('diags service', () => {
 
     it('should send current diags result for specified device, when power state is unavailable', async () => {
       // given
-      const appContext = AppContext.get();
-      appContext.diagnostics = {
-        ...defaultDiags,
-        '0': {
-          ...defaultDiags['0'],
-          power: {
-            ...defaultDiags['0'].power,
-            state: PowerStatus.UNAVAILABLE,
-          },
+      contextGetMock.mockReturnValue({
+        ...defaultContext,
+        diagnostics: {
+          ...defaultDiags,
+          '0': {
+            ...defaultDiags['0'],
+            power: {
+              ...defaultDiags['0'].power,
+              state: PowerStatus.UNAVAILABLE,
+            },
+          },  
         },
-      };
+      });
 
       // when
       await diagsForDevice('0', defaultReply);
@@ -247,8 +257,10 @@ describe('diags service', () => {
 
     it('should reply with 404 when no diags for specified device', async () => {
       // given
-      const appContext = AppContext.get();
-      appContext.diagnostics = defaultDiags;
+      contextGetMock.mockReturnValue({
+        ...defaultContext,
+        diagnostics: defaultDiags,
+      });
 
       // when
       await diagsForDevice('foo', defaultReply);

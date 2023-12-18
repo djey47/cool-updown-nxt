@@ -1,6 +1,6 @@
 import { replyWithJson } from '../../common/api';
 import { AppContext } from '../../common/context';
-import { getMockedFastifyReply } from '../../helpers/testing/mockObjects';
+import { getDefaultContext, getMockedFastifyReply } from '../../helpers/testing/mockObjects';
 import { Context } from '../../models/context';
 import { home } from './home';
 
@@ -21,16 +21,7 @@ describe('Home service', () => {
   const codeMock = jest.fn();
   const sendMock = jest.fn();
   const defaultReply = getMockedFastifyReply(codeMock, sendMock);
-
-  const defaultContext: Context = {
-    appInfo: {},
-    diagnostics: {},
-    statistics: {
-      global: {},
-      perDevice: {},
-    },
-    schedules: [],
-  };
+  const defaultContext = getDefaultContext();
 
   beforeEach(() => {
     replyWithJsonMock.mockReset();

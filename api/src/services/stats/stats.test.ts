@@ -1,31 +1,30 @@
 import { replyWithItemNotFound, replyWithJson } from '../../common/api';
 import { AppContext } from '../../common/context';
-import { getMockedFastifyReply } from '../../helpers/testing/mockObjects';
+import { getDefaultContext, getMockedFastifyReply } from '../../helpers/testing/mockObjects';
 import { stats, statsForDevice } from './stats';
 import { ApiItem } from '../../models/api';
 
 import type { StatsResponse } from './models/stats';
-import type { StatisticsContext } from '../../models/context';
+import type { Context, StatisticsContext } from '../../models/context';
 
 jest.mock('../../common/api');
+jest.mock('../../common/context');
+
 const replyWithJsonMock = replyWithJson as jest.Mock;
 const replyWithItemNotFoundMock = replyWithItemNotFound as jest.Mock;
+const contextGetMock = AppContext.get as jest.Mock<Context, []>;
 
 beforeEach(() => {
   replyWithJsonMock.mockReset();
   replyWithItemNotFoundMock.mockReset();
-  AppContext.resetAll();
+  contextGetMock.mockReset();
 });
 
 describe('stats service', () => {
   const codeMock = jest.fn();
   const sendMock = jest.fn();
   const defaultReply = getMockedFastifyReply(codeMock, sendMock);
-
-  afterEach(() => {
-    AppContext.resetAll();
-  });
-
+  const defaultContext = getDefaultContext();
   const defaultStats: StatisticsContext = {
     global: {
       appUptimeSeconds: {
@@ -52,8 +51,10 @@ describe('stats service', () => {
   describe('stats async function', () => {
     it('should send current stats results for all devices', async () => {
       // given
-      const appContext = AppContext.get();
-      appContext.statistics = defaultStats;
+      contextGetMock.mockReturnValue({
+        ...defaultContext,
+        statistics: defaultStats,
+      });
 
       // when
       await stats(defaultReply);
@@ -84,15 +85,13 @@ describe('stats service', () => {
         },
       };
       expect(replyWithJsonMock).toHaveBeenCalledWith(defaultReply, expectedOutput);
-    });    
-    
+    });
+
     it('should send current stats results when app uptime info not available', async () => {
       // given
-      const appContext = AppContext.get();
-      appContext.statistics = {
-        global: {},
-        perDevice: {}
-      };
+      contextGetMock.mockReturnValue({
+        ...defaultContext,
+      });
 
       // when
       await stats(defaultReply);
@@ -116,8 +115,10 @@ describe('stats service', () => {
   describe('statsForDevice async function', () => {
     it('should send current stats result for specified device', async () => {
       // given
-      const appContext = AppContext.get();
-      appContext.statistics = defaultStats;
+      contextGetMock.mockReturnValue({
+        ...defaultContext,
+        statistics: defaultStats,
+      });
 
       // when
       await statsForDevice('0', defaultReply);
@@ -132,12 +133,14 @@ describe('stats service', () => {
         },
       };
       expect(replyWithJsonMock).toHaveBeenCalledWith(defaultReply, expectedOutput);
-    });    
-    
+    });
+
     it('should reply with 404 when no stats for specified device', async () => {
       // given
-      const appContext = AppContext.get();
-      appContext.statistics = defaultStats;
+      contextGetMock.mockReturnValue({
+        ...defaultContext,
+        statistics: defaultStats,
+      });
 
       // when
       await statsForDevice('foo', defaultReply);
