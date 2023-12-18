@@ -1,7 +1,7 @@
 import { replyWithJson, replyWithItemNotFound, replyWithInternalError } from '../../common/api';
 import { AppContext } from '../../common/context';
 import { getMockedFastifyReply } from '../../helpers/testing/mockObjects';
-import { powerOffForDevice } from './powerOff';
+import { powerOffForDevice, powerOffForDevicesScheduled } from './powerOff';
 import resetMocks from '../../../config/jest/resetMocks';
 import { type ExecOptions, sshExec } from '../../helpers/ssh';
 
@@ -12,6 +12,13 @@ import { PowerStatus } from '../../models/common';
 
 jest.mock('../../common/api');
 jest.mock('../../helpers/ssh');
+jest.mock('../../common/logger', () => ({
+  coreLogger: {
+    debug: jest.fn(),
+    error: jest.fn(),
+    info: jest.fn(),
+  },
+}));
 
 const replyWithJsonMock = replyWithJson as jest.Mock;
 const replyWithItemNotFoundMock = replyWithItemNotFound as jest.Mock;
@@ -31,18 +38,19 @@ describe('powerOff service', () => {
     replyWithItemNotFoundMock.mockReset();
     replyWithInternalErrorMock.mockReset();
     sshExecMock.mockReset();
+
+    sshExecMock.mockResolvedValue({
+      stdout: 'stdout',
+      stderr: 'stderr',
+      code: 0,
+      signal: null,
+    });
   });
 
   describe('powerOffForDevice async function', () => {
     it('should shutdown specified device, update diags context and return 204', async () => {
       // given
       const deviceConfig = getDeviceConfig('0');
-      sshExecMock.mockResolvedValue({
-        stdout: 'stdout',
-        stderr: 'stderr',
-        code: 0,
-        signal: null,
-      });
 
       // when
       await powerOffForDevice('0', defaultReply);
@@ -126,6 +134,25 @@ describe('powerOff service', () => {
 
       // then
       expect(replyWithInternalErrorMock).toHaveBeenCalledWith(defaultReply, 'Unable to perform shutdown via SSH: SSH command error');
+    });
+  });
+
+  describe('powerOffForDevicesScheduled async function', () => {
+    it('should shutdown device and update diags context', () => {
+      // given
+      const deviceConfig = getDeviceConfig('0');
+
+      // when
+      powerOffForDevicesScheduled(['0']);
+
+      // then
+      const { power: { lastStopAttempt } } = AppContext.get().diagnostics['0'];
+      expect(lastStopAttempt.reason).toBe('scheduled');
+      expect(lastStopAttempt.on).not.toBeUndefined();
+      expect(sshExecMock).toHaveBeenCalledWith(
+        'sudo -bS shutdown -h 1',
+        deviceConfig,
+        { password: 'pwd', exitOnFinished: true });
     });
   });
 });
