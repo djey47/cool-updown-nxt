@@ -27,6 +27,15 @@ jest.mock('app-root-dir', () => ({
   get: () => mockAppRootDirGet(),
 }));
 
+// cron
+const mockCronStart = jest.fn<void,[]>();
+const mockCronJob = jest.fn<unknown, [string, () => void] >(() => ({
+  start: () => mockCronStart(),
+}));
+jest.mock('cron', () => ({
+  CronJob: mockCronJob,
+}));
+
 // node-fetch
 const mockNodeFetch = jest.fn();
 jest.mock('node-fetch', () => mockNodeFetch);
@@ -63,6 +72,10 @@ export default {
   },
   authMock: {
     readPrivateKey: mockAuthReadPrivateKey,
+  },
+  cronMock: {
+    Job: mockCronJob,
+    start: mockCronStart,
   },
   node: {
     childProcessMock: {
