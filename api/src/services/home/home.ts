@@ -17,7 +17,7 @@ export function home(reply: FastifyReply) {
       name,
       version,
     },
-    context: AppContext.get(),
+    context: AppContext.getWithoutInternals(),
   };
   replyWithJson(reply, output);
 }
