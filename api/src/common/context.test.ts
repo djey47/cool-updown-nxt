@@ -118,6 +118,7 @@ describe('AppContext singleton class', () => {
           deviceIds: ['0'],
           enabled: false,
           id: 'sch-0',
+          cronJobs: {},
         }],
       });
     });

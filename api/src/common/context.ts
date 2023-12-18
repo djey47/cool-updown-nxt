@@ -9,6 +9,7 @@ import { coreLogger } from './logger';
 import type { DeviceConfig } from '../models/configuration';
 import type { Context, DiagnosticsContext, PerDeviceStatisticsContext, PersistedContext, ScheduleContext, StatisticsContext } from '../models/context';
 import { LastPowerAttemptReason } from '../processors/diag/models/diag';
+import { initPowerCronJobs } from '../helpers/cron';
 
 /**
  * Singleton for application context
@@ -143,9 +144,14 @@ export class AppContext {
 
   private static createDefaultSchedules(): ScheduleContext[] {
     return getConfig().defaultSchedules.map((sc, i) => {
+      const [powerOnJob, powerOffJob] = initPowerCronJobs(sc);
       return ({
         ...sc,
         id: `sch-${i}`,
+        cronJobs: {
+          powerOnJob,
+          powerOffJob,
+        }
       });
     });
   }

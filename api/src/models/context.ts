@@ -1,3 +1,4 @@
+import { CronJob } from 'cron';
 import { FeatureDiagnostics, PowerDiagnostics } from '../processors/diag/models/diag';
 import { ScheduleConfig } from './configuration';
 
@@ -56,4 +57,10 @@ export interface UptimeStatisticsContext {
 
 export interface ScheduleContext extends ScheduleConfig {
   id: string;
+  cronJobs: CronJobsContext;
+}
+
+export interface CronJobsContext {
+  powerOnJob?: CronJob;
+  powerOffJob?: CronJob;
 }

@@ -45,6 +45,7 @@ export interface DeviceHTTPConfig {
   url: string;
 }
 
+/** @see https://crontab.guru */
 export interface ScheduleConfig {
   deviceIds: string[];
   enabled: boolean;
