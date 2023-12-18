@@ -5,6 +5,7 @@
 import type { FastifyBaseLogger, FastifyInstance, FastifyReply, FastifyReplyContext, FastifyRequest } from 'fastify';
 import type { Stats } from 'fs';
 import type { ServerResponse } from 'http';
+import { Context } from '../../models/context';
 
 export function getMockedFastifyReply(codeMock: jest.Mock, sendMock: jest.Mock): FastifyReply {
   return {
@@ -208,5 +209,17 @@ export function getFileStats(size: number): Stats {
     mtime: new Date(),
     ctime: new Date(),
     birthtime: new Date()
+  };
+}
+
+export function getDefaultContext(): Context {
+  return {
+    appInfo: {},
+    diagnostics: {},
+    statistics: {
+      global: {},
+      perDevice: {},
+    },
+    schedules: [],
   };
 }
