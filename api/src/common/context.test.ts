@@ -42,6 +42,16 @@ describe('AppContext singleton class', () => {
       // then
       expect(actualInstance1).toBe(actualInstance2);
     });
+  });  
+  
+  describe('getWithoutInternals static method', () => {
+    it('should return cleaned information', () => {
+      // given-when
+      const actualInstance = AppContext.getWithoutInternals();
+
+      // then
+      expect(actualInstance.schedules[0].cronJobs).toEqual({});
+    });
   });
 
   describe('resetAll static method', () => {

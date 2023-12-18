@@ -5,11 +5,11 @@ import { readFile, stat, writeFile } from 'fs/promises';
 import { FeatureStatus, PowerStatus } from '../models/common';
 import { getConfig } from './configuration';
 import { coreLogger } from './logger';
+import { initPowerCronJobs } from '../helpers/cron';
 
 import type { DeviceConfig } from '../models/configuration';
 import type { Context, DiagnosticsContext, PerDeviceStatisticsContext, PersistedContext, ScheduleContext, StatisticsContext } from '../models/context';
 import { LastPowerAttemptReason } from '../processors/diag/models/diag';
-import { initPowerCronJobs } from '../helpers/cron';
 
 /**
  * Singleton for application context
@@ -27,6 +27,20 @@ export class AppContext {
       AppContext.ctx = AppContext.createDefault();
     }
     return AppContext.ctx;
+  }
+
+  /**
+   * @returns adapted context instance, without its internals (cron jobs etc)
+   */
+  public static getWithoutInternals(): Context {
+    const ctx = AppContext.get();
+    return {
+      ...ctx,
+      schedules: ctx.schedules.map((sch) => ({
+        ...sch,
+        cronJobs: {},
+      })),
+    };
   }
 
   /**
@@ -51,11 +65,11 @@ export class AppContext {
       contents: contextInstance,
     };
 
-    await writeFile(contextFilePath, JSON.stringify(persisted, null, 2), {
+    await writeFile(contextFilePath, JSON.stringify(persisted, AppContext.contextReplacer, 2), {
       encoding: 'utf-8',
     });
 
-    coreLogger.info('AppContext::persist saved context to %s', contextFilePath);
+    coreLogger.info('(AppContext::persist) saved context to %s', contextFilePath);
   }
 
   /**
@@ -77,7 +91,7 @@ export class AppContext {
         contextInstance.statistics = contents.statistics;
       }
     } catch (err) {
-      coreLogger.info('AppContext::restore could not find persisted context in %s', contextFilePath);
+      coreLogger.info('(AppContext::restore) could not find persisted context in %s', contextFilePath);
     }
   }
 
@@ -143,7 +157,7 @@ export class AppContext {
   }
 
   private static createDefaultSchedules(): ScheduleContext[] {
-    return getConfig().defaultSchedules.map((sc, i) => {
+    const schedules =  getConfig().defaultSchedules.map((sc, i) => {
       const [powerOnJob, powerOffJob] = initPowerCronJobs(sc);
       return ({
         ...sc,
@@ -154,11 +168,27 @@ export class AppContext {
         }
       });
     });
+
+    if (schedules.length) {
+      coreLogger.info('(AppContext::createDefaultSchedules) created cron job(s) for power ON/OFF scheduling', schedules.length);
+    } else {
+      coreLogger.info('(AppContext::createDefaultSchedules) no cron jobs available for power ON/OFF scheduling', schedules.length);
+    }
+
+    return schedules;
   }
 
   private static contextReviver(key: string, value: unknown) {
     if ((key === 'on' || key.endsWith('On')) && typeof (value) === 'string') {
       return parseISO(value);
+    }
+
+    return value;
+  }
+
+  private static contextReplacer(key: string, value: unknown) {
+    if (key === 'cronJobs') {
+      return {};
     }
 
     return value;
