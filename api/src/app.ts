@@ -10,13 +10,8 @@ import { getConfig } from './common/configuration';
 import { diagProcessor } from './processors/diag/diag';
 import { AppContext } from './common/context';
 import { contextProcessor } from './processors/context/context';
-import { rootRoutes } from './routes/root';
-import { logsRoutes } from './routes/logs';
-import { configRoutes } from './routes/config';
-import { diagsRoutes } from './routes/diags';
-import { statsRoutes } from './routes/stats';
-import { powerRoutes } from './routes/power';
 import { initAppAuthentication } from './helpers/auth';
+import initRoutes from './routes';
 
 const IS_PRODUCTION = !!import.meta.env.PROD;
 
@@ -46,18 +41,7 @@ const app = async () => {
 
   // TODO critical error management
 
-  // Routes
-  rootRoutes(app);
-
-  logsRoutes(app);
-
-  configRoutes(app);
-
-  diagsRoutes(app);
-
-  statsRoutes(app);
-
-  powerRoutes(app);
+  initRoutes(app);
 
   app.after(() => {
     // Auth on every route

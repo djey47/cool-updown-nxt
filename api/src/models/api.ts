@@ -4,8 +4,16 @@ import type { ConfigResponse } from '../services/config/models/config';
 import type { DiagsResponse } from '../services/diags/models/diags';
 import type { StatsResponse } from '../services/stats/models/stats';
 import type { FastifyRequest } from 'fastify';
+import { SchedulesResponse } from '../services/schedules/models/schedules';
 
-export type ApiResponse = HomeResponse | LogsResponse | ConfigResponse | DiagsResponse | StatsResponse | DefaultResponse;
+export type ApiResponse =
+  HomeResponse |
+  LogsResponse |
+  ConfigResponse |
+  DiagsResponse |
+  StatsResponse |
+  SchedulesResponse |
+  DefaultResponse;
 
 export type ApiItemNotFoundResponse = {
   errorMessage: string;
