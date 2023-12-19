@@ -91,7 +91,14 @@ TODOs
       - [ ] Add schedule
       - [ ] Remove schedule by id
       - [ ] List all schedules
-      - [ ] Display schedule by id
+        - [X] Basic info
+        - [ ] Next job execution time (absolute)
+      - [ ] Display schedules by device id
+        - [X] Basic info
+        - [ ] Same details as all schedules
+      - [ ] Display schedules by sch id
+        - [ ] Basic info
+        - [ ] Same details as all schedules
     - ON/OFF service
       - From schedule
         - [X] ID list as parameter for ON and OFF

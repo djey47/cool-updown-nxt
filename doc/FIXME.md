@@ -24,8 +24,9 @@ FIXMEs/BUGs
     node_modules/cpu-features/lib/index.js:3:24:
       3 │ const binding = require('../build/Release/cpufeatures.node');
         ╵                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-- [] SSH shutdown command does not give hand back immediately
+- [ ] SSH shutdown command does not give hand back immediately
   => force or do not wait for promise resolution? 'exit' does not seem to work
+- [ ] Refactor to use deviceId validator in every service which needs it
 
 ## WEB
 
