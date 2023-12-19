@@ -68,7 +68,13 @@ Default configuration is defined in `api/config/default.json` file.
       "port": 2122,      
       "user": "my-nas-user"
     }
-  }]
+  }],
+  "defaultSchedules": [{
+    "deviceIds": ["0"],
+    "enabled": false,
+    "powerOnCron": "0 19 * * *",
+    "powerOffCron": "30 23 * * *",
+  }];
 }
 ```
 
@@ -98,7 +104,14 @@ To override settings, create a copy to `api/config/production.json` file and mak
 | `.. keyPath`| Path of private key for direct access (mandatory, PEM RSA only supported) | / |
 | `.. password`| Password to use when invoking a command with sudo (mandatory for sudoer) | / |
 | `.. port`| Custom SSH port to be accessed | 22 |
+| `defaultSchedules` | List of planified power ON/OFF operations as configured below: |  |
+| `. deviceIds`| List of device identifiers to apply this schedule to (mandatory) | / |
+| `. enabled`| `true` to enable the schedule, `false` otherwise (mandatory) | / |
+| `. powerOnCron`| Moment to perform a power ON operation to specified devices, using cron syntax | no power operation |
+| `. powerOffCron`| Moment to perform a power OFF operation to specified devices, using cron syntax | no power operation |
 |
+
+*Note: cron syntax information may be found [here](https://crontab.guru).*
 
 ### SSH Configuration
 
