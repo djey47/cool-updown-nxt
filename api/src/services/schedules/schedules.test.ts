@@ -1,25 +1,41 @@
 import { schedules, schedulesForDevice } from './schedules';
 import { replyWithJson } from '../../common/api';
 import { AppContext } from '../../common/context';
-import { getDefaultContext, getDefaultDeviceConfig, getMockedFastifyReply } from '../../helpers/testing/mockObjects';
+import { getDefaultContext, getDefaultDeviceConfig, getMockedCronJob, getMockedFastifyReply } from '../../helpers/testing/mockObjects';
 import { validateDeviceIdentifier } from '../common/validators';
 
 import type { DeviceConfig } from '../../models/configuration';
 import type { SchedulesResponse } from './models/schedules';
-import type { Context } from '../../models/context';
+import type { Context, ScheduleContext } from '../../models/context';
+import formatISO from 'date-fns/formatISO/index.js';
 
 jest.mock('../common/validators');
 jest.mock('../../common/api');
 jest.mock('../../common/context');
 
+const defaultJob = getMockedCronJob();
+const lastDateMock = defaultJob.lastDate as jest.Mock<Date, []>;
+const nextDateMock = defaultJob.nextDate as jest.Mock;
 const replyWithJsonMock = replyWithJson as jest.Mock;
-const mockGetContextWithoutInternals = AppContext.getWithoutInternals as jest.Mock<Context, []>;
+const mockGetContext = AppContext.get as jest.Mock<Context, []>;
 const validateDeviceIdentifierMock = validateDeviceIdentifier as jest.Mock<DeviceConfig, [string]>;
+
+const NOW = new Date();
+const NOW_DATETIME = {
+  toJSDate: () => NOW,
+};
 
 beforeEach(() => {
   replyWithJsonMock.mockReset();
-  mockGetContextWithoutInternals.mockReset();
+  mockGetContext.mockReset();
   validateDeviceIdentifierMock.mockReset();
+  lastDateMock.mockReset();
+  nextDateMock.mockReset();
+
+  lastDateMock.mockReturnValue(NOW);
+  nextDateMock.mockReturnValue(NOW_DATETIME);
+
+  defaultJob.running = true;
 });
 
 describe('Schedules service', () => {
@@ -28,29 +44,41 @@ describe('Schedules service', () => {
   const defaultReply = getMockedFastifyReply(codeMock, sendMock);
   const defaultContext = getDefaultContext();
   const defaultDeviceConfiguration = getDefaultDeviceConfig();
-  const contextWithSchedule: Context = {
-    ...defaultContext,
-    schedules: [{
-      id: 'sch-0',
-      cronJobs: {},
-      deviceIds: ['0'],
-      enabled: false,
-      powerOnCron: '* * * * *',
-      powerOffCron: '* * * * *',
-    }, {
-      id: 'sch-1',
-      cronJobs: {},
-      deviceIds: ['1'],
-      enabled: true,
-      powerOnCron: '0 0 * * *',
-      powerOffCron: '30 0 * * *',
-    }],
+  const scheduleForPowerOn: ScheduleContext = {
+    id: 'sch-0',
+    cronJobs: {
+      powerOnJob: defaultJob,
+    },
+    deviceIds: ['0'],
+    enabled: false,
+    powerOnCron: '* * * * *',
+    powerOffCron: '* * * * *',
+  };
+  const scheduleForPowerOff: ScheduleContext = {
+    ...scheduleForPowerOn,
+    cronJobs: {
+      powerOffJob: defaultJob,
+    },
   };
 
   describe('schedules function', () => {
+    const contextWithSchedule: Context = {
+      ...defaultContext,
+      schedules: [{
+        ...scheduleForPowerOn,
+      }, {
+        id: 'sch-1',
+        cronJobs: {},
+        deviceIds: ['1'],
+        enabled: true,
+        powerOnCron: '0 0 * * *',
+        powerOffCron: '30 0 * * *',
+      }],
+    };
+
     it('should reply with all schedules as JSON', () => {
       // given
-      mockGetContextWithoutInternals.mockReturnValue({ ...contextWithSchedule });
+      mockGetContext.mockReturnValue({ ...contextWithSchedule });
 
       // when
       schedules(defaultReply);
@@ -63,6 +91,10 @@ describe('Schedules service', () => {
             enabled: false,
             powerOnCron: '* * * * *',
             powerOffCron: '* * * * *',
+            powerOnExecDates: {
+              last: formatISO(NOW),
+              next: formatISO(NOW),
+            },
           },
           'sch-1': {
             deviceIds: ['1'],
@@ -77,9 +109,23 @@ describe('Schedules service', () => {
   });
 
   describe('schedulesForDevice function', () => {
+    const contextWithSchedule: Context = {
+      ...defaultContext,
+      schedules: [{
+        ...scheduleForPowerOff,
+      }, {
+        id: 'sch-1',
+        cronJobs: {},
+        deviceIds: ['1'],
+        enabled: true,
+        powerOnCron: '0 0 * * *',
+        powerOffCron: '30 0 * * *',
+      }],
+    };
+
     it('should provide schedules as JSON for existing device', () => {
       // given
-      mockGetContextWithoutInternals.mockReturnValue({ ...contextWithSchedule });
+      mockGetContext.mockReturnValue({ ...contextWithSchedule });
       validateDeviceIdentifierMock.mockReturnValue(defaultDeviceConfiguration);
 
       // when
@@ -93,6 +139,10 @@ describe('Schedules service', () => {
             enabled: false,
             powerOnCron: '* * * * *',
             powerOffCron: '* * * * *',
+            powerOffExecDates: {
+              last: formatISO(NOW),
+              next: formatISO(NOW),
+            },
           },
         },
       };
@@ -102,7 +152,7 @@ describe('Schedules service', () => {
     it('should provide schedules as JSON for existing device, having no schedule', () => {
       // given
       validateDeviceIdentifierMock.mockReturnValue(defaultDeviceConfiguration);
-      mockGetContextWithoutInternals.mockReturnValue({ ...defaultContext });
+      mockGetContext.mockReturnValue({ ...defaultContext });
 
       // when
       schedulesForDevice('1', defaultReply);
