@@ -5,7 +5,8 @@
 import type { FastifyBaseLogger, FastifyInstance, FastifyReply, FastifyReplyContext, FastifyRequest } from 'fastify';
 import type { Stats } from 'fs';
 import type { ServerResponse } from 'http';
-import { Context } from '../../models/context';
+import type { Context } from '../../models/context';
+import type { DeviceConfig } from '../../models/configuration';
 
 export function getMockedFastifyReply(codeMock: jest.Mock, sendMock: jest.Mock): FastifyReply {
   return {
@@ -221,5 +222,15 @@ export function getDefaultContext(): Context {
       perDevice: {},
     },
     schedules: [],
+  };
+}
+
+export function getDefaultDeviceConfig(): DeviceConfig {
+  return {
+    network: {
+      broadcastIpAddress: '255.255.255.255',
+      hostname: 'host-name',
+      macAddress: 'aa:bb:cc:dd:ee:ff',
+    },
   };
 }
