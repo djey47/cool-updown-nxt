@@ -478,6 +478,70 @@ This service does not provide any output in nominal case (HTTP code being 204).
 }
 ```
 
+
+
+
+
+
+### GET /schedules
+
+Returns all registered schedules for power ON/OFF operations.
+
+**Sample output**
+```json
+{
+  "schedules": {
+    "sch-0": {
+      "deviceIds": [
+        "0"
+      ],
+      "enabled": true,
+      "powerOnCron": "50 22 * * *",
+      "powerOffCron": "00 23 * * *"
+    }
+  }
+}
+```
+
+**Notes**
+- every schedule has a unique identifier defined with the following prefix: `sch-`
+- `deviceIds` value is an array of all device identifiers to be operated with this schedule
+- `powerOnCron` and `powerOffCron` values comply with the [cron](https://crontab.guru) syntax.
+
+### GET /device-schedules/[deviceId]
+
+Returns all registered schedules involving a device.
+
+**Sample output**
+```json
+{
+  "schedules": {
+    "sch-0": {
+      "deviceIds": [
+        "0"
+      ],
+      "enabled": true,
+      "powerOnCron": "50 22 * * *",
+      "powerOffCron": "00 23 * * *"
+    }
+  }
+}
+```
+
+**Notes**
+- Please refer to `/schedules` documentation above for details
+- `deviceId` acts as unique identifier for a configured device; it matches the 0-based rank of the device in the configuration array
+- If no configuration is available for specified device, a 404 is replied with following output:
+
+```json
+{
+  "errorMessage": "Specified item was not found",
+  "itemType": "deviceId",
+  "itemValue": "foo"
+}
+```
+
+
 ## Monitoring cool-updown-nxt server instance
 
 ### Logs
