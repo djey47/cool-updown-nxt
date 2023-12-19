@@ -2,6 +2,7 @@
  * Provide convenient mocks for complex objects
  */
 
+import { CronJob } from 'cron';
 import type { FastifyBaseLogger, FastifyInstance, FastifyReply, FastifyReplyContext, FastifyRequest } from 'fastify';
 import type { Stats } from 'fs';
 import type { ServerResponse } from 'http';
@@ -233,4 +234,12 @@ export function getDefaultDeviceConfig(): DeviceConfig {
       macAddress: 'aa:bb:cc:dd:ee:ff',
     },
   };
+}
+
+export function getMockedCronJob(): CronJob {
+  const jobCallback = jest.fn();
+  const mockedJob = new CronJob('* * * * *', () => jobCallback());
+  mockedJob.lastDate = jest.fn<Date | null, []>();
+  mockedJob.nextDate = jest.fn();
+  return mockedJob;
 }
