@@ -497,7 +497,15 @@ Returns all registered schedules for power ON/OFF operations.
       ],
       "enabled": true,
       "powerOnCron": "50 22 * * *",
-      "powerOffCron": "00 23 * * *"
+      "powerOffCron": "00 23 * * *",
+      "powerOnExecDates": {
+        "last": "2023-12-19T22:50:00+01:00",
+        "next": "2023-12-20T22:50:00+01:00"
+      },
+      "powerOffExecDates": {
+        "last": "2023-12-19T23:00:00+01:00",
+        "next": "2023-12-20T23:00:00+01:00"
+      }      
     }
   }
 }
@@ -507,6 +515,7 @@ Returns all registered schedules for power ON/OFF operations.
 - every schedule has a unique identifier defined with the following prefix: `sch-`
 - `deviceIds` value is an array of all device identifiers to be operated with this schedule
 - `powerOnCron` and `powerOffCron` values comply with the [cron](https://crontab.guru) syntax.
+- `powerOnExecDates` or `powerOffExecDates` provide the last and next dates of power execution.
 
 ### GET /device-schedules/[deviceId]
 
@@ -520,9 +529,11 @@ Returns all registered schedules involving a device.
       "deviceIds": [
         "0"
       ],
-      "enabled": true,
+      "enabled": false,
       "powerOnCron": "50 22 * * *",
-      "powerOffCron": "00 23 * * *"
+      "powerOffCron": "00 23 * * *",
+      "powerOnExecDates": {},
+      "powerOffExecDates": {}      
     }
   }
 }
