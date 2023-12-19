@@ -24,20 +24,22 @@ TODOs
   - [ ] Dashboard
     - [ ] Handle API call errors (4xx, 5xx)
     - [ ] Click outside to close drop down menu...  [https://www.robinwieruch.de/react-hook-detect-click-outside-component/]
-    - [ ] device tiles
+    - Device tiles
       - [X] power status,
       - [X] uptime
+      - [ ] if schedule enabled: next start/stop date depending on power state (+ relative?) 
       - diags results
         - [X] SSH connectivity
         - [X] HTTP with link
-        - [ ] detailed view: ping value when available
-            - [ ] UX (modal?)
       - rdp via URI scheme (https://learn.microsoft.com/en-us/windows-server/remote/remote-desktop-services/clients/remote-desktop-uri#ms-rd-uri-scheme)
       - Menu: 
         - per-device logs
         - per-device config
         - ???
       - [ ] Power notifications: when ON/OFF status changes, display toast
+    - Device details
+      - [ ] Ping stats
+      - [ ] Last start/stop date depending on power state 
     - [X] Toaster on power actions
   - [ ] Global logs with filters
   - [ ] Config (web app, server)
@@ -55,6 +57,7 @@ TODOs
   - SSH
     - [X] Always execute exit command automatically
     - [X] Dispose
+    - [ ] Handle password interactive authentication (Windows workaround)
   - Services
     - [ ] enhancement: Websocket support for diags/stats refresh
     - [X] Home service
@@ -90,12 +93,12 @@ TODOs
       - [ ] Recreate jobs from saved context at app start + start if enabled. Override default schedules values.
       - [ ] Add schedule
       - [ ] Remove schedule by id
-      - [ ] List all schedules
+      - List all schedules
         - [X] Basic info
-        - [ ] Next job execution time (absolute)
-      - [ ] Display schedules by device id
+        - [X] Next job execution time (absolute)
+      - Display schedules by device id
         - [X] Basic info
-        - [ ] Same details as all schedules
+        - [X] Same details as all schedules
       - [ ] Display schedules by sch id
         - [ ] Basic info
         - [ ] Same details as all schedules
@@ -134,7 +137,7 @@ TODOs
         - [X] basic suppoort
         - ?
       - Web server (page)
-        - [ ] basic support
+        - [X] basic support
       - [ ] ?
     - [ ] Stats
       - [X] Uptimes: app, per device (current and overall)
