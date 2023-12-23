@@ -27,7 +27,9 @@ FIXMEs/BUGs
 - [ ] SSH shutdown command does not give hand back immediately
   => force or do not wait for promise resolution? 'exit' does not seem to work
 - [ ] Refactor to use deviceId validator in every service which needs it
+- [ ] authentication helper: remove success message or use debug log level, fix interpolation to display user name on success) failure 
 
 ## WEB
 
-- [] Power OFF is still blocking as Promise resolution only occurs after SSH connection is closed (caused by shutdown) 
+- [X] Power OFF is still blocking as Promise resolution only occurs after SSH connection is closed (caused by shutdown) 
+- [ ] power state change notifications don't appear
