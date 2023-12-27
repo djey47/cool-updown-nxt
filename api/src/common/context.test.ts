@@ -4,8 +4,9 @@ import { FeatureStatus, PowerStatus } from '../models/common';
 import { LastPowerAttemptReason } from '../processors/diag/models/diag';
 import { AppContext } from './context';
 import { coreLogger } from './logger';
+import { getConfig } from './configuration';
 
-import type { PersistedContext } from '../models/context';
+import type { DiagnosticsContext, PersistedContext } from '../models/context';
 
 const { appRootDirMock, node: { fsMock } } = globalMocks;
 
@@ -55,35 +56,37 @@ describe('AppContext singleton class', () => {
   });
 
   describe('resetAll static method', () => {
-    it('should reset context contents', () => {
-      // given
-      AppContext.get().diagnostics = {
-        '0': {
-          on: new Date(),
-          ping: {
-            status: FeatureStatus.OK,
+    const defaultDiags: DiagnosticsContext = {
+      '0':  {
+        on: new Date(),
+        ping: {
+          status: FeatureStatus.OK,
+        },
+        power: {
+          state: PowerStatus.ON,
+          lastStartAttempt: {
+            reason: LastPowerAttemptReason.NONE,
           },
-          power: {
-            state: PowerStatus.ON,
-            lastStartAttempt: {
-              reason: LastPowerAttemptReason.NONE,
-            },
-            lastStopAttempt: {
-              reason: LastPowerAttemptReason.NONE,
-            },
-          },
-          ssh: {
-            status: FeatureStatus.OK,
-          },
-          http: {
-            status: FeatureStatus.OK,
-            data: {
-              statusCode: 200,
-              url: 'http://my-nas:5000',
-            },
+          lastStopAttempt: {
+            reason: LastPowerAttemptReason.NONE,
           },
         },
-      };
+        ssh: {
+          status: FeatureStatus.OK,
+        },
+        http: {
+          status: FeatureStatus.OK,
+          data: {
+            statusCode: 200,
+            url: 'http://my-nas:5000',
+          },
+        },
+      },
+    };
+
+    it('should reset context contents', () => {
+      // given
+      AppContext.get().diagnostics = defaultDiags;
 
       // when
       AppContext.resetAll();
@@ -132,12 +135,31 @@ describe('AppContext singleton class', () => {
         }],
       });
     });
+
+    it('should reset context contents when no default schedules', () => {
+      // given
+      AppContext.get().diagnostics = defaultDiags;
+      getConfig().defaultSchedules = [];
+
+      // when
+      AppContext.resetAll();
+
+      // then
+      expect(AppContext.get()).toBeDefined();
+    });
   });
 
   describe('persist static method', () => {
     it('should write context to file asynchronously', async () => {
       // given
-      AppContext.get().appInfo.lastStartOn = NOW;
+      const ctx = AppContext.get();
+      ctx.appInfo.lastStartOn = NOW;
+      ctx.schedules[0] = {
+        id: 'sch-id',
+        deviceIds: [],
+        enabled: false,        
+        cronJobs: {},
+      };
 
       // when
       await AppContext.persist();

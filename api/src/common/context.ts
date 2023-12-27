@@ -8,7 +8,7 @@ import { coreLogger } from './logger';
 import { initPowerCronJobs } from '../helpers/cron';
 
 import type { DeviceConfig } from '../models/configuration';
-import type { Context, DiagnosticsContext, PerDeviceStatisticsContext, PersistedContext, ScheduleContext, StatisticsContext } from '../models/context';
+import type { Context, DeviceDiagnosticsContext, DeviceStatisticsContext, DiagnosticsContext, PerDeviceStatisticsContext, PersistedContext, ScheduleContext, StatisticsContext } from '../models/context';
 import { LastPowerAttemptReason } from '../processors/diag/models/diag';
 
 /**
@@ -95,6 +95,38 @@ export class AppContext {
     }
   }
 
+  public static createDefaultDiagsForDevice(): DeviceDiagnosticsContext {
+    return {
+      ping: {
+        status: FeatureStatus.UNAVAILABLE,
+      },
+      power: {
+        state: PowerStatus.UNAVAILABLE,
+        lastStartAttempt: {
+          reason: LastPowerAttemptReason.NONE,
+        },
+        lastStopAttempt: {
+          reason: LastPowerAttemptReason.NONE,
+        },
+      },
+      ssh: {
+        status: FeatureStatus.UNAVAILABLE,
+      },
+      http: {
+        status: FeatureStatus.UNAVAILABLE,
+      }
+    };
+  }
+
+  public static createDefaultStatsForDevice(): DeviceStatisticsContext {
+    return {
+      uptimeSeconds: {
+        current: 0,
+        overall: 0,
+      },
+    };
+  }
+
   private static resolveContextFilePath() {
     return path.join(
       appRootDir.get(),
@@ -113,26 +145,7 @@ export class AppContext {
 
   private static createDefaultDiags(): DiagnosticsContext {
     return AppContext.deviceConfigurations.reduce((acc: DiagnosticsContext, _dc, index) => {
-      acc[String(index)] = {
-        ping: {
-          status: FeatureStatus.UNAVAILABLE,
-        },
-        power: {
-          state: PowerStatus.UNAVAILABLE,
-          lastStartAttempt: {
-            reason: LastPowerAttemptReason.NONE,
-          },
-          lastStopAttempt: {
-            reason: LastPowerAttemptReason.NONE,
-          },
-        },
-        ssh: {
-          status: FeatureStatus.UNAVAILABLE,
-        },
-        http: {
-          status: FeatureStatus.UNAVAILABLE,
-        }
-      };
+      acc[String(index)] = AppContext.createDefaultDiagsForDevice();
       return acc;
     }, {});
   }
@@ -146,12 +159,7 @@ export class AppContext {
 
   private static createDefaultStatsPerDevice() {
     return AppContext.deviceConfigurations.reduce((acc: PerDeviceStatisticsContext, _dc, index) => {
-      acc[String(index)] = {
-        uptimeSeconds: {
-          current: 0,
-          overall: 0,
-        },
-      };
+      acc[String(index)] = AppContext.createDefaultStatsForDevice();
       return acc;
     }, {});
   }
