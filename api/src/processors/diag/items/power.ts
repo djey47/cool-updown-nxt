@@ -3,21 +3,19 @@ import { FeatureStatus, PowerStatus } from '../../../models/common';
 import type { DeviceDiagnosticsContext } from '../../../models/context';
 import { LastPowerAttemptDiagnostics, LastPowerAttemptReason, type PowerDiagnostics } from '../models/diag';
 import { coreLogger } from '../../../common/logger';
+import { AppContext } from '../../../common/context';
+
+// TODO see to tweak this value
+const POWER_CHANGE_THRESHOLD_MINUTES = 10;
 
 export function powerDiag(deviceId: string, diags: DeviceDiagnosticsContext): PowerDiagnostics {
-    const { power: powerDiags, ping: { status: currentPingStatus }} = diags;
+    const { power, ping: { status: currentPingStatus }} = diags;
   
-    // TODO See if still necessary
+    // Handles case of added device having no diags yet
+    let powerDiags = power;
     if (!powerDiags) {
-      diags.power = {
-        state: PowerStatus.UNAVAILABLE,
-        lastStartAttempt: {
-          reason: LastPowerAttemptReason.NONE,
-        },
-        lastStopAttempt: {
-          reason: LastPowerAttemptReason.NONE,
-        },
-      };
+      const { power: defaultPowerDiags } = AppContext.createDefaultDiagsForDevice();
+      powerDiags = defaultPowerDiags;
     }
   
     let newPowerState: PowerStatus = PowerStatus.UNAVAILABLE;
@@ -45,7 +43,7 @@ export function powerDiag(deviceId: string, diags: DeviceDiagnosticsContext): Po
     const { on: lastAttemptOn, reason: lastReason } = powerDiags[lastAttemptType];
   
     const now = new Date();
-    const isPowerChangeValid = !lastAttemptOn || differenceInMinutes(now, lastAttemptOn) > 10; // TODO see to tweak this value
+    const isPowerChangeValid = !lastAttemptOn || differenceInMinutes(now, lastAttemptOn) > POWER_CHANGE_THRESHOLD_MINUTES;
 
     // console.log('processors::diag::registerAttempt', lastAttemptOn && differenceInMinutes(now, lastAttemptOn));
 

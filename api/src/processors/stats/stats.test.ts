@@ -20,7 +20,15 @@ beforeEach(() => {
 });
 
 describe('statistics processor', () => {
-  describe('stats function', () => {
+  describe('statsProcessor function', () => {
+    it('should handle devices without stats yet', async () => {
+      // given
+      AppContext.get().statistics.perDevice = {};
+
+      // when-then
+      statsProcessor();
+    });
+
     it('should compute stats (uptimes) into context', async () => {
       // given
       const { appInfo, statistics, diagnostics } = AppContext.get();

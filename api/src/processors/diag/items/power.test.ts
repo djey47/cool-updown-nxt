@@ -25,6 +25,19 @@ afterAll(() => {
 
 describe('power diag item', () => {
   describe('powerDiag function', () => {
+    it('should handle device without power diagnostics yet', async () => {
+      // given
+      const deviceDiags = {
+        ping: {},
+      } as DeviceDiagnosticsContext;
+
+      // when
+      const actualDiags = powerDiag('0', deviceDiags);
+
+      // then
+      expect(actualDiags).toBeDefined();
+    });
+
     it('should register an external stop attempt when ping status becomes KO after a while', async () => {
       // given
       const deviceDiags: DeviceDiagnosticsContext = {

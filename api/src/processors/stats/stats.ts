@@ -43,7 +43,11 @@ function statsForAllDevices() {
   devicesConfigs.forEach((dc, index) => {
     const deviceId = String(index);
     const deviceDiagnostics = diagnostics[deviceId];
-    statistics.perDevice[deviceId] = statsByDevice(deviceId, dc, deviceDiagnostics, statistics.perDevice[deviceId]);
+    statistics.perDevice[deviceId] = statsByDevice(
+      deviceId,
+      dc, 
+      deviceDiagnostics, 
+      statistics.perDevice[deviceId] || AppContext.createDefaultStatsForDevice());
   });
 }
 
