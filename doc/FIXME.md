@@ -42,3 +42,4 @@ FIXMEs/BUGs
 
 - [X] Power OFF is still blocking as Promise resolution only occurs after SSH connection is closed (caused by shutdown) 
 - [ ] power state change notifications don't appear
+- [ ] click on power button should not have effect when power state is ON and ssh is unavailable
