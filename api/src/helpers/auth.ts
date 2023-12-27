@@ -40,10 +40,10 @@ export function initAppAuthentication(app: FastifyInstance, authConfiguration?: 
 
   const validate = (username: string, password: string, _req: FastifyRequest, _reply: FastifyReply, done: (err?: Error) => void) => {
     if (username === appLogin && password === appPassword) {
-      app.log.info('User {} authenticated succesfully.', appLogin);
+      app.log.debug('User %s authenticated succesfully.', appLogin);
       done();
     } else {
-      app.log.error('Authentication failed for user {}.', appLogin);
+      app.log.error('Authentication failed for user %s.', appLogin);
       done(new Error('Authentication failed!'));
     }
   };
