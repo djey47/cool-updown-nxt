@@ -1,9 +1,12 @@
+import { FastifyReply } from 'fastify/types/reply';
 import globalMocks from '../../../config/jest/globalMocks';
 import resetMocks from '../../../config/jest/resetMocks';
 import { replyWithInternalError, replyWithItemNotFound, replyWithJson } from '../../common/api';
 import { AppContext } from '../../common/context';
-import { getMockedFastifyReply } from '../../helpers/testing/mockObjects';
+import { getDefaultDeviceConfig, getMockedFastifyReply } from '../../helpers/testing/mockObjects';
 import { PowerStatus } from '../../models/common';
+import { DeviceConfig } from '../../models/configuration';
+import { validateDeviceIdentifier } from '../common/validators';
 import { powerOnForDevice, powerOnForDevicesScheduled } from './powerOn';
 
 import type { WakeOptions } from 'wake_on_lan';
@@ -13,18 +16,22 @@ const { wakeonlanMock } = globalMocks;
 jest.mock('../../common/api');
 jest.mock('../../common/logger', () => ({
   coreLogger: {
+    error: jest.fn(),
     info: jest.fn(),
   },
 }));
+jest.mock('../common/validators');
 
 const replyWithJsonMock = replyWithJson as jest.Mock;
 const replyWithInternalErrorMock = replyWithInternalError as jest.Mock;
 const replyWithItemNotFoundMock = replyWithItemNotFound as jest.Mock;
+const validateDeviceIdentifierMock = validateDeviceIdentifier as jest.Mock<DeviceConfig | undefined, [string, FastifyReply?]>;
 
 beforeEach(() => {
   wakeonlanMock.wake.mockImplementation((_a, _o, cb) => {
     cb();
-  });
+  });  
+  validateDeviceIdentifierMock.mockReturnValue(getDefaultDeviceConfig());
 });
 
 afterEach(() => {
@@ -32,6 +39,7 @@ afterEach(() => {
   replyWithJsonMock.mockReset();
   replyWithInternalErrorMock.mockReset();
   replyWithItemNotFoundMock.mockReset();
+  validateDeviceIdentifierMock.mockReset();
 });
 
 describe('powerOn service', () => {
@@ -86,12 +94,16 @@ describe('powerOn service', () => {
     });    
     
     it('should return 404 when device is not found', async () => {
-      // given-when
+      // given
+      validateDeviceIdentifierMock.mockReturnValue(undefined);
+
+      // when
       await powerOnForDevice('foo', defaultReply);
 
       // then
       expect(wakeonlanMock.wake).not.toHaveBeenCalled();
-      expect(replyWithItemNotFoundMock).toHaveBeenCalledWith(defaultReply, 'deviceId', 'foo');
+      expect(replyWithJsonMock).not.toHaveBeenCalled();
+      expect(replyWithItemNotFoundMock).not.toHaveBeenCalled();
     });    
     
     it('should not attempt to wake device nor update diags context and return 204 when already powered ON', async () => {
@@ -122,6 +134,17 @@ describe('powerOn service', () => {
       const { power: { lastStartAttempt }} = AppContext.get().diagnostics['0'];
       expect(lastStartAttempt.reason).toBe('scheduled');
       expect(wakeonlanMock.wake).toHaveBeenCalledTimes(1);
+    });
+ 
+    it('should handle invalid device identifier', async () => {
+      // given
+      validateDeviceIdentifierMock.mockReturnValue(undefined);
+
+      // when
+      await powerOnForDevicesScheduled(['0']);
+
+      // then
+      expect(wakeonlanMock.wake).not.toHaveBeenCalled();
     });
   });
 });
