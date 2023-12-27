@@ -40,7 +40,7 @@ export async function logs(maxNbEvents: number | undefined, reply: FastifyReply)
 async function readLogs(logFilePath: string) {
   const contents = await readFile(logFilePath, { encoding: 'utf-8'});
 
-  console.log('logs::readLogs', { contents });
+  // console.log('logs::readLogs', { contents });
 
   return contents.split(/\r?\n/);
 }
