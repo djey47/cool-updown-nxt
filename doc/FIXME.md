@@ -27,7 +27,16 @@ FIXMEs/BUGs
 - [ ] SSH shutdown command does not give hand back immediately
   => force or do not wait for promise resolution? 'exit' does not seem to work
 - [ ] Refactor to use deviceId validator in every service which needs it
-- [ ] authentication helper: remove success message or use debug log level, fix interpolation to display user name on success) failure 
+- [ ] authentication helper: remove success message or use debug log level, fix interpolation to display user name on success) failure
+- [ ] issue when adding new device with just hostname as configuration:
+4|cud-nxt  | TypeError: Cannot read properties of undefined (reading 'state')
+4|cud-nxt  |     at powerDiag (file:///home/pi/app/cool-updown-nxt/api/dist/app.mjs:600:18)
+4|cud-nxt  |     at file:///home/pi/app/cool-updown-nxt/api/dist/app.mjs:684:25
+4|cud-nxt  |     at Array.forEach (<anonymous>)
+4|cud-nxt  |     at diagForAllDevices (file:///home/pi/app/cool-updown-nxt/api/dist/app.mjs:668:14)
+4|cud-nxt  |     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+4|cud-nxt  |     at async diagProcessor (file:///home/pi/app/cool-updown-nxt/api/dist/app.mjs:659:3)
+4|cud-nxt  |     at async app (file:///home/pi/app/cool-updown-nxt/api/dist/app.mjs:1171:3)
 
 ## WEB
 
