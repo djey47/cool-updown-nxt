@@ -1,5 +1,6 @@
 import { replyWithItemNotFound, replyWithJson } from '../../common/api';
 import { AppContext } from '../../common/context';
+import { validateDeviceIdentifier } from '../common/validators';
 
 import type { FastifyReply } from 'fastify';
 import type { DeviceStatisticsContext, GlobalStatisticsContext, StatisticsContext } from '../../models/context';
@@ -28,12 +29,17 @@ export async function stats(reply: FastifyReply) {
  * Statistics service implementation: for a specified device
  */
 export async function statsForDevice(deviceId: string, reply: FastifyReply) {
+  const deviceConfig = validateDeviceIdentifier(deviceId, reply);
+  if (!deviceConfig) {
+    return;
+  }
+
   const appContext = AppContext.get();
   const { statistics } = appContext;
 
   const deviceStats = statistics.perDevice[deviceId];
   if (!deviceStats) {
-    replyWithItemNotFound(reply, ApiItem.DEVICE_ID, deviceId);
+    replyWithItemNotFound(reply, ApiItem.DEVICE_ID_DIAGS, deviceId);
     return;
   }
 

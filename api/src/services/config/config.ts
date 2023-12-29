@@ -1,7 +1,7 @@
-import { replyWithItemNotFound, replyWithJson } from '../../common/api';
-import { getBaseConfig, getDeviceConfig } from '../../common/configuration';
+import { replyWithJson } from '../../common/api';
+import { getBaseConfig } from '../../common/configuration';
+import { validateDeviceIdentifier } from '../common/validators';
 
-import { ApiItem } from '../../models/api';
 import type { FastifyReply } from 'fastify/types/reply';
 import type { ConfigResponse } from './models/config';
 import type { BaseConfig, DeviceConfig } from '../../models/configuration';
@@ -59,10 +59,8 @@ export function config(reply: FastifyReply) {
  * Provides configuration for device having provided deviceId
  */
 export function configForDevice(deviceId: string, reply: FastifyReply) {
-  const deviceConfig = getDeviceConfig(deviceId);
-
+  const deviceConfig = validateDeviceIdentifier(deviceId, reply);
   if (!deviceConfig) {
-    replyWithItemNotFound(reply, ApiItem.DEVICE_ID, deviceId);
     return;
   }
 

@@ -1,12 +1,15 @@
 import { replyWithJson, replyWithItemNotFound } from '../../common/api';
 import { AppContext } from '../../common/context';
-import { getDefaultContext, getMockedFastifyReply } from '../../helpers/testing/mockObjects';
+import { getDefaultContext, getDefaultDeviceConfig, getMockedFastifyReply } from '../../helpers/testing/mockObjects';
 import { FeatureStatus, PowerStatus } from '../../models/common';
 import { diags, diagsForDevice } from './diags';
-import { ApiItem } from '../../models/api';
+import { validateDeviceIdentifier } from '../common/validators';
 
+import type { FastifyReply } from 'fastify/types/reply';
 import type { DiagsResponse } from './models/diags';
 import type { Context, DiagnosticsContext } from '../../models/context';
+import type { DeviceConfig } from '../../models/configuration';
+import { ApiItem } from '../../models/api';
 import { LastPowerAttemptReason } from '../../processors/diag/models/diag';
 
 jest.useFakeTimers();
@@ -14,15 +17,22 @@ const NOW = new Date();
 
 jest.mock('../../common/api');
 jest.mock('../../common/context');
+jest.mock('../common/validators');
 
 const replyWithJsonMock = replyWithJson as jest.Mock;
 const replyWithItemNotFoundMock = replyWithItemNotFound as jest.Mock;
 const contextGetMock = AppContext.get as jest.Mock<Context, []>; 
+const validateDeviceIdentifierMock = validateDeviceIdentifier as jest.Mock<DeviceConfig, [string, FastifyReply]>;
+
+const defaultDeviceConfig: DeviceConfig = getDefaultDeviceConfig();
 
 beforeEach(() => {
   replyWithJsonMock.mockReset();
   replyWithItemNotFoundMock.mockReset();
   contextGetMock.mockReset();
+  validateDeviceIdentifierMock.mockReset();
+
+  validateDeviceIdentifierMock.mockReturnValue({ ...defaultDeviceConfig });
 });
 
 describe('diags service', () => {
@@ -255,19 +265,37 @@ describe('diags service', () => {
       expect(replyWithJsonMock).toHaveBeenCalledWith(defaultReply, expectedOutput);
     });
 
+    it('should reply with 404 when no configuration for specified device', async () => {
+      // given
+      contextGetMock.mockReturnValue({
+        ...defaultContext,
+        diagnostics: defaultDiags,
+      });
+      validateDeviceIdentifierMock.mockReset();
+      
+      // when
+      await diagsForDevice('foo', defaultReply);
+
+      // then
+      expect(validateDeviceIdentifierMock).toHaveBeenCalledWith('foo', defaultReply);
+      expect(replyWithJsonMock).not.toHaveBeenCalled();
+      expect(replyWithItemNotFoundMock).not.toHaveBeenCalled();
+    });
+
     it('should reply with 404 when no diags for specified device', async () => {
       // given
       contextGetMock.mockReturnValue({
         ...defaultContext,
         diagnostics: defaultDiags,
       });
+      validateDeviceIdentifierMock.mockReturnValue({ ...defaultDeviceConfig });
 
       // when
       await diagsForDevice('foo', defaultReply);
 
       // then
       expect(replyWithJsonMock).not.toHaveBeenCalled();
-      expect(replyWithItemNotFoundMock).toHaveBeenCalledWith(defaultReply, ApiItem.DEVICE_ID, 'foo');
+      expect(replyWithItemNotFoundMock).toHaveBeenCalledWith(defaultReply, ApiItem.DEVICE_ID_DIAGS, 'foo');
     });
   });
 });

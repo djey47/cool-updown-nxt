@@ -1,25 +1,35 @@
 import { replyWithItemNotFound, replyWithJson } from '../../common/api';
 import { AppContext } from '../../common/context';
-import { getDefaultContext, getMockedFastifyReply } from '../../helpers/testing/mockObjects';
+import { getDefaultContext, getDefaultDeviceConfig, getMockedFastifyReply } from '../../helpers/testing/mockObjects';
 import { stats, statsForDevice } from './stats';
-import { ApiItem } from '../../models/api';
+import { validateDeviceIdentifier } from '../common/validators';
 
+import type { FastifyReply } from 'fastify/types/reply';
 import type { StatsResponse } from './models/stats';
 import type { Context, StatisticsContext } from '../../models/context';
+import { DeviceConfig } from '../../models/configuration';
+import { ApiItem } from '../../models/api';
 
 jest.mock('../../common/api');
 jest.mock('../../common/context');
+jest.mock('..//common/validators');
 
 const replyWithJsonMock = replyWithJson as jest.Mock;
 const replyWithItemNotFoundMock = replyWithItemNotFound as jest.Mock;
 const contextGetMock = AppContext.get as jest.Mock<Context, []>;
+const validateDeviceIdentifierMock = validateDeviceIdentifier as jest.Mock<DeviceConfig, [string, FastifyReply]>;
+
+const defaultDeviceConfig = getDefaultDeviceConfig();
 
 beforeEach(() => {
   replyWithJsonMock.mockReset();
   replyWithItemNotFoundMock.mockReset();
   contextGetMock.mockReset();
-});
+  validateDeviceIdentifierMock.mockReset();
 
+  validateDeviceIdentifierMock.mockReturnValue({ ...defaultDeviceConfig });
+});
+ 
 describe('stats service', () => {
   const codeMock = jest.fn();
   const sendMock = jest.fn();
@@ -124,6 +134,7 @@ describe('stats service', () => {
       await statsForDevice('0', defaultReply);
 
       // then
+      expect(validateDeviceIdentifierMock).toHaveBeenCalledWith('0', defaultReply);
       const expectedOutput: StatsResponse = {
         statistics: {
           uptimeSeconds: {
@@ -133,6 +144,22 @@ describe('stats service', () => {
         },
       };
       expect(replyWithJsonMock).toHaveBeenCalledWith(defaultReply, expectedOutput);
+    });
+
+    it('should reply with 404 when no config for specified device', async () => {
+      // given
+      contextGetMock.mockReturnValue({
+        ...defaultContext,
+        statistics: defaultStats,
+      });
+      validateDeviceIdentifierMock.mockReset();
+
+      // when
+      await statsForDevice('foo', defaultReply);
+
+      // then
+      expect(replyWithJsonMock).not.toHaveBeenCalled();
+      expect(replyWithItemNotFound).not.toHaveBeenCalled();
     });
 
     it('should reply with 404 when no stats for specified device', async () => {
@@ -146,8 +173,9 @@ describe('stats service', () => {
       await statsForDevice('foo', defaultReply);
 
       // then
+      expect(validateDeviceIdentifierMock).toHaveBeenCalledWith('foo', defaultReply);
       expect(replyWithJsonMock).not.toHaveBeenCalled();
-      expect(replyWithItemNotFound).toHaveBeenCalledWith(defaultReply, ApiItem.DEVICE_ID, 'foo');
+      expect(replyWithItemNotFound).toHaveBeenCalledWith(defaultReply, ApiItem.DEVICE_ID_DIAGS, 'foo');
     });
   });
 });

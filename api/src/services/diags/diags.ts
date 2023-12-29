@@ -1,5 +1,6 @@
 import { replyWithItemNotFound, replyWithJson } from '../../common/api';
 import { AppContext } from '../../common/context';
+import { validateDeviceIdentifier } from '../common/validators';
 
 import type { FastifyReply } from 'fastify';
 import type { DiagsResponse, DiagsResponseForAllDevices, DiagsResponseForDevice, DiagsResponseForFeature, PowerDiagsResponse as DiagsResponseForPower } from './models/diags';
@@ -26,12 +27,17 @@ export async function diags(reply: FastifyReply) {
  * Diagnostics service implementation: for a specified device
  */
 export async function diagsForDevice(deviceId: string, reply: FastifyReply) {
+  const deviceConfig = validateDeviceIdentifier(deviceId, reply);
+  if (!deviceConfig) {
+    return;
+  }
+
   const appContext = AppContext.get();
   const { diagnostics } = appContext;
 
   const deviceDiags = diagnostics[deviceId];
   if (!deviceDiags) {
-    replyWithItemNotFound(reply, ApiItem.DEVICE_ID, deviceId);
+    replyWithItemNotFound(reply, ApiItem.DEVICE_ID_DIAGS, deviceId);
     return;
   }
 

@@ -1,24 +1,27 @@
+import { FastifyReply } from 'fastify/types/reply';
 import { replyWithJson, replyWithItemNotFound } from '../../common/api';
-import { getBaseConfig, getDeviceConfig } from '../../common/configuration';
+import { getBaseConfig } from '../../common/configuration';
 import { getMockedFastifyReply } from '../../helpers/testing/mockObjects';
-import { ApiItem } from '../../models/api';
-import { BaseConfig, DeviceConfig } from '../../models/configuration';
+import { validateDeviceIdentifier } from '../common/validators';
 import { config, configForDevice } from './config';
-import { ConfigResponse } from './models/config';
+
+import type { BaseConfig, DeviceConfig } from '../../models/configuration';
+import type { ConfigResponse } from './models/config';
 
 jest.mock('../../common/api');
 jest.mock('../../common/configuration');
+jest.mock('../common/validators');
 
 const replyWithJsonMock = replyWithJson as jest.Mock;
 const replyWithItemNotFoundMock = replyWithItemNotFound as jest.Mock;
 const getBaseConfigMock = getBaseConfig as jest.Mock;
-const getDeviceConfigMock = getDeviceConfig as jest.Mock;
+const validateDeviceIdentifierMock = validateDeviceIdentifier as jest.Mock<DeviceConfig, [string, FastifyReply?]>;
 
 beforeEach(() => {
   replyWithJsonMock.mockReset();
   replyWithItemNotFoundMock.mockReset();
   getBaseConfigMock.mockReset();
-  getDeviceConfigMock.mockReset();
+  validateDeviceIdentifierMock.mockReset();
 });
 
 describe('Configuration service', () => {
@@ -53,21 +56,7 @@ describe('Configuration service', () => {
       diagnosticsIntervalMs: 0,
       port: 3001,
     },
-    devices: [{
-      http: {
-        url: 'http://my-nas:5000',
-      },
-      network: {
-        hostname: 'my-nas',
-        broadcastIpAddress: '255.255.255.255',
-        macAddress: 'aa:bb:cc:dd:ee:ff',
-      },
-      ssh: {
-        keyPath: '/id_rsa',
-        password: 'ssh-pwd',
-        user: 'ssh-user',
-      },
-    }],
+    devices: [{ ...deviceConfig }],
     defaultSchedules: [],
   };
 
@@ -110,12 +99,13 @@ describe('Configuration service', () => {
   describe('configForDevice function', () => {
     it('should provide configuration as JSON for existing device', () => {
       // given
-      getDeviceConfigMock.mockReturnValue({ ...deviceConfig });
+      validateDeviceIdentifierMock.mockReturnValue({ ...deviceConfig });
 
       // when
       configForDevice('0', defaultReply);
 
       // then
+      expect(validateDeviceIdentifierMock).toHaveBeenCalledWith('0', defaultReply);
       const expectedOutput: ConfigResponse = {
         configuration: {
           ...deviceConfig,
@@ -135,7 +125,7 @@ describe('Configuration service', () => {
         ssh: _sshConfig,
         ...deviceConfigWithoutSSH
       } = deviceConfig;
-      getDeviceConfigMock.mockReturnValue(deviceConfigWithoutSSH);
+      validateDeviceIdentifierMock.mockReturnValue({ ...deviceConfigWithoutSSH });
 
       // when
       configForDevice('0', defaultReply);
@@ -158,7 +148,7 @@ describe('Configuration service', () => {
           user: 'username',
         },
       };
-      getDeviceConfigMock.mockReturnValue(deviceConfigWithoutSSHPassword);
+      validateDeviceIdentifierMock.mockReturnValue({ ...deviceConfigWithoutSSHPassword });
 
       // when
       configForDevice('0', defaultReply);
@@ -181,8 +171,9 @@ describe('Configuration service', () => {
       await configForDevice('foo', defaultReply);
 
       // then
+      expect(validateDeviceIdentifierMock).toHaveBeenCalledWith('foo', defaultReply);
       expect(replyWithJsonMock).not.toHaveBeenCalled();
-      expect(replyWithItemNotFoundMock).toHaveBeenCalledWith(defaultReply, ApiItem.DEVICE_ID, 'foo');
+      expect(replyWithItemNotFoundMock).not.toHaveBeenCalled();
     });
   });
 });

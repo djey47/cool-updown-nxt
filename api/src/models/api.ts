@@ -27,6 +27,7 @@ export type ApiInternalErrorResponse = {
 
 export enum ApiItem {
   DEVICE_ID = 'deviceId',
+  DEVICE_ID_DIAGS = 'deviceIdDiagnostics',
 }
 
 export type ApiWithDeviceIdParameterRequest = FastifyRequest<{
