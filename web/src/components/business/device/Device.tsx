@@ -138,6 +138,10 @@ const Device = ({ deviceInfo }: DeviceProps) => {
     status: diagsQueryData?.ping.status || STATUS_UNAVAIL,
   }];
 
+  const sshDiagItem = diagItems.find((di) => di.type === DiagItemType.SSH);
+  const isSSHAvailable = sshDiagItem && sshDiagItem.status === 'ok';
+  const isPowerButtonClickable = devicePowerState === 'off' || (devicePowerState === 'on' && isSSHAvailable);
+
   return (
     <>
       <Card key={deviceId}>
@@ -146,6 +150,7 @@ const Device = ({ deviceInfo }: DeviceProps) => {
             isPerformingPowerOperation={isPerformingPowerOn || isPerformingPowerOff}
             onPowerAction={handlePowerClick}
             devicePowerState={devicePowerState}
+            isClickable={isPowerButtonClickable}
           />
           {deviceLabel}
         </CardContent>

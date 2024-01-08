@@ -8,9 +8,16 @@ interface PowerItemButtonProps {
   devicePowerState: PowerState;
   onPowerAction: () => void;
   isPerformingPowerOperation: boolean;
+  isClickable?: boolean;
 }
 
-const PowerItemButton = ({ onPowerAction, isPerformingPowerOperation, devicePowerState }: PowerItemButtonProps) => {
+const PowerItemButton = ({ onPowerAction, isPerformingPowerOperation, devicePowerState, isClickable = true }: PowerItemButtonProps) => {
+  const handlePowerAction = () => {
+    if (isClickable) {
+      onPowerAction();
+    }
+  };
+
   const devicePowerClassNames = classNames(
     'device-power-cta',
     'text-xl',
@@ -23,7 +30,7 @@ const PowerItemButton = ({ onPowerAction, isPerformingPowerOperation, devicePowe
     });
 
   return (
-    <Button onClick={onPowerAction}>
+    <Button onClick={handlePowerAction} isClickable={isClickable}>
       <IoPowerSharp className={devicePowerClassNames} />
     </Button>
   );
