@@ -41,6 +41,9 @@ TODOs
       - [ ] Ping stats
       - [ ] Last start/stop date depending on power state 
     - [X] Toaster on power actions
+    - Stats
+      - [ ] find chart lib
+      - [ ] uptime device/app ratio (pie charts, current / total)
   - [ ] Global logs with filters
   - [ ] Config (web app, server)
     - [ ] About (web UI / server meta)
@@ -139,8 +142,11 @@ TODOs
       - Web server (page)
         - [X] basic support
       - [ ] ?
-    - [ ] Stats
-      - [X] Uptimes: app, per device (current and overall)
+    - Stats
+      - Uptimes:
+        - [X] cud app, per device (current and overall)
+        - [ ] device/cud app uptime ratio (current and overall)
+        - 
       - [ ] Ping packet loss and RTT on some time interval (day? week? month?...)
       - [ ] ?
   - Transversal
