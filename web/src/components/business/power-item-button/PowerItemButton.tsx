@@ -18,12 +18,17 @@ const PowerItemButton = ({ onPowerAction, isPerformingPowerOperation, devicePowe
     }
   };
 
+  const effectivePowerState: PowerState =
+    isPerformingPowerOperation && ['on', 'off'].includes(devicePowerState)
+      ? (devicePowerState === 'on' ? 'off' : 'on')
+      : devicePowerState;
+
   const devicePowerClassNames = classNames(
     'device-power-cta',
     'text-xl',
     {
-      'is-on': devicePowerState === 'on',
-      'is-off': devicePowerState === 'off',
+      'is-on': effectivePowerState === 'on',
+      'is-off': effectivePowerState === 'off',
       'is-na': devicePowerState === 'n/a',
       'text-indigo-900': devicePowerState === 'n/a',
       'animate-pulse': isPerformingPowerOperation,
