@@ -40,7 +40,7 @@ FIXMEs/BUGs
 
 ## WEB
 
-- [ ] pending ON/OFF state colors are inverted => when turning ON, it should blink green instead (and red for OFF)
 - [ ] power state change notifications don't appear
+- [X] pending ON/OFF state colors are inverted => when turning ON, it should blink green instead (and red for OFF)
 - [X] Power OFF is still blocking as Promise resolution only occurs after SSH connection is closed (caused by shutdown) 
 - [X] click on power button should not have effect when power state is ON and ssh is unavailable
