@@ -34,7 +34,8 @@ interface DeviceNetworkConfig {
 }
 
 export interface DeviceSSHConfig {
-  keyPath: string;
+  authMode?: 'key' | 'basic';
+  keyPath?: string;
   offCommand?: string;
   password?: string;
   port?: number;

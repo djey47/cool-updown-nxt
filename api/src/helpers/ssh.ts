@@ -50,13 +50,21 @@ export async function sshExec(command: string, deviceConfig: DeviceConfig, execO
 
 async function getSSHParameters(deviceConfiguration: DeviceConfig): Promise<Config> {
   const { ssh: sshConf, network: netConf} = deviceConfiguration;
+  
   const privateKeyPath = sshConf?.keyPath;
-  const privateKey = await readPrivateKey(privateKeyPath);
+  const privateKey = await readPrivateKey(privateKeyPath);    
 
-  return {
+  const authMode = sshConf?.authMode;
+  const params: Config = {
     host: netConf?.hostname,
     port: sshConf?.port,
     username: sshConf?.user,
-    privateKey,
+    password: authMode === 'basic' && sshConf?.password || undefined ,
+    privateKey: authMode !== 'basic' && privateKey || undefined,
+    tryKeyboard: authMode === 'basic',
   };
+
+  console.log('ssh::getSSHParameters', { params });
+
+  return params;
 }

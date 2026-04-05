@@ -24,6 +24,8 @@ export async function sshDiag(deviceId: string, deviceConfig: DeviceConfig): Pro
       status: FeatureStatus.OK,
     };
   } catch (error) {
+    console.log('ssh::sshDiag', { error });
+
     const sshError = error as Error;
     return {
       data: sshError,
